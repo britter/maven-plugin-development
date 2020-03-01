@@ -16,15 +16,26 @@
 
 package com.github.britter.mavenpluginmetadata
 
-import org.gradle.api.Project
 import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.plugins.JavaBasePlugin
+import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.register
+import org.gradle.kotlin.dsl.the
 
-class MavenPluginMetadataPlugin: Plugin<Project> {
-    override fun apply(project: Project) {
-        project.tasks.register("greeting") { task ->
-            task.doLast {
-                println("Hello from plugin 'com.github.britter.maven-plugin-metadata'")
-            }
+class MavenPluginMetadataPlugin : Plugin<Project> {
+
+    override fun apply(project: Project): Unit = project.run {
+        pluginManager.apply(JavaBasePlugin::class)
+
+        val sourceSets = the<SourceSetContainer>()
+        tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
+            val mainSourceSet = sourceSets["main"]
+            classesDirectory.set(mainSourceSet.java.outputDir)
+            outputDirectory.set(mainSourceSet.output.resourcesDir)
+            dependsOn(tasks.named(mainSourceSet.classesTaskName))
         }
     }
 }
