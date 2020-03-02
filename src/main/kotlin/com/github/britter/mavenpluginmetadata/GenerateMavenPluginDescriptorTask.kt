@@ -16,6 +16,7 @@
 
 package com.github.britter.mavenpluginmetadata
 
+import com.github.britter.mavenpluginmetadata.internal.MavenLoggerAdapter
 import org.apache.maven.model.Build
 import org.apache.maven.plugin.descriptor.PluginDescriptor
 import org.apache.maven.project.MavenProject
