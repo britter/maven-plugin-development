@@ -29,9 +29,11 @@ class MavenPluginMetadataPlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = project.run {
         pluginManager.apply(JavaBasePlugin::class)
 
-        val extension = createExtension(project)
+        val extension = createExtension(project) as DefaultMavenPluginMetadataExtension
 
         tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
+            pluginDescriptor.set(extension.pluginDescriptor)
+
             classesDirs.set(extension.sourceSet.map { it.output.classesDirs })
             outputDirectory.fileProvider(extension.sourceSet.map { it.output.resourcesDir!! })
             dependsOn(extension.sourceSet.map { it.output })

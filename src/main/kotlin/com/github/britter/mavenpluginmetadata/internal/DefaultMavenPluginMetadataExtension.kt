@@ -30,21 +30,14 @@ import javax.inject.Inject
 
 open class DefaultMavenPluginMetadataExtension @Inject constructor(project: Project) : MavenPluginMetadataExtension {
 
-    private val pluginDescriptor = DefaultMavenPluginDescriptor(project)
+    val pluginDescriptor = DefaultMavenPluginDescriptor(project)
 
-    override val sourceSet: Property<SourceSet> = project.objects.property<SourceSet>().convention(project.provider { project.the<SourceSetContainer>()["main"] })
+    override val sourceSet: Property<SourceSet> = project.objects.property<SourceSet>()
+            .convention(project.provider { project.the<SourceSetContainer>()["main"] })
 
     override fun pluginDescriptor(action: Action<in MavenPluginDescriptor>) {
         action.execute(pluginDescriptor)
     }
 
-    class DefaultMavenPluginDescriptor(project: Project) : MavenPluginDescriptor {
-        override val groupId: Property<String> = project.objects.property()
-        override val artifactId: Property<String> = project.objects.property()
-        override val version: Property<String> = project.objects.property()
-        override val name: Property<String> = project.objects.property()
-        override val description: Property<String> = project.objects.property()
-        override val goalPrefix: Property<String> = project.objects.property()
-    }
 }
 

@@ -103,6 +103,6 @@ class TemporaryDirectoryExtensions {
     }
 
     static File helpDescriptor(TemporaryFolder self, String sourceSetName = "main") {
-        new File(self.root, "build/resources/$sourceSetName/META-INF/maven/org.example/maven-touch-plugin/plugin-help.xml")
+        new File(self.root, "build/resources/$sourceSetName/META-INF/maven/org.example/touch-maven-plugin/plugin-help.xml")
     }
 }

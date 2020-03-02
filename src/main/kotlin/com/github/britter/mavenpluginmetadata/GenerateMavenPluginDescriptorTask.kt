@@ -35,6 +35,7 @@ import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.get
@@ -47,6 +48,9 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
 
     @get:OutputDirectory
     abstract val outputDirectory: DirectoryProperty
+
+    @get:Nested
+    abstract val pluginDescriptor: Property<MavenPluginDescriptor>
 
     private val loggerAdapter = MavenLoggerAdapter(logger)
 
@@ -96,13 +100,15 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
     }
 
     private fun pluginDescriptor(): PluginDescriptor {
+        val pluginDescriptor = pluginDescriptor.get()
         return PluginDescriptor().also {
-            it.groupId = project.group.toString()
-            it.artifactId = project.name
-            it.version = project.version.toString()
-            it.goalPrefix = PluginDescriptor.getGoalPrefixFromArtifactId(project.name)
-            it.name = project.name
-            it.description = project.description
+            it.groupId = pluginDescriptor.groupId.get()
+            it.version = pluginDescriptor.version.get()
+            val artifactId = pluginDescriptor.artifactId.get()
+            it.artifactId = artifactId
+            it.goalPrefix = pluginDescriptor.goalPrefix.getOrElse(PluginDescriptor.getGoalPrefixFromArtifactId(artifactId))
+            it.name = pluginDescriptor.name.get()
+            it.description = pluginDescriptor.description.get()
             it.dependencies = getComponentDependencies()
         }
     }

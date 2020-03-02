@@ -33,34 +33,104 @@ class MavenPluginMetadataPluginFuncTest extends Specification {
     File buildFile
 
     void setup() {
-        settingsFile = testProjectDir.newFile("settings.gradle") << "rootProject.name=\"maven-touch-plugin\""
+        settingsFile = testProjectDir.newFile("settings.gradle") << "rootProject.name=\"touch-maven-plugin\""
         buildFile = testProjectDir.newFile("build.gradle") << """
             plugins {
                 id 'java'
                 id 'com.github.britter.maven-plugin-metadata'
             }
+
+            group "org.example"
+            description "A maven plugin with a mojo that can touch it!"
+            version "1.0.0"
+
+            repositories {
+                mavenCentral()
+            }
+            dependencies {
+                implementation 'org.apache.maven:maven-plugin-api:3.6.3'
+                implementation 'org.apache.maven.plugin-tools:maven-plugin-annotations:3.6.0'
+            }
         """
+    }
+
+    def "adds project metadata"() {
+        given:
+        testProjectDir.javaMojo()
+
+        when:
+        run("generateMavenPluginDescriptor")
+
+        then:
+        assertDescriptorContents(testProjectDir.pluginDescriptor(),
+                "touch-maven-plugin",
+                "A maven plugin with a mojo that can touch it!",
+                "org.example",
+                "touch-maven-plugin",
+                "1.0.0",
+                "touch"
+        )
+        assertDescriptorContents(testProjectDir.helpDescriptor(),
+                "touch-maven-plugin",
+                "A maven plugin with a mojo that can touch it!",
+                "org.example",
+                "touch-maven-plugin",
+                "1.0.0",
+                "touch"
+        )
+    }
+
+    def "adds customized metadata"() {
+        given:
+        buildFile << """
+            mavenPluginMetadata {
+                pluginDescriptor {
+                    name.set("custom-name")
+                    description.set("custom description")
+                    groupId.set("com.acme")
+                    artifactId.set("custom-artifact-id")
+                    version.set("2.0-custom")
+                    goalPrefix.set("custom-prefix")
+                }
+            }
+        """
+        testProjectDir.javaMojo()
+
+        when:
+        run("generateMavenPluginDescriptor")
+
+        then:
+        assertDescriptorContents(testProjectDir.pluginDescriptor(),
+            "custom-name",
+            "custom description",
+            "com.acme",
+            "custom-artifact-id",
+            "2.0-custom",
+            "custom-prefix"
+        )
+        assertDescriptorContents(testProjectDir.helpDescriptor(),
+            "custom-name",
+            "custom description",
+            "com.acme",
+            "custom-artifact-id",
+            "2.0-custom",
+            "custom-prefix"
+        )
     }
 
     def "generates a plugin and help descriptor for mojos in the main source set"() {
         given:
         buildFile << """
             apply plugin: 'groovy'
-            group "org.example"
-            repositories {
-                mavenCentral()
-            }
             dependencies {
                 implementation localGroovy()
-                implementation 'org.apache.maven:maven-plugin-api:3.6.3'
-                implementation 'org.apache.maven.plugin-tools:maven-plugin-annotations:3.6.0'
             }
         """
         testProjectDir.javaMojo("main", "create")
         testProjectDir.groovyMojo()
 
         when:
-        run("generateMavenPluginDescriptor", "-s")
+        run("generateMavenPluginDescriptor")
 
         then:
         def pluginDescriptor = testProjectDir.pluginDescriptor()
@@ -79,10 +149,6 @@ class MavenPluginMetadataPluginFuncTest extends Specification {
     def "generates a plugin descriptor and help descriptor for a different source set"() {
         given:
         buildFile << """
-            group "org.example"
-            repositories {
-                mavenCentral()
-            }
             def mojoSourceSet = sourceSets.create('mojo')
             mavenPluginMetadata {
                 sourceSet = mojoSourceSet
@@ -95,11 +161,29 @@ class MavenPluginMetadataPluginFuncTest extends Specification {
         testProjectDir.javaMojo("mojo")
 
         when:
-        run("generateMavenPluginDescriptor", "-s")
+        run("generateMavenPluginDescriptor")
 
         then:
         testProjectDir.pluginDescriptor("mojo").exists()
         testProjectDir.helpDescriptor("mojo").exists()
+    }
+
+    void assertDescriptorContents(
+            File descriptorFile,
+            String name,
+            String description,
+            String groupId,
+            String artifactId,
+            String version,
+            String goalPrefix) {
+        descriptorFile.exists()
+        def descriptorContents = descriptorFile.text
+        descriptorContents.contains("<name>$name</name>")
+        descriptorContents.contains("<description>$description</description>")
+        descriptorContents.contains("<groupId>$groupId</groupId>")
+        descriptorContents.contains("<artifactId>$artifactId</artifactId>")
+        descriptorContents.contains("<version>$version</version>")
+        descriptorContents.contains("<goalPrefix>$goalPrefix</goalPrefix>")
     }
 
     def run(String... args) {
@@ -107,7 +191,7 @@ class MavenPluginMetadataPluginFuncTest extends Specification {
                 .forwardOutput()
                 .withDebug(ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0)
                 .withPluginClasspath()
-                .withArguments(args)
+                .withArguments([*args, "-s"])
                 .withProjectDir(testProjectDir.root)
 
         runner.build()
