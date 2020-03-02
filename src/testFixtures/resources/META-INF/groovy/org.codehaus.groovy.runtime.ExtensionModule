@@ -1,0 +1,3 @@
+moduleName=Test extensions module
+moduleVersion=1.0-test
+extensionClasses=com.github.britter.mavenpluginmetadata.fixtures.TemporaryDirectoryExtensions

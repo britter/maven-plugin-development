@@ -54,18 +54,18 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
 
     @TaskAction
     fun generateDescriptor() {
+        val pluginDescriptor = pluginDescriptor()
         classesDirs.get().forEach {
             val mavenProject = mavenProject(it)
-            val pluginToolsRequest = createPluginToolsRequest(mavenProject)
+            val pluginToolsRequest = createPluginToolsRequest(mavenProject, pluginDescriptor)
             scanner.populatePluginDescriptor(pluginToolsRequest)
-
-            val descriptorGenerator = PluginDescriptorGenerator(loggerAdapter)
-            // Workaround for the fact that the target location of the help descriptor is derived from the project
-            // instead of from the directory passed to execute. This works for Maven since it does not have separate
-            // directories for classes and resources in the build output.
-            mavenProject.build.outputDirectory = outputDirectory.asFile.get().absolutePath
-            descriptorGenerator.execute(outputDirectory.dir("META-INF/maven").get().asFile, pluginToolsRequest)
         }
+        val descriptorGenerator = PluginDescriptorGenerator(loggerAdapter)
+        // Workaround for the fact that the target location of the help descriptor is derived from the project
+        // instead of from the directory passed to execute. This works for Maven since it does not have separate
+        // directories for classes and resources in the build output.
+        val mavenProject = mavenProject(outputDirectory.asFile.get())
+        descriptorGenerator.execute(outputDirectory.dir("META-INF/maven").get().asFile, createPluginToolsRequest(mavenProject, pluginDescriptor))
     }
 
     private fun createMojoScanner(loggerAdapter: MavenLoggerAdapter): MojoScanner {
@@ -89,8 +89,8 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
         return extractor
     }
 
-    private fun createPluginToolsRequest(mavenProject: MavenProject): PluginToolsRequest {
-        return DefaultPluginToolsRequest(mavenProject, pluginDescriptor()).also {
+    private fun createPluginToolsRequest(mavenProject: MavenProject, pluginDescriptor: PluginDescriptor): PluginToolsRequest {
+        return DefaultPluginToolsRequest(mavenProject, pluginDescriptor).also {
             it.isSkipErrorNoDescriptorsFound = true
         }
     }
