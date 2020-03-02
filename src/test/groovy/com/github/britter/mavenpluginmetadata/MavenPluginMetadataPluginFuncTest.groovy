@@ -186,6 +186,36 @@ class MavenPluginMetadataPluginFuncTest extends Specification {
         testProjectDir.helpDescriptor("mojo").exists()
     }
 
+    def "adds direct and transitive runtime dependencies to plugin descriptor"() {
+        given:
+        buildFile << """
+            apply plugin: 'java-library'
+            dependencies {
+                api 'org.apache.commons:commons-lang3:3.6'
+                implementation 'com.google.guava:guava:28.0-jre'
+                compileOnly 'commons-io:commons-io:2.6'
+                runtimeOnly 'org.apache.commons:commons-math3:3.6.1'
+                testImplementation 'junit:junit:4.12'
+            }
+        """
+        testProjectDir.javaMojo()
+
+        when:
+        run("generateMavenPluginDescriptor")
+
+        then:
+        assertDescriptorContainsDependencies(testProjectDir.pluginDescriptor(),
+            'org.apache.commons:commons-lang3:3.8.1', // selected by conflict resolution
+            'com.google.guava:guava:28.0-jre',
+            'com.google.guava:failureaccess:1.0.1', // transitive guava dependency
+            'org.apache.commons:commons-math3:3.6.1'
+        )
+        assertDescriptorNotContainsDependencies(testProjectDir.pluginDescriptor(),
+                'commons-io:commons-io:2.6',
+                'junit:junit:4.12'
+        )
+    }
+
     void assertDescriptorContents(
             File descriptorFile,
             String name,
@@ -202,6 +232,32 @@ class MavenPluginMetadataPluginFuncTest extends Specification {
         descriptorContents.contains("<artifactId>$artifactId</artifactId>")
         descriptorContents.contains("<version>$version</version>")
         descriptorContents.contains("<goalPrefix>$goalPrefix</goalPrefix>")
+    }
+
+    void assertDescriptorContainsDependencies(
+            File descriptorFile,
+            String... notations) {
+        descriptorFile.exists()
+        def descriptorContents = descriptorFile.text
+        notations.each {
+            def coords = it.split(":")
+            assert descriptorContents.contains("<groupId>${coords[0]}</groupId>")
+            assert descriptorContents.contains("<artifactId>${coords[1]}</artifactId>")
+            assert descriptorContents.contains("<version>${coords[2]}</version>")
+        }
+    }
+
+    void assertDescriptorNotContainsDependencies(
+            File descriptorFile,
+            String... notations) {
+        descriptorFile.exists()
+        def descriptorContents = descriptorFile.text
+        notations.each {
+            def coords = it.split(":")
+            assert !descriptorContents.contains("<groupId>${coords[0]}</groupId>")
+            assert !descriptorContents.contains("<artifactId>${coords[1]}</artifactId>")
+            assert !descriptorContents.contains("<version>${coords[2]}</version>")
+        }
     }
 
     def run(String... args) {
