@@ -118,6 +118,24 @@ class MavenPluginMetadataPluginFuncTest extends Specification {
         )
     }
 
+    def "warns against invalid coordinates"() {
+        given:
+        buildFile << """
+            mavenPluginMetadata {
+                pluginDescriptor {
+                    artifactId.set("maven-touch-plugin")
+                }
+            }
+        """
+        testProjectDir.javaMojo()
+
+        when:
+        def result = run("generateMavenPluginDescriptor")
+
+        then:
+        result.output.contains("ArtifactIds of the form maven-___-plugin are reserved for plugins of the maven team. Please change the plugin artifactId to the format ___-maven-plugin.")
+    }
+
     def "generates a plugin and help descriptor for mojos in the main source set"() {
         given:
         buildFile << """

@@ -56,20 +56,37 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
 
     private val scanner = createMojoScanner(loggerAdapter)
 
+    private val generator = PluginDescriptorGenerator(loggerAdapter)
+
     @TaskAction
     fun generateDescriptor() {
-        val pluginDescriptor = pluginDescriptor()
-        classesDirs.get().forEach {
-            val mavenProject = mavenProject(it)
-            val pluginToolsRequest = createPluginToolsRequest(mavenProject, pluginDescriptor)
-            scanner.populatePluginDescriptor(pluginToolsRequest)
+        checkArtifactId()
+
+        val pluginDescriptor = extractPluginDescriptor()
+
+        writeDescriptor(pluginDescriptor)
+    }
+
+    private fun checkArtifactId() {
+        val artifactId = pluginDescriptor.get().artifactId.get()
+        if (artifactId.startsWith("maven-") && artifactId.endsWith("-plugin")) {
+            logger.warn("ArtifactIds of the form maven-___-plugin are reserved for plugins of the maven team. Please change the plugin artifactId to the format ___-maven-plugin.")
         }
-        val descriptorGenerator = PluginDescriptorGenerator(loggerAdapter)
-        // Workaround for the fact that the target location of the help descriptor is derived from the project
-        // instead of from the directory passed to execute. This works for Maven since it does not have separate
-        // directories for classes and resources in the build output.
+    }
+
+    private fun writeDescriptor(pluginDescriptor: PluginDescriptor) {
         val mavenProject = mavenProject(outputDirectory.asFile.get())
-        descriptorGenerator.execute(outputDirectory.dir("META-INF/maven").get().asFile, createPluginToolsRequest(mavenProject, pluginDescriptor))
+        generator.execute(outputDirectory.dir("META-INF/maven").get().asFile, createPluginToolsRequest(mavenProject, pluginDescriptor))
+    }
+
+    private fun extractPluginDescriptor(): PluginDescriptor {
+        return createPluginDescriptor().also { pluginDescriptor ->
+            classesDirs.get().forEach {
+                val mavenProject = mavenProject(it)
+                val pluginToolsRequest = createPluginToolsRequest(mavenProject, pluginDescriptor)
+                scanner.populatePluginDescriptor(pluginToolsRequest)
+            }
+        }
     }
 
     private fun createMojoScanner(loggerAdapter: MavenLoggerAdapter): MojoScanner {
@@ -99,7 +116,7 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
         }
     }
 
-    private fun pluginDescriptor(): PluginDescriptor {
+    private fun createPluginDescriptor(): PluginDescriptor {
         val pluginDescriptor = pluginDescriptor.get()
         return PluginDescriptor().also {
             it.groupId = pluginDescriptor.groupId.get()
