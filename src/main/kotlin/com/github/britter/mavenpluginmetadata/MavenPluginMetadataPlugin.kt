@@ -16,26 +16,32 @@
 
 package com.github.britter.mavenpluginmetadata
 
+import com.github.britter.mavenpluginmetadata.internal.DefaultMavenPluginMetadataExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaBasePlugin
-import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.kotlin.dsl.apply
-import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.register
-import org.gradle.kotlin.dsl.the
 
 class MavenPluginMetadataPlugin : Plugin<Project> {
 
     override fun apply(project: Project): Unit = project.run {
         pluginManager.apply(JavaBasePlugin::class)
 
-        val sourceSets = the<SourceSetContainer>()
+        val extension = createExtension(project)
+
         tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
-            val mainSourceSet = sourceSets["main"]
-            classesDirs.set(mainSourceSet.output.classesDirs)
-            outputDirectory.set(mainSourceSet.output.resourcesDir)
-            dependsOn(tasks.named(mainSourceSet.classesTaskName))
+            classesDirs.set(extension.sourceSet.map { it.output.classesDirs })
+            outputDirectory.fileProvider(extension.sourceSet.map { it.output.resourcesDir!! })
+            dependsOn(extension.sourceSet.map { it.output })
         }
     }
+
+    private fun Project.createExtension(project: Project) =
+            extensions.create(
+                    MavenPluginMetadataExtension::class,
+                    MavenPluginMetadataExtension.NAME,
+                    DefaultMavenPluginMetadataExtension::class,
+                    project)
 }
