@@ -33,7 +33,7 @@ class MavenPluginMetadataPlugin : Plugin<Project> {
         val sourceSets = the<SourceSetContainer>()
         tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
             val mainSourceSet = sourceSets["main"]
-            classesDirectory.set(mainSourceSet.java.outputDir)
+            classesDirs.set(mainSourceSet.output.classesDirs)
             outputDirectory.set(mainSourceSet.output.resourcesDir)
             dependsOn(tasks.named(mainSourceSet.classesTaskName))
         }
