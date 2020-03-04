@@ -240,6 +240,7 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
             assert descriptorContents.contains("<groupId>${coords[0]}</groupId>")
             assert descriptorContents.contains("<artifactId>${coords[1]}</artifactId>")
             assert descriptorContents.contains("<version>${coords[2]}</version>")
+            assert descriptorContents.contains("<type>jar</type>")
         }
     }
 

@@ -144,7 +144,7 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
                 it.groupId = resolved.moduleVersion.id.group
                 it.artifactId = resolved.moduleVersion.id.name
                 it.version = resolved.moduleVersion.id.version
-                it.type = resolved.classifier
+                it.type = resolved.extension
             }
         }
     }
