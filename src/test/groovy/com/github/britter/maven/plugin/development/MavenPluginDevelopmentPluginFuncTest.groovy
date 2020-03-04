@@ -59,22 +59,20 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
         run("generateMavenPluginDescriptor")
 
         then:
-        assertDescriptorContents(pluginDescriptor,
-                "touch-maven-plugin",
-                "A maven plugin with a mojo that can touch it!",
-                "org.example",
-                "touch-maven-plugin",
-                "1.0.0",
-                "touch"
-        )
-        assertDescriptorContents(helpDescriptor,
-                "touch-maven-plugin",
-                "A maven plugin with a mojo that can touch it!",
-                "org.example",
-                "touch-maven-plugin",
-                "1.0.0",
-                "touch"
-        )
+        pluginDescriptor.hasName("touch-maven-plugin")
+        pluginDescriptor.hasDescription("A maven plugin with a mojo that can touch it!")
+        pluginDescriptor.hasGroupId("org.example")
+        pluginDescriptor.hasArtifactId("touch-maven-plugin")
+        pluginDescriptor.hasVersion("1.0.0")
+        pluginDescriptor.hasGoalPrefix("touch")
+
+        and:
+        helpDescriptor.hasName("touch-maven-plugin")
+        helpDescriptor.hasDescription("A maven plugin with a mojo that can touch it!")
+        helpDescriptor.hasGroupId("org.example")
+        helpDescriptor.hasArtifactId("touch-maven-plugin")
+        helpDescriptor.hasVersion("1.0.0")
+        helpDescriptor.hasGoalPrefix("touch")
     }
 
     def "adds customized metadata"() {
@@ -95,22 +93,20 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
         run("generateMavenPluginDescriptor")
 
         then:
-        assertDescriptorContents(pluginDescriptor,
-            "custom-name",
-            "custom description",
-            "com.acme",
-            "custom-artifact-id",
-            "2.0-custom",
-            "custom-prefix"
-        )
-        assertDescriptorContents(helpDescriptor,
-            "custom-name",
-            "custom description",
-            "com.acme",
-            "custom-artifact-id",
-            "2.0-custom",
-            "custom-prefix"
-        )
+        pluginDescriptor.hasName("custom-name")
+        pluginDescriptor.hasDescription("custom description")
+        pluginDescriptor.hasGroupId("com.acme")
+        pluginDescriptor.hasArtifactId("custom-artifact-id")
+        pluginDescriptor.hasVersion("2.0-custom")
+        pluginDescriptor.hasGoalPrefix("custom-prefix")
+
+        and:
+        helpDescriptor.hasName("custom-name")
+        helpDescriptor.hasDescription("custom description")
+        helpDescriptor.hasGroupId("com.acme")
+        helpDescriptor.hasArtifactId("custom-artifact-id")
+        helpDescriptor.hasVersion("2.0-custom")
+        helpDescriptor.hasGoalPrefix("custom-prefix")
     }
 
     def "warns against invalid coordinates"() {
@@ -144,15 +140,12 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
         run("generateMavenPluginDescriptor")
 
         then:
-        pluginDescriptor.exists()
-        def descriptorContents = pluginDescriptor.text
-        descriptorContents.contains("<goal>create</goal>")
-        descriptorContents.contains("<goal>touch</goal>")
+        pluginDescriptor.hasGoal("create")
+        pluginDescriptor.hasGoal("touch")
 
-        helpDescriptor.exists()
-        def helpContents = pluginDescriptor.text
-        helpContents.contains("<goal>create</goal>")
-        helpContents.contains("<goal>touch</goal>")
+        and:
+        helpDescriptor.hasGoal("create")
+        helpDescriptor.hasGoal("touch")
     }
 
     def "generates a plugin descriptor and help descriptor for a different source set"() {
@@ -173,8 +166,8 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
         run("generateMavenPluginDescriptor")
 
         then:
-        getPluginDescriptor("mojo").exists()
-        getHelpDescriptor("mojo").exists()
+        getPluginDescriptor("mojo")
+        getHelpDescriptor("mojo")
     }
 
     def "adds direct and transitive runtime dependencies to plugin descriptor"() {
@@ -195,61 +188,15 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
         run("generateMavenPluginDescriptor")
 
         then:
-        assertDescriptorContainsDependencies(pluginDescriptor,
-            'org.apache.commons:commons-lang3:3.8.1', // selected by conflict resolution
-            'com.google.guava:guava:28.0-jre',
-            'com.google.guava:failureaccess:1.0.1', // transitive guava dependency
-            'org.apache.commons:commons-math3:3.6.1'
-        )
-        assertDescriptorNotContainsDependencies(pluginDescriptor,
-                'commons-io:commons-io:2.6',
-                'junit:junit:4.12'
-        )
-    }
+        pluginDescriptor.hasDependency('org.apache.commons:commons-lang3:3.8.1') // selected by conflict resolution
+        pluginDescriptor.hasDependency('com.google.guava:guava:28.0-jre')
+        pluginDescriptor.hasDependency('com.google.guava:failureaccess:1.0.1') // transitive guava dependency
+        pluginDescriptor.hasDependency('org.apache.commons:commons-math3:3.6.1')
+        !pluginDescriptor.hasDependency('commons-io:commons-io:2.6')
+        !pluginDescriptor.hasDependency('junit:junit:4.12')
 
-    void assertDescriptorContents(
-            File descriptorFile,
-            String name,
-            String description,
-            String groupId,
-            String artifactId,
-            String version,
-            String goalPrefix) {
-        descriptorFile.exists()
-        def descriptorContents = descriptorFile.text
-        descriptorContents.contains("<name>$name</name>")
-        descriptorContents.contains("<description>$description</description>")
-        descriptorContents.contains("<groupId>$groupId</groupId>")
-        descriptorContents.contains("<artifactId>$artifactId</artifactId>")
-        descriptorContents.contains("<version>$version</version>")
-        descriptorContents.contains("<goalPrefix>$goalPrefix</goalPrefix>")
-    }
-
-    void assertDescriptorContainsDependencies(
-            File descriptorFile,
-            String... notations) {
-        descriptorFile.exists()
-        def descriptorContents = descriptorFile.text
-        notations.each {
-            def coords = it.split(":")
-            assert descriptorContents.contains("<groupId>${coords[0]}</groupId>")
-            assert descriptorContents.contains("<artifactId>${coords[1]}</artifactId>")
-            assert descriptorContents.contains("<version>${coords[2]}</version>")
-            assert descriptorContents.contains("<type>jar</type>")
-        }
-    }
-
-    void assertDescriptorNotContainsDependencies(
-            File descriptorFile,
-            String... notations) {
-        descriptorFile.exists()
-        def descriptorContents = descriptorFile.text
-        notations.each {
-            def coords = it.split(":")
-            assert !descriptorContents.contains("<groupId>${coords[0]}</groupId>")
-            assert !descriptorContents.contains("<artifactId>${coords[1]}</artifactId>")
-            assert !descriptorContents.contains("<version>${coords[2]}</version>")
-        }
+        and:
+        helpDescriptor.hasNoDependencies()
     }
 
     def run(String... args) {

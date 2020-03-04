@@ -135,11 +135,11 @@ class Workspace extends ExternalResource {
         '''
     }
 
-    File getPluginDescriptor(String sourceSetName = "main") {
-        file("build/resources/$sourceSetName/META-INF/maven/plugin.xml")
+    DescriptorFile getPluginDescriptor(String sourceSetName = "main") {
+        new DescriptorFile(file("build/resources/$sourceSetName/META-INF/maven/plugin.xml"))
     }
 
-    File getHelpDescriptor(String sourceSetName = "main") {
-        file("build/resources/$sourceSetName/META-INF/maven/org.example/touch-maven-plugin/plugin-help.xml")
+    DescriptorFile getHelpDescriptor(String sourceSetName = "main") {
+        new DescriptorFile(file("build/resources/$sourceSetName/META-INF/maven/org.example/touch-maven-plugin/plugin-help.xml"))
     }
 }
