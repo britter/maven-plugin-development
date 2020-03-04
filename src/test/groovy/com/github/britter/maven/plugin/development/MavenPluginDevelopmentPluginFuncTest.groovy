@@ -16,9 +16,9 @@
 
 package com.github.britter.maven.plugin.development
 
+import com.github.britter.maven.plugin.development.fixtures.Workspace
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Rule
-import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
 import java.lang.management.ManagementFactory
@@ -26,15 +26,12 @@ import java.lang.management.ManagementFactory
 class MavenPluginDevelopmentPluginFuncTest extends Specification {
 
     @Rule
-    TemporaryFolder testProjectDir
-
-    File settingsFile
-
-    File buildFile
+    @Delegate
+    Workspace workspace
 
     void setup() {
-        settingsFile = testProjectDir.newFile("settings.gradle") << "rootProject.name=\"touch-maven-plugin\""
-        buildFile = testProjectDir.newFile("build.gradle") << """
+        settingsFile << "rootProject.name=\"touch-maven-plugin\""
+        buildFile << """
             plugins {
                 id 'java'
                 id 'com.github.britter.maven-plugin-development'
@@ -56,13 +53,13 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
 
     def "adds project metadata"() {
         given:
-        testProjectDir.javaMojo()
+        javaMojo()
 
         when:
         run("generateMavenPluginDescriptor")
 
         then:
-        assertDescriptorContents(testProjectDir.pluginDescriptor(),
+        assertDescriptorContents(pluginDescriptor,
                 "touch-maven-plugin",
                 "A maven plugin with a mojo that can touch it!",
                 "org.example",
@@ -70,7 +67,7 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
                 "1.0.0",
                 "touch"
         )
-        assertDescriptorContents(testProjectDir.helpDescriptor(),
+        assertDescriptorContents(helpDescriptor,
                 "touch-maven-plugin",
                 "A maven plugin with a mojo that can touch it!",
                 "org.example",
@@ -92,13 +89,13 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
                 goalPrefix.set("custom-prefix")
             }
         """
-        testProjectDir.javaMojo()
+        javaMojo()
 
         when:
         run("generateMavenPluginDescriptor")
 
         then:
-        assertDescriptorContents(testProjectDir.pluginDescriptor(),
+        assertDescriptorContents(pluginDescriptor,
             "custom-name",
             "custom description",
             "com.acme",
@@ -106,7 +103,7 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
             "2.0-custom",
             "custom-prefix"
         )
-        assertDescriptorContents(testProjectDir.helpDescriptor(),
+        assertDescriptorContents(helpDescriptor,
             "custom-name",
             "custom description",
             "com.acme",
@@ -123,7 +120,7 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
                 artifactId.set("maven-touch-plugin")
             }
         """
-        testProjectDir.javaMojo()
+        javaMojo()
 
         when:
         def result = run("generateMavenPluginDescriptor")
@@ -140,20 +137,18 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
                 implementation localGroovy()
             }
         """
-        testProjectDir.javaMojo("main", "create")
-        testProjectDir.groovyMojo()
+        javaMojo("main", "create")
+        groovyMojo()
 
         when:
         run("generateMavenPluginDescriptor")
 
         then:
-        def pluginDescriptor = testProjectDir.pluginDescriptor()
         pluginDescriptor.exists()
         def descriptorContents = pluginDescriptor.text
         descriptorContents.contains("<goal>create</goal>")
         descriptorContents.contains("<goal>touch</goal>")
 
-        def helpDescriptor = testProjectDir.helpDescriptor()
         helpDescriptor.exists()
         def helpContents = pluginDescriptor.text
         helpContents.contains("<goal>create</goal>")
@@ -172,14 +167,14 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
                 mojoImplementation 'org.apache.maven.plugin-tools:maven-plugin-annotations:3.6.0'
             }
         """
-        testProjectDir.javaMojo("mojo")
+        javaMojo("mojo")
 
         when:
         run("generateMavenPluginDescriptor")
 
         then:
-        testProjectDir.pluginDescriptor("mojo").exists()
-        testProjectDir.helpDescriptor("mojo").exists()
+        getPluginDescriptor("mojo").exists()
+        getHelpDescriptor("mojo").exists()
     }
 
     def "adds direct and transitive runtime dependencies to plugin descriptor"() {
@@ -194,19 +189,19 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
                 testImplementation 'junit:junit:4.12'
             }
         """
-        testProjectDir.javaMojo()
+        javaMojo()
 
         when:
         run("generateMavenPluginDescriptor")
 
         then:
-        assertDescriptorContainsDependencies(testProjectDir.pluginDescriptor(),
+        assertDescriptorContainsDependencies(pluginDescriptor,
             'org.apache.commons:commons-lang3:3.8.1', // selected by conflict resolution
             'com.google.guava:guava:28.0-jre',
             'com.google.guava:failureaccess:1.0.1', // transitive guava dependency
             'org.apache.commons:commons-math3:3.6.1'
         )
-        assertDescriptorNotContainsDependencies(testProjectDir.pluginDescriptor(),
+        assertDescriptorNotContainsDependencies(pluginDescriptor,
                 'commons-io:commons-io:2.6',
                 'junit:junit:4.12'
         )
@@ -263,7 +258,7 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
                 .withDebug(ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0)
                 .withPluginClasspath()
                 .withArguments([*args, "-s"])
-                .withProjectDir(testProjectDir.root)
+                .withProjectDir(workspace.root)
 
         runner.build()
     }

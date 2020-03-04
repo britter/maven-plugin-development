@@ -16,15 +16,54 @@
 
 package com.github.britter.maven.plugin.development.fixtures
 
+import org.apache.commons.lang3.StringUtils
+import org.junit.rules.ExternalResource
 import org.junit.rules.TemporaryFolder
 
-class TemporaryDirectoryExtensions {
+class Workspace extends ExternalResource {
 
-    static def javaMojo(TemporaryFolder self, String sourceSetName = "main", String mojoName = "touch") {
-        File dir = new File(self.root, "src/$sourceSetName/java/org/example")
+    private TemporaryFolder workspaceFolder = new TemporaryFolder()
+
+    @Override
+    void before() {
+        workspaceFolder.create()
+    }
+
+    @Override
+    void after() {
+        workspaceFolder.delete()
+    }
+
+    File getRoot() {
+        workspaceFolder.root
+    }
+
+    File dir(String path) {
+        def dir = new File(root, path)
         dir.mkdirs()
+        dir
+    }
+
+    File file(String path) {
+        if (path.contains("/")) {
+            def parentDir = dir(StringUtils.substringBeforeLast(path, '/'))
+            new File(parentDir, StringUtils.substringAfterLast(path, '/'))
+        } else {
+            new File(root, path)
+        }
+    }
+
+    File getSettingsFile() {
+        file("settings.gradle")
+    }
+
+    File getBuildFile() {
+        file("build.gradle")
+    }
+
+    def javaMojo(String sourceSetName = "main", String mojoName = "touch") {
         def className = "${mojoName.capitalize()}Mojo"
-        new File(dir, "${className}.java") << """
+        file("src/$sourceSetName/java/org/example/${className}.java") << """
             package org.example;
             import java.io.*;
             import org.apache.maven.plugin.AbstractMojo;
@@ -62,10 +101,8 @@ class TemporaryDirectoryExtensions {
         """
     }
 
-    static def groovyMojo(TemporaryFolder self) {
-        File dir = new File(self.root, "src/main/groovy/org/example")
-        dir.mkdirs()
-        new File(dir, "TouchMojo.groovy") << '''
+    def groovyMojo() {
+        file("src/main/groovy/org/example/TouchMojo.groovy") << '''
             package org.example;
             import java.io.*;
             import org.apache.maven.plugin.AbstractMojo;
@@ -98,11 +135,11 @@ class TemporaryDirectoryExtensions {
         '''
     }
 
-    static File pluginDescriptor(TemporaryFolder self, String sourceSetName = "main") {
-        new File(self.root, "build/resources/$sourceSetName/META-INF/maven/plugin.xml")
+    File getPluginDescriptor(String sourceSetName = "main") {
+        file("build/resources/$sourceSetName/META-INF/maven/plugin.xml")
     }
 
-    static File helpDescriptor(TemporaryFolder self, String sourceSetName = "main") {
-        new File(self.root, "build/resources/$sourceSetName/META-INF/maven/org.example/touch-maven-plugin/plugin-help.xml")
+    File getHelpDescriptor(String sourceSetName = "main") {
+        file("build/resources/$sourceSetName/META-INF/maven/org.example/touch-maven-plugin/plugin-help.xml")
     }
 }
