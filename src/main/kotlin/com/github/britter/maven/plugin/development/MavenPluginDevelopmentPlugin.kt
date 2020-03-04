@@ -16,7 +16,7 @@
 
 package com.github.britter.maven.plugin.development
 
-import com.github.britter.maven.plugin.development.internal.DefaultMavenPluginMetadataExtension
+import com.github.britter.maven.plugin.development.internal.DefaultMavenPluginDevelopmentExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaBasePlugin
@@ -29,21 +29,28 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = project.run {
         pluginManager.apply(JavaBasePlugin::class)
 
-        val extension = createExtension(project) as DefaultMavenPluginMetadataExtension
+        val extension = createExtension(project) as DefaultMavenPluginDevelopmentExtension
 
         tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
-            pluginDescriptor.set(extension.pluginDescriptor)
+            classesDirs.set(extension.pluginSourceSet.map { it.output.classesDirs })
+            outputDirectory.fileProvider(extension.pluginSourceSet.map { it.output.resourcesDir!! })
+            pluginDescriptor.set(MavenPluginDescriptor(
+                    extension.groupId.get(),
+                    extension.artifactId.get(),
+                    extension.version.get(),
+                    extension.name.get(),
+                    extension.description.get(),
+                    extension.goalPrefix.orNull
+            ))
 
-            classesDirs.set(extension.sourceSet.map { it.output.classesDirs })
-            outputDirectory.fileProvider(extension.sourceSet.map { it.output.resourcesDir!! })
-            dependsOn(extension.sourceSet.map { it.output })
+            dependsOn(extension.pluginSourceSet.map { it.output })
         }
     }
 
     private fun Project.createExtension(project: Project) =
             extensions.create(
-                    MavenPluginMetadataExtension::class,
-                    MavenPluginMetadataExtension.NAME,
-                    DefaultMavenPluginMetadataExtension::class,
+                    MavenPluginDevelopmentExtension::class,
+                    MavenPluginDevelopmentExtension.NAME,
+                    DefaultMavenPluginDevelopmentExtension::class,
                     project)
 }

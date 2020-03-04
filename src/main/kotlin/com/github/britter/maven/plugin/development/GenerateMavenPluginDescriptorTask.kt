@@ -35,10 +35,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Nested
-import org.gradle.api.tasks.OutputDirectory
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.*
 import org.gradle.kotlin.dsl.get
 import java.io.File
 
@@ -69,7 +66,7 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
     }
 
     private fun checkArtifactId() {
-        val artifactId = pluginDescriptor.get().artifactId.get()
+        val artifactId = pluginDescriptor.get().artifactId
         if (artifactId.startsWith("maven-") && artifactId.endsWith("-plugin")) {
             logger.warn("ArtifactIds of the form maven-___-plugin are reserved for plugins of the maven team. Please change the plugin artifactId to the format ___-maven-plugin.")
         }
@@ -120,13 +117,13 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
     private fun createPluginDescriptor(): PluginDescriptor {
         val pluginDescriptor = pluginDescriptor.get()
         return PluginDescriptor().also {
-            it.groupId = pluginDescriptor.groupId.get()
-            it.version = pluginDescriptor.version.get()
-            val artifactId = pluginDescriptor.artifactId.get()
+            it.groupId = pluginDescriptor.groupId
+            it.version = pluginDescriptor.version
+            val artifactId = pluginDescriptor.artifactId
             it.artifactId = artifactId
-            it.goalPrefix = pluginDescriptor.goalPrefix.getOrElse(PluginDescriptor.getGoalPrefixFromArtifactId(artifactId))
-            it.name = pluginDescriptor.name.get()
-            it.description = pluginDescriptor.description.get()
+            it.goalPrefix = pluginDescriptor.goalPrefix ?: PluginDescriptor.getGoalPrefixFromArtifactId(artifactId)
+            it.name = pluginDescriptor.name
+            it.description = pluginDescriptor.description
             it.dependencies = getComponentDependencies()
         }
     }
@@ -152,3 +149,12 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
         }
     }
 }
+
+data class MavenPluginDescriptor(
+        @get:Input val groupId: String,
+        @get:Input val artifactId: String,
+        @get:Input val version: String,
+        @get:Input val name: String,
+        @get:Input val description: String,
+        @get:Input @get:Optional val goalPrefix: String?
+)

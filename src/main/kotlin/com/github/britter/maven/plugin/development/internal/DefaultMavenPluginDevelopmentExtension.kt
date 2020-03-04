@@ -16,12 +16,20 @@
 
 package com.github.britter.maven.plugin.development.internal
 
-import com.github.britter.maven.plugin.development.MavenPluginDescriptor
+import com.github.britter.maven.plugin.development.MavenPluginDevelopmentExtension
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
+import org.gradle.api.tasks.SourceSet
+import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.property
+import org.gradle.kotlin.dsl.the
+import javax.inject.Inject
 
-open class DefaultMavenPluginDescriptor(project: Project) : MavenPluginDescriptor {
+open class DefaultMavenPluginDevelopmentExtension @Inject constructor(project: Project) : MavenPluginDevelopmentExtension {
+
+    override val pluginSourceSet: Property<SourceSet> = project.objects.property<SourceSet>()
+            .convention(project.provider { project.the<SourceSetContainer>()["main"] })
 
     override val groupId: Property<String> = project.objects.property<String>()
             .convention(project.provider { project.group.toString() })
@@ -39,4 +47,6 @@ open class DefaultMavenPluginDescriptor(project: Project) : MavenPluginDescripto
             .convention(project.provider { project.description })
 
     override val goalPrefix: Property<String> = project.objects.property()
+
 }
+

@@ -83,15 +83,13 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
     def "adds customized metadata"() {
         given:
         buildFile << """
-            mavenPluginMetadata {
-                pluginDescriptor {
-                    name.set("custom-name")
-                    description.set("custom description")
-                    groupId.set("com.acme")
-                    artifactId.set("custom-artifact-id")
-                    version.set("2.0-custom")
-                    goalPrefix.set("custom-prefix")
-                }
+            mavenPlugin {
+                name.set("custom-name")
+                description.set("custom description")
+                groupId.set("com.acme")
+                artifactId.set("custom-artifact-id")
+                version.set("2.0-custom")
+                goalPrefix.set("custom-prefix")
             }
         """
         testProjectDir.javaMojo()
@@ -121,10 +119,8 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
     def "warns against invalid coordinates"() {
         given:
         buildFile << """
-            mavenPluginMetadata {
-                pluginDescriptor {
-                    artifactId.set("maven-touch-plugin")
-                }
+            mavenPlugin {
+                artifactId.set("maven-touch-plugin")
             }
         """
         testProjectDir.javaMojo()
@@ -168,8 +164,8 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
         given:
         buildFile << """
             def mojoSourceSet = sourceSets.create('mojo')
-            mavenPluginMetadata {
-                sourceSet = mojoSourceSet
+            mavenPlugin {
+                pluginSourceSet = mojoSourceSet
             }
             dependencies {
                 mojoImplementation 'org.apache.maven:maven-plugin-api:3.6.3'

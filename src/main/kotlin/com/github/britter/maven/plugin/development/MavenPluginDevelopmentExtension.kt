@@ -16,17 +16,27 @@
 
 package com.github.britter.maven.plugin.development
 
-import org.gradle.api.Action
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.SourceSet
 
-interface MavenPluginMetadataExtension {
+interface MavenPluginDevelopmentExtension {
 
     companion object {
-        const val NAME = "mavenPluginMetadata"
+        const val NAME = "mavenPlugin"
     }
 
-    fun pluginDescriptor(action: Action<in MavenPluginDescriptor>)
+    val pluginSourceSet: Property<SourceSet>
 
-    val sourceSet: Property<SourceSet>
+    val groupId: Property<String>
+
+    val artifactId: Property<String>
+
+    val version: Property<String>
+
+    val name: Property<String>
+
+    val description: Property<String>
+
+    val goalPrefix: Property<String>
+
 }
