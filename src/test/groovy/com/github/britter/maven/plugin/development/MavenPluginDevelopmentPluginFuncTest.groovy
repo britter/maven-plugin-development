@@ -18,8 +18,10 @@ package com.github.britter.maven.plugin.development
 
 import com.github.britter.maven.plugin.development.fixtures.Workspace
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Rule
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import java.lang.management.ManagementFactory
 
@@ -197,6 +199,21 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
 
         and:
         helpDescriptor.hasNoDependencies()
+    }
+
+    @Unroll
+    def "task is executed when #task lifecycle task is executed"() {
+        given:
+        javaMojo()
+
+        when:
+        def result = run(task)
+
+        then:
+        result.task(":generateMavenPluginDescriptor").outcome == TaskOutcome.SUCCESS
+
+        where:
+        task << ["jar", "build"]
     }
 
     def run(String... args) {
