@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.github.britter.mavenpluginmetadata.internal
+package com.github.britter.maven.plugin.development.internal
 
-import com.github.britter.mavenpluginmetadata.MavenPluginDescriptor
-import com.github.britter.mavenpluginmetadata.MavenPluginMetadataExtension
+import com.github.britter.maven.plugin.development.MavenPluginDescriptor
+import com.github.britter.maven.plugin.development.MavenPluginMetadataExtension
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.provider.Property

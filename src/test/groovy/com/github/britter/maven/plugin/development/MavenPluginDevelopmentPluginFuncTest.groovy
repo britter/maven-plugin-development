@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.britter.mavenpluginmetadata
+package com.github.britter.maven.plugin.development
 
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Rule
@@ -23,7 +23,7 @@ import spock.lang.Specification
 
 import java.lang.management.ManagementFactory
 
-class MavenPluginMetadataPluginFuncTest extends Specification {
+class MavenPluginDevelopmentPluginFuncTest extends Specification {
 
     @Rule
     TemporaryFolder testProjectDir
@@ -37,7 +37,7 @@ class MavenPluginMetadataPluginFuncTest extends Specification {
         buildFile = testProjectDir.newFile("build.gradle") << """
             plugins {
                 id 'java'
-                id 'com.github.britter.maven-plugin-metadata'
+                id 'com.github.britter.maven-plugin-development'
             }
 
             group "org.example"

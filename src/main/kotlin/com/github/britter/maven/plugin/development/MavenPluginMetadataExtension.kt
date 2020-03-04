@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.britter.mavenpluginmetadata
+package com.github.britter.maven.plugin.development
 
 import org.gradle.api.Action
 import org.gradle.api.provider.Property

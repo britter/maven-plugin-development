@@ -14,38 +14,29 @@
  * limitations under the License.
  */
 
-package com.github.britter.mavenpluginmetadata.internal
+package com.github.britter.maven.plugin.development.internal
 
-import com.github.britter.mavenpluginmetadata.MavenPluginDescriptor
+import com.github.britter.maven.plugin.development.MavenPluginDescriptor
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Optional
 import org.gradle.kotlin.dsl.property
 
 open class DefaultMavenPluginDescriptor(project: Project) : MavenPluginDescriptor {
 
-    @get:Input
     override val groupId: Property<String> = project.objects.property<String>()
             .convention(project.provider { project.group.toString() })
 
-    @get:Input
     override val artifactId: Property<String> = project.objects.property<String>()
             .convention(project.provider { project.name })
 
-    @get:Input
     override val version: Property<String> = project.objects.property<String>()
             .convention(project.provider { project.version.toString() })
 
-    @get:Input
     override val name: Property<String> = project.objects.property<String>()
             .convention(project.provider { project.name })
 
-    @get:Input
     override val description: Property<String> = project.objects.property<String>()
             .convention(project.provider { project.description })
 
-    @get:Input
-    @get:Optional
     override val goalPrefix: Property<String> = project.objects.property()
 }

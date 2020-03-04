@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.britter.mavenpluginmetadata
+package com.github.britter.maven.plugin.development
 
-import com.github.britter.mavenpluginmetadata.internal.DefaultMavenPluginMetadataExtension
+import com.github.britter.maven.plugin.development.internal.DefaultMavenPluginMetadataExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaBasePlugin
@@ -24,7 +24,7 @@ import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.register
 
-class MavenPluginMetadataPlugin : Plugin<Project> {
+class MavenPluginDevelopmentPlugin : Plugin<Project> {
 
     override fun apply(project: Project): Unit = project.run {
         pluginManager.apply(JavaBasePlugin::class)

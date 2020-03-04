@@ -24,7 +24,7 @@ plugins {
 }
 
 group = "com.github.britter"
-description = "Gradle plugin for build Maven plugins by generating the necessary metadata files"
+description = "Gradle plugin for developing Apache Maven plugins"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -53,10 +53,10 @@ dependencies {
 }
 
 gradlePlugin {
-    plugins.create("mavenPluginMetadata") {
-        id = "com.github.britter.maven-plugin-metadata"
-        displayName = "Maven plugin metadata plugin"
+    plugins.create("mavenPluginDevelopment") {
+        id = "com.github.britter.maven-plugin-development"
+        displayName = "Maven plugin development plugin"
         description = project.description
-        implementationClass = "com.github.britter.mavenpluginmetadata.MavenPluginMetadataPlugin"
+        implementationClass = "com.github.britter.maven.plugin.development.MavenPluginDevelopmentPlugin"
     }
 }

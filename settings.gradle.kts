@@ -15,4 +15,4 @@
  */
 
 
-rootProject.name = "maven-plugin-metadata"
+rootProject.name = "maven-plugin-development"

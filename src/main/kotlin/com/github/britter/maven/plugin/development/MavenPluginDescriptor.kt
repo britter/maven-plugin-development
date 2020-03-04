@@ -14,21 +14,30 @@
  * limitations under the License.
  */
 
-package com.github.britter.mavenpluginmetadata
+package com.github.britter.maven.plugin.development
 
 import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Optional
 
 interface MavenPluginDescriptor {
 
+    @get:Input
     val groupId: Property<String>
 
+    @get:Input
     val artifactId: Property<String>
 
+    @get:Input
     val version: Property<String>
 
+    @get:Input
     val name: Property<String>
 
+    @get:Input
     val description: Property<String>
 
+    @get:Input
+    @get:Optional
     val goalPrefix: Property<String>
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.britter.mavenpluginmetadata.fixtures
+package com.github.britter.maven.plugin.development.fixtures
 
 import org.junit.rules.TemporaryFolder
 

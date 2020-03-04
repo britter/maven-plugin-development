@@ -1,6 +1,6 @@
-# gradle-maven-plugin-metadata-plugin
+# Maven Plugin Development Gradle Plugin
 
-Welcome to gradle-maven-plugin-metadata-plugin!
+A Gradle plugin for developing Apache Maven plugins.
 
 ## Contribution policy
 
