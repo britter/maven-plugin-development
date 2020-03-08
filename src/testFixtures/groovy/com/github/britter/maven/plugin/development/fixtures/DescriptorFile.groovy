@@ -64,4 +64,8 @@ class DescriptorFile {
     boolean hasNoDependencies() {
         return !content.contains("<dependency>")
     }
+
+    String getText() {
+        content
+    }
 }
