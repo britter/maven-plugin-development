@@ -16,42 +16,10 @@
 
 package com.github.britter.maven.plugin.development
 
-import com.github.britter.maven.plugin.development.fixtures.Workspace
-import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.Rule
-import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.lang.management.ManagementFactory
-
-class MavenPluginDevelopmentPluginFuncTest extends Specification {
-
-    @Rule
-    @Delegate
-    Workspace workspace
-
-    void setup() {
-        settingsFile << "rootProject.name=\"touch-maven-plugin\""
-        buildFile << """
-            plugins {
-                id 'java'
-                id 'com.github.britter.maven-plugin-development'
-            }
-
-            group "org.example"
-            description "A maven plugin with a mojo that can touch it!"
-            version "1.0.0"
-
-            repositories {
-                mavenCentral()
-            }
-            dependencies {
-                implementation 'org.apache.maven:maven-plugin-api:3.6.3'
-                implementation 'org.apache.maven.plugin-tools:maven-plugin-annotations:3.6.0'
-            }
-        """
-    }
+class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
 
     def "adds project metadata"() {
         given:
@@ -216,14 +184,4 @@ class MavenPluginDevelopmentPluginFuncTest extends Specification {
         task << ["jar", "build"]
     }
 
-    def run(String... args) {
-        def runner = GradleRunner.create()
-                .forwardOutput()
-                .withDebug(ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0)
-                .withPluginClasspath()
-                .withArguments([*args, "-s"])
-                .withProjectDir(workspace.root)
-
-        runner.build()
-    }
 }

@@ -39,7 +39,12 @@ class Workspace extends ExternalResource {
     }
 
     File dir(String path) {
-        def dir = new File(root, path)
+        def dir
+        if (path.startsWith("/")) {
+            dir = new File(path)
+        } else {
+            dir = new File(root, path)
+        }
         dir.mkdirs()
         dir
     }
