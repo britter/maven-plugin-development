@@ -18,54 +18,60 @@ package com.github.britter.maven.plugin.development.fixtures
 
 class DescriptorFile {
 
-    private final String content
+    private final def xml
+    private final String rawContent
 
     DescriptorFile(File file) {
         assert file.exists(): "Descriptor $file does not exist"
-        this.content = file.text
+        this.rawContent = file.text
+        this.xml = new XmlSlurper().parse(file)
     }
 
     boolean hasName(String expectedName) {
-        content.contains("<name>$expectedName</name>")
+        xml.name == expectedName
     }
 
     boolean hasDescription(String expectedDescription) {
-        content.contains("<description>$expectedDescription</description>")
+        xml.description == expectedDescription
     }
 
     boolean hasGroupId(String expectedGroupId) {
-        content.contains("<groupId>$expectedGroupId</groupId>")
+        xml.groupId == expectedGroupId
     }
 
     boolean hasArtifactId(String expectedArtifactId) {
-        content.contains("<artifactId>$expectedArtifactId</artifactId>")
+        xml.artifactId == expectedArtifactId
     }
 
     boolean hasVersion(String expectedVersion) {
-        content.contains("<version>$expectedVersion</version>")
+        xml.version == expectedVersion
     }
 
     boolean hasGoalPrefix(String expectedGoalPrefix) {
-        content.contains("<goalPrefix>$expectedGoalPrefix</goalPrefix>")
+        xml.goalPrefix == expectedGoalPrefix
     }
 
     boolean hasGoal(String expectedGoal) {
-        content.contains("<goal>$expectedGoal</goal>")
+        xml.mojos.mojo.find { mojo ->
+            mojo.goal == expectedGoal
+        }.size() == 1
     }
 
     boolean hasDependency(String dependencyNotation) {
         def coords = dependencyNotation.split(":")
-        return (content.contains("<groupId>${coords[0]}</groupId>")
-                && content.contains("<artifactId>${coords[1]}</artifactId>")
-                && content.contains("<version>${coords[2]}</version>")
-                && content.contains("<type>jar</type>"))
+        xml.dependencies.dependency.find { dependency ->
+            dependency.groupId == coords[0] &&
+            dependency.artifactId == coords[1] &&
+            dependency.version == coords[2] &&
+            dependency.type == "jar"
+        }.size() == 1
     }
 
     boolean hasNoDependencies() {
-        return !content.contains("<dependency>")
+        return xml.dependencies.isEmpty
     }
 
     String getText() {
-        content
+        xml
     }
 }
