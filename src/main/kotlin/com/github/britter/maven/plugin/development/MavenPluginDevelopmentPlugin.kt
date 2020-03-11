@@ -22,6 +22,7 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.register
 
 class MavenPluginDevelopmentPlugin : Plugin<Project> {
@@ -42,6 +43,17 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
                     extension.description.get(),
                     extension.goalPrefix.orNull
             ))
+            runtimeDependencies.set(
+                    project.provider {
+                        project.configurations["runtimeClasspath"].resolvedConfiguration.resolvedArtifacts.map {
+                            RuntimeDepenencyDescriptor(
+                                    it.moduleVersion.id.group,
+                                    it.moduleVersion.id.name,
+                                    it.moduleVersion.id.version,
+                                    it.extension
+                            )
+                        }
+                    })
 
             dependsOn(extension.pluginSourceSet.map { it.output })
         }

@@ -34,9 +34,13 @@ import org.codehaus.plexus.component.repository.ComponentDependency
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
+import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.*
-import org.gradle.kotlin.dsl.get
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Nested
+import org.gradle.api.tasks.Optional
+import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
@@ -49,6 +53,9 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
 
     @get:Nested
     abstract val pluginDescriptor: Property<MavenPluginDescriptor>
+
+    @get:Nested
+    abstract val runtimeDependencies: ListProperty<RuntimeDepenencyDescriptor>
 
     private val loggerAdapter = MavenLoggerAdapter(logger)
 
@@ -139,12 +146,12 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
     }
 
     private fun getComponentDependencies(): List<ComponentDependency> {
-        return project.configurations["runtimeClasspath"].resolvedConfiguration.resolvedArtifacts.map { resolved ->
+        return runtimeDependencies.get().map { dependency ->
             ComponentDependency().also {
-                it.groupId = resolved.moduleVersion.id.group
-                it.artifactId = resolved.moduleVersion.id.name
-                it.version = resolved.moduleVersion.id.version
-                it.type = resolved.extension
+                it.groupId = dependency.groupId
+                it.artifactId = dependency.artifactId
+                it.version = dependency.version
+                it.type = dependency.type
             }
         }
     }
@@ -157,4 +164,11 @@ data class MavenPluginDescriptor(
         @get:Input val name: String,
         @get:Input val description: String,
         @get:Input @get:Optional val goalPrefix: String?
+)
+
+data class RuntimeDepenencyDescriptor(
+        @get:Input val groupId: String,
+        @get:Input val artifactId: String,
+        @get:Input val version: String,
+        @get:Input val type: String
 )
