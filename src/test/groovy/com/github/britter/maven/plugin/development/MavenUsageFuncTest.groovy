@@ -16,7 +16,7 @@
 
 package com.github.britter.maven.plugin.development
 
-import spock.lang.Ignore
+import com.github.britter.maven.plugin.development.fixtures.DescriptorFile
 
 class MavenUsageFuncTest extends AbstractPluginFuncTest {
 
@@ -68,7 +68,6 @@ class MavenUsageFuncTest extends AbstractPluginFuncTest {
         file("$mavenBuild/target/classes/touch.txt").exists()
     }
 
-    @Ignore("Ordering of dependencies is different so a string based comparison does not work")
     def "plugin descriptor build by Gradle equals plugin descriptor build by Maven"() {
         given:
         javaMojo()
@@ -88,12 +87,10 @@ class MavenUsageFuncTest extends AbstractPluginFuncTest {
         mavenBuildResult.contains("BUILD SUCCESS")
 
         and:
-        def mavenPluginDescriptor = file("$mavenBuild/target/classes/META-INF/maven/plugin.xml")
-        def mavenHelpDescriptor = file("$mavenBuild/target/classes/META-INF/maven/org.example/touch-maven-plugin/plugin-help.xml")
-        mavenPluginDescriptor.exists()
-        mavenHelpDescriptor.exists()
-        mavenPluginDescriptor.text == pluginDescriptor.text
-        mavenHelpDescriptor.text == helpDescriptor.text
+        def mavenPluginDescriptor = DescriptorFile.parse(file("$mavenBuild/target/classes/META-INF/maven/plugin.xml"))
+        def mavenHelpDescriptor = DescriptorFile.parse(file("$mavenBuild/target/classes/META-INF/maven/org.example/touch-maven-plugin/plugin-help.xml"))
+        mavenPluginDescriptor == pluginDescriptor
+        mavenHelpDescriptor == helpDescriptor
     }
 
     File mavenBuildUsingPlugin() {
@@ -139,7 +136,8 @@ class MavenUsageFuncTest extends AbstractPluginFuncTest {
   <groupId>org.example</groupId>
   <artifactId>touch-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
+  <description>A maven plugin with a mojo that can touch it!</description>
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>

@@ -16,62 +16,101 @@
 
 package com.github.britter.maven.plugin.development.fixtures
 
+import groovy.transform.Immutable
+
+@Immutable
 class DescriptorFile {
 
-    private final def xml
-    private final String rawContent
+    String name
+    String description
+    String groupId
+    String artifactId
+    String version
+    String goalPrefix
+    Set<MojoDeclaration> mojos
+    Set<DependencyDeclaration> dependencies
 
-    DescriptorFile(File file) {
+    static DescriptorFile parse(File file) {
         assert file.exists(): "Descriptor $file does not exist"
-        this.rawContent = file.text
-        this.xml = new XmlSlurper().parse(file)
-    }
-
-    boolean hasName(String expectedName) {
-        xml.name == expectedName
-    }
-
-    boolean hasDescription(String expectedDescription) {
-        xml.description == expectedDescription
-    }
-
-    boolean hasGroupId(String expectedGroupId) {
-        xml.groupId == expectedGroupId
-    }
-
-    boolean hasArtifactId(String expectedArtifactId) {
-        xml.artifactId == expectedArtifactId
-    }
-
-    boolean hasVersion(String expectedVersion) {
-        xml.version == expectedVersion
-    }
-
-    boolean hasGoalPrefix(String expectedGoalPrefix) {
-        xml.goalPrefix == expectedGoalPrefix
+        def xml = new XmlSlurper().parse(file)
+        def mojos = [] as Set
+        xml.mojos.mojo.each {
+            def mojo = new MojoDeclaration(
+                    it.goal.text(),
+                    it.description.text(),
+                    it.requiresDirectInvocation.text().toBoolean(),
+                    it.requiresProject.text().toBoolean(),
+                    it.requiresReports.text().toBoolean(),
+                    it.aggregator.text().toBoolean(),
+                    it.requiresOnline.text().toBoolean(),
+                    it.inheritedByDefault.text().toBoolean(),
+                    it.phase.text(),
+                    it.implementation.text(),
+                    it.language.text(),
+                    it.instantiationStrategy.text(),
+                    it.executionStrategy.text(),
+                    it.threadSafe.text().toBoolean()
+            )
+            assert mojos << mojo: "Duplicate mojo declaration $mojo"
+        }
+        def dependencies = [] as Set
+        xml.dependencies.dependency.each {
+            def dependency = new DependencyDeclaration(it.groupId.text(), it.artifactId.text(), it.version.text(), it.type.text())
+            assert dependencies << dependency: "Duplicate dependency declaration $dependency"
+        }
+        return new DescriptorFile(
+                xml.name.text(),
+                xml.description.text(),
+                xml.groupId.text(),
+                xml.artifactId.text(),
+                xml.version.text(),
+                xml.goalPrefix.text(),
+                mojos,
+                dependencies
+        )
     }
 
     boolean hasGoal(String expectedGoal) {
-        xml.mojos.mojo.find { mojo ->
-            mojo.goal == expectedGoal
-        }.size() == 1
+        mojos.any { it.goal == expectedGoal }
     }
 
     boolean hasDependency(String dependencyNotation) {
         def coords = dependencyNotation.split(":")
-        xml.dependencies.dependency.find { dependency ->
-            dependency.groupId == coords[0] &&
-            dependency.artifactId == coords[1] &&
-            dependency.version == coords[2] &&
-            dependency.type == "jar"
-        }.size() == 1
+        dependencies.any {
+            it.groupId == coords[0] &&
+            it.artifactId == coords[1] &&
+            it.version == coords[2] &&
+            it.type == "jar"
+        }
     }
 
     boolean hasNoDependencies() {
-        return xml.dependencies.isEmpty
+        return dependencies.isEmpty()
     }
 
-    String getText() {
-        xml
+    @Immutable
+    static class DependencyDeclaration {
+        String groupId
+        String artifactId
+        String version
+        String type
+    }
+
+    @Immutable
+    static class MojoDeclaration {
+        String goal
+        String description
+        boolean requiresDirectInvocation
+        boolean requiresProject
+        boolean requiresReports
+        boolean aggregator
+        boolean requiresOnline
+        boolean inheritedByDefault
+        String phase
+        String implementation
+        String language
+        String instantiationStrategy
+        String executionStrategy
+        boolean threadSafe
     }
 }

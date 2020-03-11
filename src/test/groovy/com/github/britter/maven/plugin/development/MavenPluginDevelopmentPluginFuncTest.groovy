@@ -29,20 +29,20 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
         run("generateMavenPluginDescriptor")
 
         then:
-        pluginDescriptor.hasName("touch-maven-plugin")
-        pluginDescriptor.hasDescription("A maven plugin with a mojo that can touch it!")
-        pluginDescriptor.hasGroupId("org.example")
-        pluginDescriptor.hasArtifactId("touch-maven-plugin")
-        pluginDescriptor.hasVersion("1.0.0")
-        pluginDescriptor.hasGoalPrefix("touch")
+        pluginDescriptor.name == "touch-maven-plugin"
+        pluginDescriptor.description == "A maven plugin with a mojo that can touch it!"
+        pluginDescriptor.groupId == "org.example"
+        pluginDescriptor.artifactId == "touch-maven-plugin"
+        pluginDescriptor.version == "1.0.0"
+        pluginDescriptor.goalPrefix == "touch"
 
         and:
-        helpDescriptor.hasName("touch-maven-plugin")
-        helpDescriptor.hasDescription("A maven plugin with a mojo that can touch it!")
-        helpDescriptor.hasGroupId("org.example")
-        helpDescriptor.hasArtifactId("touch-maven-plugin")
-        helpDescriptor.hasVersion("1.0.0")
-        helpDescriptor.hasGoalPrefix("touch")
+        helpDescriptor.name == "touch-maven-plugin"
+        helpDescriptor.description == "A maven plugin with a mojo that can touch it!"
+        helpDescriptor.groupId == "org.example"
+        helpDescriptor.artifactId == "touch-maven-plugin"
+        helpDescriptor.version == "1.0.0"
+        helpDescriptor.goalPrefix == "touch"
     }
 
     def "adds customized metadata"() {
@@ -63,20 +63,20 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
         run("generateMavenPluginDescriptor")
 
         then:
-        pluginDescriptor.hasName("custom-name")
-        pluginDescriptor.hasDescription("custom description")
-        pluginDescriptor.hasGroupId("com.acme")
-        pluginDescriptor.hasArtifactId("custom-artifact-id")
-        pluginDescriptor.hasVersion("2.0-custom")
-        pluginDescriptor.hasGoalPrefix("custom-prefix")
+        pluginDescriptor.name == "custom-name"
+        pluginDescriptor.description == "custom description"
+        pluginDescriptor.groupId == "com.acme"
+        pluginDescriptor.artifactId == "custom-artifact-id"
+        pluginDescriptor.version == "2.0-custom"
+        pluginDescriptor.goalPrefix == "custom-prefix"
 
         and:
-        helpDescriptor.hasName("custom-name")
-        helpDescriptor.hasDescription("custom description")
-        helpDescriptor.hasGroupId("com.acme")
-        helpDescriptor.hasArtifactId("custom-artifact-id")
-        helpDescriptor.hasVersion("2.0-custom")
-        helpDescriptor.hasGoalPrefix("custom-prefix")
+        helpDescriptor.name == "custom-name"
+        helpDescriptor.description == "custom description"
+        helpDescriptor.groupId == "com.acme"
+        helpDescriptor.artifactId == "custom-artifact-id"
+        helpDescriptor.version == "2.0-custom"
+        helpDescriptor.goalPrefix == "custom-prefix"
     }
 
     def "warns against invalid coordinates"() {
@@ -136,8 +136,8 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
         run("generateMavenPluginDescriptor")
 
         then:
-        getPluginDescriptor("mojo")
-        getHelpDescriptor("mojo")
+        pluginDescriptor("mojo")
+        helpDescriptor("mojo")
     }
 
     def "adds direct and transitive runtime dependencies to plugin descriptor"() {
