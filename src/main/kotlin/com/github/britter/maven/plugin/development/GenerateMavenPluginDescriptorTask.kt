@@ -48,6 +48,9 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
     @get:Input
     abstract val classesDirs: Property<FileCollection>
 
+    @get:Input
+    abstract val sourcesDirs: Property<FileCollection>
+
     @get:OutputDirectory
     abstract val outputDirectory: DirectoryProperty
 
@@ -142,6 +145,8 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
             it.version = project.version.toString()
             it.artifact = ProjectArtifact(it)
             it.build = Build().also { b -> b.outputDirectory = outputDirectory.absolutePath }
+            // populate compileSourceRoots in order to extract meta data from JavaDoc
+            sourcesDirs.get().forEach { dir -> it.addCompileSourceRoot(dir.absolutePath) }
         }
     }
 

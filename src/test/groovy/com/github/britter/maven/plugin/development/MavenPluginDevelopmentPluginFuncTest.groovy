@@ -16,6 +16,7 @@
 
 package com.github.britter.maven.plugin.development
 
+import com.github.britter.maven.plugin.development.fixtures.DescriptorFile
 import org.gradle.testkit.runner.TaskOutcome
 import spock.lang.Unroll
 
@@ -77,6 +78,21 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
         helpDescriptor.artifactId == "custom-artifact-id"
         helpDescriptor.version == "2.0-custom"
         helpDescriptor.goalPrefix == "custom-prefix"
+    }
+
+    def "extracts metadata from JavaDoc"() {
+        given:
+        javaMojo()
+
+        when:
+        run("generateMavenPluginDescriptor")
+
+        then:
+        def mojo = pluginDescriptor.getMojo("touch")
+        mojo.description == "A mojo written in Java that touches a file."
+        mojo.parameters.size() == 2
+        mojo.parameters.contains(new DescriptorFile.ParameterDeclaration("fileName", File, false, true, "The name of the file to put into the output directory."))
+        mojo.parameters.contains(new DescriptorFile.ParameterDeclaration("outputDirectory", File, false, true, "The output directory to put the file into."))
     }
 
     def "warns against invalid coordinates"() {

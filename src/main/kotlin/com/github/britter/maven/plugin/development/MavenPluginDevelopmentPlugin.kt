@@ -34,6 +34,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
 
         val generateTask = tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
             classesDirs.set(extension.pluginSourceSet.map { it.output.classesDirs })
+            sourcesDirs.set(extension.pluginSourceSet.map { it.allSource.sourceDirectories } )
             outputDirectory.fileProvider(extension.pluginSourceSet.map { it.output.resourcesDir!! })
             pluginDescriptor.set(MavenPluginDescriptor(
                     extension.groupId.get(),

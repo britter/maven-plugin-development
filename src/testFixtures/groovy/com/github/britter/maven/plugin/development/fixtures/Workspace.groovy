@@ -78,6 +78,9 @@ class Workspace extends ExternalResource {
             import org.apache.maven.plugin.AbstractMojo;
             import org.apache.maven.plugin.MojoExecutionException;
             import org.apache.maven.plugins.annotations.*;
+            /**
+             * A mojo written in Java that touches a file.
+             */
             @Mojo(
                 name = "$mojoName",
                 defaultPhase = LifecyclePhase.PROCESS_SOURCES
@@ -117,6 +120,9 @@ class Workspace extends ExternalResource {
             import org.apache.maven.plugin.AbstractMojo;
             import org.apache.maven.plugin.MojoExecutionException;
             import org.apache.maven.plugins.annotations.*;
+            /**
+             * A mojo written in Groovy that touches a file.
+             */
             @Mojo(
                 name = "touch",
                 defaultPhase = LifecyclePhase.PROCESS_SOURCES

@@ -35,6 +35,17 @@ class DescriptorFile {
         def xml = new XmlSlurper().parse(file)
         def mojos = [] as Set
         xml.mojos.mojo.each {
+            def params = [] as Set
+            it.parameters.parameter.each {
+                def param = new ParameterDeclaration(
+                        it.name.text(),
+                        Class.forName(it.type.text()),
+                        it.required.text().toBoolean(),
+                        it.editable.text().toBoolean(),
+                        it.description.text()
+                )
+                assert params << param: "Duplicate parameter declaration $param for mojo $mojo"
+            }
             def mojo = new MojoDeclaration(
                     it.goal.text(),
                     it.description.text(),
@@ -49,7 +60,8 @@ class DescriptorFile {
                     it.language.text(),
                     it.instantiationStrategy.text(),
                     it.executionStrategy.text(),
-                    it.threadSafe.text().toBoolean()
+                    it.threadSafe.text().toBoolean(),
+                    params
             )
             assert mojos << mojo: "Duplicate mojo declaration $mojo"
         }
@@ -72,6 +84,10 @@ class DescriptorFile {
 
     boolean hasGoal(String expectedGoal) {
         mojos.any { it.goal == expectedGoal }
+    }
+
+    MojoDeclaration getMojo(String goalName) {
+        mojos.find { it.goal == goalName }
     }
 
     boolean hasDependency(String dependencyNotation) {
@@ -112,5 +128,15 @@ class DescriptorFile {
         String instantiationStrategy
         String executionStrategy
         boolean threadSafe
+        Set<ParameterDeclaration> parameters
+    }
+
+    @Immutable
+    static class ParameterDeclaration {
+        String name
+        Class type
+        boolean required
+        boolean editable
+        String description
     }
 }
