@@ -30,7 +30,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = project.run {
         pluginManager.apply(JavaBasePlugin::class)
 
-        val extension = createExtension(project) as DefaultMavenPluginDevelopmentExtension
+        val extension = createExtension() as DefaultMavenPluginDevelopmentExtension
 
         val generateTask = tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
             classesDirs.set(extension.pluginSourceSet.map { it.output.classesDirs })
@@ -64,10 +64,10 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
         }
     }
 
-    private fun Project.createExtension(project: Project) =
+    private fun Project.createExtension() =
             extensions.create(
                     MavenPluginDevelopmentExtension::class,
                     MavenPluginDevelopmentExtension.NAME,
                     DefaultMavenPluginDevelopmentExtension::class,
-                    project)
+                    this)
 }
