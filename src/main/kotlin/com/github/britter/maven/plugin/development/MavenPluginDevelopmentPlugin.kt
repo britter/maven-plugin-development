@@ -41,7 +41,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
                     extension.artifactId.get(),
                     extension.version.get(),
                     extension.name.get(),
-                    extension.description.get(),
+                    extension.description.getOrElse(""),
                     extension.goalPrefix.orNull
             ))
             runtimeDependencies.set(

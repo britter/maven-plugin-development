@@ -80,6 +80,18 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
         helpDescriptor.goalPrefix == "custom-prefix"
     }
 
+    def "description is optional"() {
+        given:
+        javaMojo()
+        buildFile << "description = null"
+
+        when:
+        run("generateMavenPluginDescriptor")
+
+        then:
+        pluginDescriptor.description == ""
+    }
+
     def "extracts metadata from JavaDoc"() {
         given:
         javaMojo()
