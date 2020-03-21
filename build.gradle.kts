@@ -25,6 +25,7 @@ plugins {
 
 group = "com.github.britter"
 description = "Gradle plugin for developing Apache Maven plugins"
+version = "1.0.0-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
