@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.britter.maven.plugin.development
+package de.benediktritter.maven.plugin.development
 
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.SourceSet

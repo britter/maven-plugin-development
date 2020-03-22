@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.britter.maven.plugin.development
+package de.benediktritter.maven.plugin.development
 
-import com.github.britter.maven.plugin.development.fixtures.Workspace
+import de.benediktritter.maven.plugin.development.fixtures.Workspace
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Rule
 import spock.lang.Specification
@@ -34,7 +34,7 @@ abstract class AbstractPluginFuncTest extends Specification {
         buildFile << """
             plugins {
                 id 'java'
-                id 'com.github.britter.maven-plugin-development'
+                id 'de.benediktritter.maven-plugin-development'
             }
 
             group "org.example"

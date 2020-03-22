@@ -23,9 +23,9 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.3.61"
 }
 
-group = "com.github.britter"
+group = "de.benediktritter"
 description = "Gradle plugin for developing Apache Maven plugins"
-version = "1.0.0-SNAPSHOT"
+version = "0.1.0-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -56,9 +56,9 @@ dependencies {
 
 gradlePlugin {
     plugins.create("mavenPluginDevelopment") {
-        id = "com.github.britter.maven-plugin-development"
+        id = "de.benediktritter.maven-plugin-development"
         displayName = "Maven plugin development plugin"
         description = project.description
-        implementationClass = "com.github.britter.maven.plugin.development.MavenPluginDevelopmentPlugin"
+        implementationClass = "de.benediktritter.maven.plugin.development.MavenPluginDevelopmentPlugin"
     }
 }

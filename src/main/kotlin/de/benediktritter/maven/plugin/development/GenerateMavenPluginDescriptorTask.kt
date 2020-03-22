@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.britter.maven.plugin.development
+package de.benediktritter.maven.plugin.development
 
-import com.github.britter.maven.plugin.development.internal.MavenLoggerAdapter
+import de.benediktritter.maven.plugin.development.internal.MavenLoggerAdapter
 import org.apache.maven.model.Build
 import org.apache.maven.plugin.descriptor.PluginDescriptor
 import org.apache.maven.project.MavenProject

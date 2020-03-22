@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.britter.maven.plugin.development.fixtures
+package de.benediktritter.maven.plugin.development.fixtures
 
 import org.apache.commons.lang3.StringUtils
 import org.junit.rules.ExternalResource

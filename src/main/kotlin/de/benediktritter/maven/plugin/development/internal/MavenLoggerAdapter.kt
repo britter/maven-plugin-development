@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.britter.maven.plugin.development.internal
+package de.benediktritter.maven.plugin.development.internal
 
 import org.gradle.api.logging.Logger
 

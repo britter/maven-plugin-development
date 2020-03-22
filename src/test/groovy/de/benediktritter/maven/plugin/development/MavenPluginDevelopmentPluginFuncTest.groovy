@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.britter.maven.plugin.development
+package de.benediktritter.maven.plugin.development
 
-import com.github.britter.maven.plugin.development.fixtures.DescriptorFile
+import de.benediktritter.maven.plugin.development.fixtures.DescriptorFile
 import org.gradle.testkit.runner.TaskOutcome
 import spock.lang.Unroll
 

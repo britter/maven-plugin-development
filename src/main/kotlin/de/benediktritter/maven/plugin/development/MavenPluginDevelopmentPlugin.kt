@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.britter.maven.plugin.development
+package de.benediktritter.maven.plugin.development
 
-import com.github.britter.maven.plugin.development.internal.DefaultMavenPluginDevelopmentExtension
+import de.benediktritter.maven.plugin.development.internal.DefaultMavenPluginDevelopmentExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaBasePlugin
