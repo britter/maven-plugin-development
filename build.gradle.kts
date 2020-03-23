@@ -49,6 +49,9 @@ dependencies {
     implementation("org.sonatype.sisu:sisu-inject-plexus:1.4.2") {
         because("it is needed to implement the plexus logging adapter")
     }
+    implementation("org.codehaus.plexus:plexus-velocity:1.1.8") {
+        because("it is needed to generate the help mojo")
+    }
 
     testImplementation("org.spockframework:spock-core:1.3-groovy-2.5")
     testFixturesImplementation("junit:junit:4.12")

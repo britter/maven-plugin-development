@@ -48,5 +48,7 @@ open class DefaultMavenPluginDevelopmentExtension @Inject constructor(project: P
 
     override val goalPrefix: Property<String> = project.objects.property()
 
+    override val generateHelpMojo: Property<Boolean> = project.objects.property<Boolean>()
+            .convention(false)
 }
 

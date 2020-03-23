@@ -16,28 +16,11 @@
 
 package de.benediktritter.maven.plugin.development
 
-import org.gradle.api.provider.Property
-import org.gradle.api.tasks.SourceSet
+import org.gradle.api.tasks.Input
 
-interface MavenPluginDevelopmentExtension {
-
-    companion object {
-        const val NAME = "mavenPlugin"
-    }
-
-    val pluginSourceSet: Property<SourceSet>
-
-    val groupId: Property<String>
-
-    val artifactId: Property<String>
-
-    val version: Property<String>
-
-    val name: Property<String>
-
-    val description: Property<String>
-
-    val goalPrefix: Property<String>
-
-    val generateHelpMojo: Property<Boolean>
-}
+data class RuntimeDependencyDescriptor(
+        @get:Input val groupId: String,
+        @get:Input val artifactId: String,
+        @get:Input val version: String,
+        @get:Input val type: String
+)

@@ -230,4 +230,29 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
         task << ["jar", "build"]
     }
 
+    def "generates HelpMojo"() {
+        given:
+        javaMojo()
+        buildFile << "mavenPlugin.generateHelpMojo.set(true)"
+
+        when:
+        def result = run("generateMavenPluginDescriptor")
+
+        then:
+        result.task(":generateHelpMojoSources").outcome == TaskOutcome.SUCCESS
+
+        and:
+        pluginDescriptor.getMojo("help").implementation == "org.example.HelpMojo"
+    }
+
+    def "skips HelpMojo is not configured"() {
+        given:
+        javaMojo()
+
+        when:
+        def result = run("build")
+
+        then:
+        result.task(":generateHelpMojo").outcome == TaskOutcome.SKIPPED
+    }
 }

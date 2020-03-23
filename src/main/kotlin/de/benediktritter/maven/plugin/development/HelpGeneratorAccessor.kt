@@ -16,28 +16,20 @@
 
 package de.benediktritter.maven.plugin.development
 
-import org.gradle.api.provider.Property
-import org.gradle.api.tasks.SourceSet
+import org.apache.maven.plugin.logging.Log
+import org.apache.maven.tools.plugin.PluginToolsRequest
+import org.apache.maven.tools.plugin.generator.PluginHelpGenerator
+import kotlin.reflect.full.functions
+import kotlin.reflect.jvm.isAccessible
 
-interface MavenPluginDevelopmentExtension {
+/**
+ * Provides access to the package private PluginHelpGenerator#rewriteHelpMojo method
+ */
+object HelpGeneratorAccessor {
 
-    companion object {
-        const val NAME = "mavenPlugin"
+    fun rewriteHelpMojo(request: PluginToolsRequest, log: Log) {
+        val rewriteFunction = PluginHelpGenerator::class.functions.find { it.name == "rewriteHelpMojo" }!!
+        rewriteFunction.isAccessible = true
+        rewriteFunction.call(request, log)
     }
-
-    val pluginSourceSet: Property<SourceSet>
-
-    val groupId: Property<String>
-
-    val artifactId: Property<String>
-
-    val version: Property<String>
-
-    val name: Property<String>
-
-    val description: Property<String>
-
-    val goalPrefix: Property<String>
-
-    val generateHelpMojo: Property<Boolean>
 }

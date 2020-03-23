@@ -22,38 +22,29 @@ import org.apache.maven.model.Build
 import org.apache.maven.plugin.descriptor.PluginDescriptor
 import org.apache.maven.project.MavenProject
 import org.apache.maven.project.artifact.ProjectArtifact
-import org.apache.maven.tools.plugin.DefaultPluginToolsRequest
-import org.apache.maven.tools.plugin.PluginToolsRequest
 import org.apache.maven.tools.plugin.generator.PluginDescriptorGenerator
-import org.codehaus.plexus.component.repository.ComponentDependency
-import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
-import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Nested
-import org.gradle.api.tasks.Optional
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
-abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
+abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmentTask() {
 
     @get:Input
     abstract val classesDirs: Property<FileCollection>
+
+    @get:Internal
+    abstract val javaClassesDir: DirectoryProperty
 
     @get:Input
     abstract val sourcesDirs: Property<FileCollection>
 
     @get:OutputDirectory
     abstract val outputDirectory: DirectoryProperty
-
-    @get:Nested
-    abstract val pluginDescriptor: Property<MavenPluginDescriptor>
-
-    @get:Nested
-    abstract val runtimeDependencies: ListProperty<RuntimeDepenencyDescriptor>
 
     private val loggerAdapter = MavenLoggerAdapter(logger)
 
@@ -66,7 +57,7 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
         checkArtifactId()
 
         val pluginDescriptor = extractPluginDescriptor()
-
+        rewriteHelpMojo(pluginDescriptor)
         writeDescriptor(pluginDescriptor)
     }
 
@@ -82,6 +73,11 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
         generator.execute(outputDirectory.dir("META-INF/maven").get().asFile, createPluginToolsRequest(mavenProject, pluginDescriptor))
     }
 
+    private fun rewriteHelpMojo(pluginDescriptor: PluginDescriptor) {
+        val mavenProject = mavenProject(javaClassesDir.get().asFile)
+        HelpGeneratorAccessor.rewriteHelpMojo(createPluginToolsRequest(mavenProject, pluginDescriptor), loggerAdapter)
+    }
+
     private fun extractPluginDescriptor(): PluginDescriptor {
         return createPluginDescriptor().also { pluginDescriptor ->
             classesDirs.get().forEach {
@@ -92,62 +88,19 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
         }
     }
 
-    private fun createPluginToolsRequest(mavenProject: MavenProject, pluginDescriptor: PluginDescriptor): PluginToolsRequest {
-        return DefaultPluginToolsRequest(mavenProject, pluginDescriptor).also {
-            it.isSkipErrorNoDescriptorsFound = true
-        }
-    }
-
-    private fun createPluginDescriptor(): PluginDescriptor {
-        val pluginDescriptor = pluginDescriptor.get()
-        return PluginDescriptor().also {
-            it.groupId = pluginDescriptor.groupId
-            it.version = pluginDescriptor.version
-            val artifactId = pluginDescriptor.artifactId
-            it.artifactId = artifactId
-            it.goalPrefix = pluginDescriptor.goalPrefix ?: PluginDescriptor.getGoalPrefixFromArtifactId(artifactId)
-            it.name = pluginDescriptor.name
-            it.description = pluginDescriptor.description
-            it.dependencies = getComponentDependencies()
-        }
-    }
-
     private fun mavenProject(outputDirectory: File): MavenProject {
         return MavenProject().also {
             it.groupId = project.group.toString()
             it.artifactId = project.name
             it.version = project.version.toString()
             it.artifact = ProjectArtifact(it)
-            it.build = Build().also { b -> b.outputDirectory = outputDirectory.absolutePath }
+            it.build = Build().also { b ->
+                b.outputDirectory = outputDirectory.absolutePath
+                b.directory = this@GenerateMavenPluginDescriptorTask.outputDirectory.get().asFile.parent
+            }
             // populate compileSourceRoots in order to extract meta data from JavaDoc
             sourcesDirs.get().forEach { dir -> it.addCompileSourceRoot(dir.absolutePath) }
         }
     }
-
-    private fun getComponentDependencies(): List<ComponentDependency> {
-        return runtimeDependencies.get().map { dependency ->
-            ComponentDependency().also {
-                it.groupId = dependency.groupId
-                it.artifactId = dependency.artifactId
-                it.version = dependency.version
-                it.type = dependency.type
-            }
-        }
-    }
 }
 
-data class MavenPluginDescriptor(
-        @get:Input val groupId: String,
-        @get:Input val artifactId: String,
-        @get:Input val version: String,
-        @get:Input val name: String,
-        @get:Input val description: String,
-        @get:Input @get:Optional val goalPrefix: String?
-)
-
-data class RuntimeDepenencyDescriptor(
-        @get:Input val groupId: String,
-        @get:Input val artifactId: String,
-        @get:Input val version: String,
-        @get:Input val type: String
-)

@@ -17,6 +17,7 @@
 package de.benediktritter.maven.plugin.development.fixtures
 
 import groovy.transform.Immutable
+import org.apache.commons.lang3.ClassUtils
 import org.apache.commons.lang3.StringUtils
 
 @Immutable
@@ -41,7 +42,7 @@ class DescriptorFile {
             it.parameters.parameter.each {
                 def param = new ParameterDeclaration(
                         it.name.text(),
-                        Class.forName(it.type.text()),
+                        ClassUtils.getClass(it.type.text()),
                         it.required.text().toBoolean(),
                         it.editable.text().toBoolean(),
                         it.description.text()
