@@ -24,9 +24,9 @@ class Workspace extends ExternalResource {
 
     private TemporaryFolder workspaceFolder = new TemporaryFolder()
 
-    @Lazy DescriptorFile pluginDescriptor = pluginDescriptor("main")
+    @Lazy DescriptorFile pluginDescriptor = pluginDescriptor()
 
-    @Lazy DescriptorFile helpDescriptor = helpDescriptor("main")
+    @Lazy DescriptorFile helpDescriptor = helpDescriptor()
 
     @Override
     void before() {
@@ -150,11 +150,11 @@ class Workspace extends ExternalResource {
         '''
     }
 
-    DescriptorFile pluginDescriptor(String sourceSetName = "main") {
-        DescriptorFile.parse(file("build/resources/$sourceSetName/META-INF/maven/plugin.xml"))
+    DescriptorFile pluginDescriptor() {
+        DescriptorFile.parse(file("build/mavenPlugin/descriptor/META-INF/maven/plugin.xml"))
     }
 
-    DescriptorFile helpDescriptor(String sourceSetName = "main") {
-        DescriptorFile.parse(file("build/resources/$sourceSetName/META-INF/maven/org.example/touch-maven-plugin/plugin-help.xml"))
+    DescriptorFile helpDescriptor() {
+        DescriptorFile.parse(file("build/mavenPlugin/descriptor/META-INF/maven/org.example/touch-maven-plugin/plugin-help.xml"))
     }
 }

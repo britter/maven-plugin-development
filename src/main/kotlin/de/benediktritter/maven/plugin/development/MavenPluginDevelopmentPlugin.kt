@@ -20,8 +20,10 @@ import de.benediktritter.maven.plugin.development.internal.DefaultMavenPluginDev
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaBasePlugin
+import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.dir
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.register
 
@@ -30,12 +32,15 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = project.run {
         pluginManager.apply(JavaBasePlugin::class)
 
+        val pluginOutputDirectory = layout.buildDirectory.dir("mavenPlugin")
+        val descriptorDir = pluginOutputDirectory.map { it.dir("descriptor") }
+
         val extension = createExtension() as DefaultMavenPluginDevelopmentExtension
 
         val generateTask = tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
             classesDirs.set(extension.pluginSourceSet.map { it.output.classesDirs })
             sourcesDirs.set(extension.pluginSourceSet.map { it.allSource.sourceDirectories } )
-            outputDirectory.fileProvider(extension.pluginSourceSet.map { it.output.resourcesDir!! })
+            outputDirectory.set(descriptorDir)
             pluginDescriptor.set(MavenPluginDescriptor(
                     extension.groupId.get(),
                     extension.artifactId.get(),
@@ -60,7 +65,9 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
         }
 
         project.afterEvaluate {
-            tasks.findByName(extension.pluginSourceSet.get().jarTaskName)?.dependsOn(generateTask)
+            val jarTask: Jar? = tasks.findByName(extension.pluginSourceSet.get().jarTaskName) as Jar?
+            jarTask?.dependsOn(generateTask)
+            jarTask?.from(descriptorDir)
         }
     }
 

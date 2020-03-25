@@ -164,8 +164,8 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
         run("generateMavenPluginDescriptor")
 
         then:
-        pluginDescriptor("mojo")
-        helpDescriptor("mojo")
+        pluginDescriptor()
+        helpDescriptor()
     }
 
     def "adds direct and transitive runtime dependencies to plugin descriptor"() {
