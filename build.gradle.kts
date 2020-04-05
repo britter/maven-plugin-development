@@ -17,11 +17,12 @@
 
 plugins {
     `java-gradle-plugin`
-    id("com.gradle.plugin-publish") version "0.11.0"
-    `kotlin-dsl`
-    groovy
     `java-test-fixtures`
+    `kotlin-dsl`
+    `maven-publish`
+    groovy
     id("org.jetbrains.kotlin.jvm") version "1.3.61"
+    id("com.gradle.plugin-publish") version "0.11.0"
 }
 
 group = "de.benediktritter"
@@ -75,4 +76,17 @@ pluginBundle {
     website = repoUrl
     vcsUrl = repoUrl
     tags = listOf("maven", "mojo", "maven plugin")
+}
+
+publishing {
+    publications.withType<MavenPublication>() {
+        versionMapping {
+            usage("java-api") {
+                fromResolutionResult()
+            }
+            usage("java-runtime") {
+                fromResolutionResult()
+            }
+        }
+    }
 }
