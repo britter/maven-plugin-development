@@ -17,6 +17,7 @@
 
 plugins {
     `java-gradle-plugin`
+    id("com.gradle.plugin-publish") version "0.11.0"
     `kotlin-dsl`
     groovy
     `java-test-fixtures`
@@ -65,4 +66,13 @@ gradlePlugin {
         description = project.description
         implementationClass = "de.benediktritter.maven.plugin.development.MavenPluginDevelopmentPlugin"
     }
+}
+
+val repoUrl = "https://github.com/britter/maven-plugin-development"
+
+pluginBundle {
+    description = project.description
+    website = repoUrl
+    vcsUrl = repoUrl
+    tags = listOf("maven", "mojo", "maven plugin")
 }
