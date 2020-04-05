@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.benediktritter.maven.plugin.development
+package de.benediktritter.maven.plugin.development.task
 
 import org.apache.maven.plugin.logging.Log
 import org.apache.maven.tools.plugin.PluginToolsRequest

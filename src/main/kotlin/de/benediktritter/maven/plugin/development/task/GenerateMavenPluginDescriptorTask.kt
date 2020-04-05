@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.benediktritter.maven.plugin.development
+package de.benediktritter.maven.plugin.development.task
 
 import de.benediktritter.maven.plugin.development.internal.MavenLoggerAdapter
 import de.benediktritter.maven.plugin.development.internal.MavenServiceFactory

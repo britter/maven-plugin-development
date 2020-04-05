@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.benediktritter.maven.plugin.development
+package de.benediktritter.maven.plugin.development.model
 
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
