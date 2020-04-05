@@ -70,6 +70,10 @@ class Workspace extends ExternalResource {
         file("build.gradle")
     }
 
+    File getPluginJar() {
+        file("build/libs/touch-maven-plugin-1.0.0.jar")
+    }
+
     def javaMojo(String sourceSetName = "main", String mojoName = "touch") {
         def className = "${mojoName.capitalize()}Mojo"
         file("src/$sourceSetName/java/org/example/${className}.java") << """

@@ -1,0 +1,3 @@
+moduleName=Testing extensions
+moduleVersion=1.0-test
+extensionClasses=de.benediktritter.maven.plugin.development.fixtures.FileExtensions

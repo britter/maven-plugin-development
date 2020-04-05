@@ -17,10 +17,12 @@
 package de.benediktritter.maven.plugin.development.fixtures
 
 import groovy.transform.Immutable
+import org.apache.commons.lang3.StringUtils
 
 @Immutable
 class DescriptorFile {
 
+    String path
     String name
     String description
     String groupId
@@ -70,7 +72,9 @@ class DescriptorFile {
             def dependency = new DependencyDeclaration(it.groupId.text(), it.artifactId.text(), it.version.text(), it.type.text())
             assert dependencies << dependency: "Duplicate dependency declaration $dependency"
         }
+        def path = "META-INF" + StringUtils.substringAfter(file.absolutePath, "META-INF")
         return new DescriptorFile(
+                path,
                 xml.name.text(),
                 xml.description.text(),
                 xml.groupId.text(),

@@ -20,6 +20,8 @@ import de.benediktritter.maven.plugin.development.fixtures.DescriptorFile
 import org.gradle.testkit.runner.TaskOutcome
 import spock.lang.Unroll
 
+import java.util.zip.ZipFile
+
 class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
 
     def "adds project metadata"() {
@@ -207,6 +209,10 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
 
         then:
         result.task(":generateMavenPluginDescriptor").outcome == TaskOutcome.SUCCESS
+
+        and:
+        pluginJar.contains(pluginDescriptor)
+        pluginJar.contains(helpDescriptor)
 
         where:
         task << ["jar", "build"]
