@@ -20,8 +20,6 @@ import de.benediktritter.maven.plugin.development.fixtures.DescriptorFile
 import org.gradle.testkit.runner.TaskOutcome
 import spock.lang.Unroll
 
-import java.util.zip.ZipFile
-
 class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
 
     def "adds project metadata"() {
@@ -145,6 +143,20 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
 
         and:
         helpDescriptor.hasGoal("create")
+        helpDescriptor.hasGoal("touch")
+    }
+
+    def "generates a plugin and help descriptor from JavaDoc"() {
+        given:
+        javaDocMojo()
+
+        when:
+        run("generateMavenPluginDescriptor")
+
+        then:
+        pluginDescriptor.hasGoal("touch")
+
+        and:
         helpDescriptor.hasGoal("touch")
     }
 

@@ -17,19 +17,14 @@
 package de.benediktritter.maven.plugin.development
 
 import de.benediktritter.maven.plugin.development.internal.MavenLoggerAdapter
+import de.benediktritter.maven.plugin.development.internal.MavenServiceFactory
 import org.apache.maven.model.Build
 import org.apache.maven.plugin.descriptor.PluginDescriptor
 import org.apache.maven.project.MavenProject
 import org.apache.maven.project.artifact.ProjectArtifact
 import org.apache.maven.tools.plugin.DefaultPluginToolsRequest
 import org.apache.maven.tools.plugin.PluginToolsRequest
-import org.apache.maven.tools.plugin.extractor.MojoDescriptorExtractor
-import org.apache.maven.tools.plugin.extractor.annotations.JavaAnnotationsMojoDescriptorExtractor
-import org.apache.maven.tools.plugin.extractor.annotations.scanner.DefaultMojoAnnotationsScanner
-import org.apache.maven.tools.plugin.extractor.annotations.scanner.MojoAnnotationsScanner
 import org.apache.maven.tools.plugin.generator.PluginDescriptorGenerator
-import org.apache.maven.tools.plugin.scanner.DefaultMojoScanner
-import org.apache.maven.tools.plugin.scanner.MojoScanner
 import org.codehaus.plexus.component.repository.ComponentDependency
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
@@ -62,7 +57,7 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
 
     private val loggerAdapter = MavenLoggerAdapter(logger)
 
-    private val scanner = createMojoScanner(loggerAdapter)
+    private val scanner = MavenServiceFactory.createMojoScanner(loggerAdapter)
 
     private val generator = PluginDescriptorGenerator(loggerAdapter)
 
@@ -95,27 +90,6 @@ abstract class GenerateMavenPluginDescriptorTask : DefaultTask() {
                 scanner.populatePluginDescriptor(pluginToolsRequest)
             }
         }
-    }
-
-    private fun createMojoScanner(loggerAdapter: MavenLoggerAdapter): MojoScanner {
-        val extractor = createMojoDescriptorExtractor(loggerAdapter)
-
-        return DefaultMojoScanner(mapOf("java-annotations" to extractor)).also {
-            it.enableLogging(loggerAdapter)
-        }
-    }
-
-    private fun createMojoDescriptorExtractor(loggerAdapter: MavenLoggerAdapter): MojoDescriptorExtractor {
-        val annotationsScanner: MojoAnnotationsScanner = DefaultMojoAnnotationsScanner().also {
-            it.enableLogging(loggerAdapter)
-        }
-
-        val extractor = JavaAnnotationsMojoDescriptorExtractor()
-        val extractorClass = extractor.javaClass
-        val field = extractorClass.getDeclaredField("mojoAnnotationsScanner")
-        field.isAccessible = true
-        field.set(extractor, annotationsScanner)
-        return extractor
     }
 
     private fun createPluginToolsRequest(mavenProject: MavenProject, pluginDescriptor: PluginDescriptor): PluginToolsRequest {

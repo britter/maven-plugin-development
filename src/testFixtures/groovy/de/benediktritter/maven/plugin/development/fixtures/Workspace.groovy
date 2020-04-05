@@ -117,6 +117,48 @@ class Workspace extends ExternalResource {
         """
     }
 
+    def javaDocMojo(String sourceSetName = "main", String mojoName = "touch") {
+        def className = "${mojoName.capitalize()}Mojo"
+        file("src/$sourceSetName/java/org/example/${className}.java") << """
+            package org.example;
+            import java.io.*;
+            import org.apache.maven.plugin.AbstractMojo;
+            import org.apache.maven.plugin.MojoExecutionException;
+            /**
+             * A mojo written in Java that touches a file.
+             *
+             * @goal $mojoName
+             *
+             * @phase process-resources
+             */
+            public class $className extends AbstractMojo {
+
+                /**
+                 * The output directory to put the file into.
+                 * @parameter expression="\${project.build.outputDirectory}"
+                 */
+                private File outputDirectory;
+
+                /**
+                 * The name of the file to put into the output directory.
+                 * @parameter default-value="touch.txt" property="myMojo.fileName"
+                 */
+                private File fileName;
+
+                @Override
+                public void execute() throws MojoExecutionException {
+                    outputDirectory.mkdirs();
+                    File touch = new File(outputDirectory, "touch.txt");
+                    try(FileWriter writer = new FileWriter(touch)) {
+                        writer.write("");
+                    } catch (IOException e) {
+                        throw new MojoExecutionException("Error creating file " + touch, e);
+                    }
+                }
+            }
+        """
+    }
+
     def groovyMojo() {
         file("src/main/groovy/org/example/TouchMojo.groovy") << '''
             package org.example;

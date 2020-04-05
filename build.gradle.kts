@@ -43,6 +43,7 @@ dependencies {
     implementation(platform("org.apache.maven.plugin-tools:maven-plugin-tools:3.6.0"))
     implementation("org.apache.maven.plugin-tools:maven-plugin-tools-api")
     implementation("org.apache.maven.plugin-tools:maven-plugin-tools-annotations")
+    implementation("org.apache.maven.plugin-tools:maven-plugin-tools-java")
     implementation("org.apache.maven.plugin-tools:maven-plugin-tools-generators")
     implementation("org.apache.maven:maven-plugin-api:3.0")
     implementation("org.sonatype.sisu:sisu-inject-plexus:1.4.2") {
