@@ -239,7 +239,7 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
         def result = run("generateMavenPluginDescriptor")
 
         then:
-        result.task(":generateHelpMojoSources").outcome == TaskOutcome.SUCCESS
+        result.task(":generateMavenPluginHelpMojoSources").outcome == TaskOutcome.SUCCESS
 
         and:
         pluginDescriptor.getMojo("help").implementation == "org.example.HelpMojo"
@@ -253,6 +253,6 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
         def result = run("build")
 
         then:
-        result.task(":generateHelpMojo").outcome == TaskOutcome.SKIPPED
+        result.task(":generateMavenPluginHelpMojoSources").outcome == TaskOutcome.SKIPPED
     }
 }

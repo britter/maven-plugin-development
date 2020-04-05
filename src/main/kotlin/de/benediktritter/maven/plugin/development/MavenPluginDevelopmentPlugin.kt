@@ -41,7 +41,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
 
         val extension = createExtension() as DefaultMavenPluginDevelopmentExtension
 
-        val generateHelpMojoTask = tasks.register<GenerateHelpMojoSourcesTask>("generateHelpMojoSources") {
+        val generateHelpMojoTask = tasks.register<GenerateHelpMojoSourcesTask>("generateMavenPluginHelpMojoSources") {
             onlyIf { extension.generateHelpMojo.get() }
             outputDirectory.set(helpMojoDir)
             helpPropertiesFile.set(pluginOutputDirectory.map { it.file("maven-plugin-help.properties") })
