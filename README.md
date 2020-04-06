@@ -1,5 +1,6 @@
 # Maven Plugin Development Gradle Plugin
 
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fbritter%2Fmaven-plugin-development%2Fbadge%3Fref%3Dmaster&style=flat)](https://actions-badge.atrox.dev/britter/maven-plugin-development/goto?ref=master)
 [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v?label=Plugin%20Portal&metadataUrl=https%3A%2F%2Fplugins.gradle.org%2Fm2%2Fde%2Fbenediktritter%2Fmaven-plugin-development%2Fde.benediktritter.maven-plugin-development.gradle.plugin%2Fmaven-metadata.xml)](https://plugins.gradle.org/plugin/de.benediktritter.maven-plugin-development)
 
 This plugin aims to fill the tiny gap for people who need to create an [Apache Maven](https://maven.apacke.org) plugin from a Gradle build.

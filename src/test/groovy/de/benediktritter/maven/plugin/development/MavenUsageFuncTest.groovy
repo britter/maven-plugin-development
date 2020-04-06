@@ -52,6 +52,9 @@ class MavenUsageFuncTest extends AbstractPluginFuncTest {
         given:
         javaMojo()
 
+        and:
+        def mavenBuild = mavenBuildUsingPlugin()
+
         when:
         run("publishMavenPublicationToTestRepository")
 
@@ -59,8 +62,7 @@ class MavenUsageFuncTest extends AbstractPluginFuncTest {
         file("$mavenRepository/org/example/touch-maven-plugin/1.0.0/touch-maven-plugin-1.0.0.jar").exists()
 
         when:
-        def mavenBuild = mavenBuildUsingPlugin()
-        def mavenBuildResult = "mvn clean package -B -Dmaven.repo.local=$mavenRepository".execute([], mavenBuild).text
+        def mavenBuildResult = mvnCleanPackage(mavenBuild)
 
         then:
         mavenBuildResult.contains("touch-maven-plugin:1.0.0:touch")
@@ -72,15 +74,14 @@ class MavenUsageFuncTest extends AbstractPluginFuncTest {
         given:
         javaMojo()
 
-        when:
-        run("publishMavenPublicationToTestRepository")
-
-        then:
-        file("$mavenRepository/org/example/touch-maven-plugin/1.0.0/touch-maven-plugin-1.0.0.jar").exists()
-
-        when:
+        and:
         def mavenBuild = mavenBuildBuildingPlugin()
-        def mavenBuildResult = "mvn clean package -B -Dmaven.repo.local=$mavenRepository".execute([], mavenBuild).text
+
+        when:
+        run("build")
+
+        and:
+        String mavenBuildResult = mvnCleanPackage(mavenBuild)
 
         then:
         mavenBuildResult.contains("maven-plugin-plugin")
@@ -91,6 +92,11 @@ class MavenUsageFuncTest extends AbstractPluginFuncTest {
         def mavenHelpDescriptor = DescriptorFile.parse(file("$mavenBuild/target/classes/META-INF/maven/org.example/touch-maven-plugin/plugin-help.xml"))
         mavenPluginDescriptor == pluginDescriptor
         mavenHelpDescriptor == helpDescriptor
+    }
+
+    private String mvnCleanPackage(File mavenBuild) {
+        def path = "${System.getProperty("java.home")}:${System.getenv("PATH")}"
+        "mvn clean package -B -Dmaven.repo.local=$mavenRepository".execute(["PATH=$path"], mavenBuild).text
     }
 
     File mavenBuildUsingPlugin() {
