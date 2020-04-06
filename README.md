@@ -1,6 +1,47 @@
 # Maven Plugin Development Gradle Plugin
 
-A Gradle plugin for developing Apache Maven plugins.
+[![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v?label=Plugin%20Portal&metadataUrl=https%3A%2F%2Fplugins.gradle.org%2Fm2%2Fde%2Fbenediktritter%2Fmaven-plugin-development%2Fde.benediktritter.maven-plugin-development.gradle.plugin%2Fmaven-metadata.xml)](https://plugins.gradle.org/plugin/de.benediktritter.maven-plugin-development)
+
+This plugin aims to fill the tiny gap for people who need to create an [Apache Maven](https://maven.apacke.org) plugin from a Gradle build.
+To do this the plugin wraps around the [Maven Plugin Tools API](https://maven.apache.org/plugin-tools/) and feeds it with the right inputs from the Gradle build.
+
+## Features
+
+- Automatic generation of a maven plugin descriptor containing all mojos in the selected source set (by default the plugin looks for mojo implementations in the main source set)
+- Support for annotation and JavaDoc tag based mojo implementations
+- Optional generation of a help mojo implementation
+
+## Usage
+
+Once applied, the plugin adds a [`MavenPluginDevelopmentExtension`](https://github.com/britter/maven-plugin-development/blob/0.1.0/src/main/kotlin/de/benediktritter/maven/plugin/development/MavenPluginDevelopmentExtension.kt) with name `mavenPlugin` to the project.
+All meta data for the plugin, e.g. `groupId`, `artifactId`, `description` is extracted from the corresponding project properties.
+The only setting that users might want to configure is `generateHelpMojo` which is false be default, meaning not help mojo will be generated.
+
+### Gradle Groovy DSL
+
+```groovy
+plugins {
+  id 'de.benediktritter.maven-plugin-development' version '0.1.0'
+}
+
+mavenPlugin {
+  // optional, false by default
+  generateHelpMojo = true
+}
+```
+
+### Gradle Kotlin DSL
+
+```kotlin
+plugins {
+  id("de.benediktritter.maven-plugin-development") version "0.1.0"
+}
+
+mavenPlugin {
+  // optional, false by default
+  generateHelpMojo.set(true)
+}
+```
 
 ## Contribution policy
 
