@@ -27,7 +27,7 @@ plugins {
 
 group = "de.benediktritter"
 description = "Gradle plugin for developing Apache Maven plugins"
-version = "0.1.0"
+version = "0.1.1-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
