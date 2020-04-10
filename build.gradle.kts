@@ -54,6 +54,15 @@ dependencies {
     implementation("org.codehaus.plexus:plexus-velocity:1.1.8") {
         because("it is needed to generate the help mojo")
     }
+    constraints {
+        implementation("com.thoughtworks.qdox:qdox") {
+            version {
+                require("2.0-M9")
+                prefer("2.0.0")
+            }
+            because("we need the fix for https://github.com/paul-hammant/qdox/issues/43")
+        }
+    }
 
     testImplementation("org.spockframework:spock-core:1.3-groovy-2.5")
     testFixturesImplementation("junit:junit:4.12")
