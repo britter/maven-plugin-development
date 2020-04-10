@@ -17,37 +17,17 @@
 package de.benediktritter.maven.plugin.development.fixtures
 
 import org.apache.commons.lang3.StringUtils
-import org.junit.rules.ExternalResource
-import org.junit.rules.TemporaryFolder
 
-class Workspace extends ExternalResource {
+trait TestProject {
 
-    private TemporaryFolder workspaceFolder = new TemporaryFolder()
-
-    @Lazy DescriptorFile pluginDescriptor = pluginDescriptor()
-
-    @Lazy DescriptorFile helpDescriptor = helpDescriptor()
-
-    @Override
-    void before() {
-        workspaceFolder.create()
-    }
-
-    @Override
-    void after() {
-        workspaceFolder.delete()
-    }
-
-    File getRoot() {
-        workspaceFolder.root
-    }
+    abstract File getProjectDir()
 
     File dir(String path) {
         def dir
         if (path.startsWith("/")) {
             dir = new File(path)
         } else {
-            dir = new File(root, path)
+            dir = new File(projectDir, path)
         }
         dir.mkdirs()
         dir
@@ -58,7 +38,7 @@ class Workspace extends ExternalResource {
             def parentDir = dir(StringUtils.substringBeforeLast(path, '/'))
             new File(parentDir, StringUtils.substringAfterLast(path, '/'))
         } else {
-            new File(root, path)
+            new File(projectDir, path)
         }
     }
 
@@ -72,6 +52,41 @@ class Workspace extends ExternalResource {
 
     File getPluginJar() {
         file("build/libs/touch-maven-plugin-1.0.0.jar")
+    }
+
+    abstract DescriptorFile getPluginDescriptor()
+
+    abstract DescriptorFile getHelpDescriptor()
+
+    DescriptorFile pluginDescriptor() {
+        DescriptorFile.parse(file("build/mavenPlugin/descriptor/META-INF/maven/plugin.xml"))
+    }
+
+    DescriptorFile helpDescriptor() {
+        DescriptorFile.parse(file("build/mavenPlugin/descriptor/META-INF/maven/org.example/touch-maven-plugin/plugin-help.xml"))
+    }
+
+
+    def withMavenPluginBuildConfiguration(boolean applyPlugin = true) {
+        def pluginApplication = applyPlugin ? "id 'de.benediktritter.maven-plugin-development'" : ""
+        buildFile << """
+            plugins {
+                id 'java'
+                $pluginApplication
+            }
+
+            group "org.example"
+            description "A maven plugin with a mojo that can touch it!"
+            version "1.0.0"
+
+            repositories {
+                mavenCentral()
+            }
+            dependencies {
+                implementation 'org.apache.maven:maven-plugin-api:3.6.3'
+                implementation 'org.apache.maven.plugin-tools:maven-plugin-annotations:3.6.0'
+            }
+        """
     }
 
     def javaMojo(String sourceSetName = "main", String mojoName = "touch") {
@@ -101,48 +116,6 @@ class Workspace extends ExternalResource {
                  * The name of the file to put into the output directory.
                  */
                 @Parameter(defaultValue = "touch.txt", property = "myMojo.fileName")
-                private File fileName;
-
-                @Override
-                public void execute() throws MojoExecutionException {
-                    outputDirectory.mkdirs();
-                    File touch = new File(outputDirectory, "touch.txt");
-                    try(FileWriter writer = new FileWriter(touch)) {
-                        writer.write("");
-                    } catch (IOException e) {
-                        throw new MojoExecutionException("Error creating file " + touch, e);
-                    }
-                }
-            }
-        """
-    }
-
-    def javaDocMojo(String sourceSetName = "main", String mojoName = "touch") {
-        def className = "${mojoName.capitalize()}Mojo"
-        file("src/$sourceSetName/java/org/example/${className}.java") << """
-            package org.example;
-            import java.io.*;
-            import org.apache.maven.plugin.AbstractMojo;
-            import org.apache.maven.plugin.MojoExecutionException;
-            /**
-             * A mojo written in Java that touches a file.
-             *
-             * @goal $mojoName
-             *
-             * @phase process-resources
-             */
-            public class $className extends AbstractMojo {
-
-                /**
-                 * The output directory to put the file into.
-                 * @parameter expression="\${project.build.outputDirectory}"
-                 */
-                private File outputDirectory;
-
-                /**
-                 * The name of the file to put into the output directory.
-                 * @parameter default-value="touch.txt" property="myMojo.fileName"
-                 */
                 private File fileName;
 
                 @Override
@@ -196,11 +169,47 @@ class Workspace extends ExternalResource {
         '''
     }
 
-    DescriptorFile pluginDescriptor() {
-        DescriptorFile.parse(file("build/mavenPlugin/descriptor/META-INF/maven/plugin.xml"))
+    def javaDocMojo() {
+        def className = "TouchMojo"
+        file("src/main/java/org/example/${className}.java") << """
+            package org.example;
+            import java.io.*;
+            import org.apache.maven.plugin.AbstractMojo;
+            import org.apache.maven.plugin.MojoExecutionException;
+            /**
+             * A mojo written in Java that touches a file.
+             *
+             * @goal touch
+             *
+             * @phase process-resources
+             */
+            public class $className extends AbstractMojo {
+
+                /**
+                 * The output directory to put the file into.
+                 * @parameter expression="\${project.build.outputDirectory}"
+                 */
+                private File outputDirectory;
+
+                /**
+                 * The name of the file to put into the output directory.
+                 * @parameter default-value="touch.txt" property="myMojo.fileName"
+                 */
+                private File fileName;
+
+                @Override
+                public void execute() throws MojoExecutionException {
+                    outputDirectory.mkdirs();
+                    File touch = new File(outputDirectory, "touch.txt");
+                    try(FileWriter writer = new FileWriter(touch)) {
+                        writer.write("");
+                    } catch (IOException e) {
+                        throw new MojoExecutionException("Error creating file " + touch, e);
+                    }
+                }
+            }
+        """
     }
 
-    DescriptorFile helpDescriptor() {
-        DescriptorFile.parse(file("build/mavenPlugin/descriptor/META-INF/maven/org.example/touch-maven-plugin/plugin-help.xml"))
-    }
+
 }

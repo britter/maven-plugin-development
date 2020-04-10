@@ -171,6 +171,6 @@ class MavenUsageFuncTest extends AbstractPluginFuncTest {
   </build>
 </project>
         """
-        workspace.root
+        project.projectDir
     }
 }

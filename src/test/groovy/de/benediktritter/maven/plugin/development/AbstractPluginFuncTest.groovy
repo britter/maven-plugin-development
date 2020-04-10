@@ -16,7 +16,7 @@
 
 package de.benediktritter.maven.plugin.development
 
-import de.benediktritter.maven.plugin.development.fixtures.Workspace
+import de.benediktritter.maven.plugin.development.fixtures.TestRootProject
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Rule
 import spock.lang.Specification
@@ -27,28 +27,11 @@ abstract class AbstractPluginFuncTest extends Specification {
 
     @Rule
     @Delegate
-    Workspace workspace
+    TestRootProject project
 
     void setup() {
         settingsFile << "rootProject.name=\"touch-maven-plugin\""
-        buildFile << """
-            plugins {
-                id 'java'
-                id 'de.benediktritter.maven-plugin-development'
-            }
-
-            group "org.example"
-            description "A maven plugin with a mojo that can touch it!"
-            version "1.0.0"
-
-            repositories {
-                mavenCentral()
-            }
-            dependencies {
-                implementation 'org.apache.maven:maven-plugin-api:3.6.3'
-                implementation 'org.apache.maven.plugin-tools:maven-plugin-annotations:3.6.0'
-            }
-        """
+        withMavenPluginBuildConfiguration()
     }
 
     def run(String... args) {
@@ -57,7 +40,7 @@ abstract class AbstractPluginFuncTest extends Specification {
                 .withDebug(ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0)
                 .withPluginClasspath()
                 .withArguments([*args, "-s"])
-                .withProjectDir(workspace.root)
+                .withProjectDir(project.projectDir)
 
         runner.build()
     }
