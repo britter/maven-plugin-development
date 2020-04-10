@@ -1,5 +1,10 @@
 # 0.2.0 - TBA
 
+## New Features
+
+* Add support for mojos from other projects
+  https://github.com/britter/maven-plugin-development/issues/3
+
 ## Bug Fixes
 
 * Force version upgrade of qdox

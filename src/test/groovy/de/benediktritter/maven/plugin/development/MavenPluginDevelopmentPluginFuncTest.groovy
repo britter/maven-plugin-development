@@ -228,6 +228,41 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
         helpDescriptor.hasNoDependencies()
     }
 
+    def "finds mojos in project dependencies"() {
+        given:
+        settingsFile.text = "rootProject.name = 'root-project'"
+        buildFile.text = ""
+        subproject("mojo") { project ->
+            project.withMavenPluginBuildConfiguration(false)
+            project.javaMojo()
+        }
+        def pluginProject = subproject("plugin") { project ->
+            project.buildFile << """
+                plugins {
+                    id 'java'
+                    id 'de.benediktritter.maven-plugin-development'
+                }
+                repositories {
+                    mavenCentral()
+                }
+                dependencies {
+                    implementation project(":mojo") 
+                }
+            """
+        }
+
+        when:
+        run(":plugin:build")
+
+        then:
+        pluginProject.pluginDescriptor.hasGoal("touch")
+        def mojo = pluginProject.pluginDescriptor.getMojo("touch")
+        mojo.description == "A mojo written in Java that touches a file."
+        mojo.parameters.size() == 2
+        mojo.parameters.contains(new DescriptorFile.ParameterDeclaration("fileName", File, false, true, "The name of the file to put into the output directory."))
+        mojo.parameters.contains(new DescriptorFile.ParameterDeclaration("outputDirectory", File, false, true, "The output directory to put the file into."))
+    }
+
     @Unroll
     def "task is executed when #task lifecycle task is executed"() {
         given:

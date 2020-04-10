@@ -23,13 +23,14 @@ import org.apache.maven.plugin.descriptor.PluginDescriptor
 import org.apache.maven.project.MavenProject
 import org.apache.maven.project.artifact.ProjectArtifact
 import org.apache.maven.tools.plugin.generator.PluginDescriptorGenerator
+import org.gradle.api.artifacts.Configuration
+import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Internal
-import org.gradle.api.tasks.OutputDirectory
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.*
+import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.the
 import java.io.File
 
 abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmentTask() {
@@ -42,6 +43,9 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
 
     @get:Input
     abstract val sourcesDirs: Property<FileCollection>
+
+    @get:Input
+    abstract val mojoDependencies: Property<Configuration>
 
     @get:OutputDirectory
     abstract val outputDirectory: DirectoryProperty
@@ -69,26 +73,34 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
     }
 
     private fun writeDescriptor(pluginDescriptor: PluginDescriptor) {
-        val mavenProject = mavenProject(outputDirectory.asFile.get())
+        val mavenProject = mavenProject(sourcesDirs.get(), outputDirectory.asFile.get())
         generator.execute(outputDirectory.dir("META-INF/maven").get().asFile, createPluginToolsRequest(mavenProject, pluginDescriptor))
     }
 
     private fun rewriteHelpMojo(pluginDescriptor: PluginDescriptor) {
-        val mavenProject = mavenProject(javaClassesDir.get().asFile)
+        val mavenProject = mavenProject(sourcesDirs.get(), javaClassesDir.get().asFile)
         HelpGeneratorAccessor.rewriteHelpMojo(createPluginToolsRequest(mavenProject, pluginDescriptor), loggerAdapter)
     }
 
     private fun extractPluginDescriptor(): PluginDescriptor {
         return createPluginDescriptor().also { pluginDescriptor ->
-            classesDirs.get().forEach {
-                val mavenProject = mavenProject(it)
+            classesDirs.get().forEach { classesDir ->
+                val mavenProject = mavenProject(sourcesDirs.get(), classesDir)
                 val pluginToolsRequest = createPluginToolsRequest(mavenProject, pluginDescriptor)
                 scanner.populatePluginDescriptor(pluginToolsRequest)
+            }
+            getUpstreamProjects().forEach {
+                val main = it.the<SourceSetContainer>()["main"]
+                main.output.classesDirs.forEach { classesDir ->
+                    val mavenProject = mavenProject(main.java.sourceDirectories, classesDir)
+                    val pluginToolsRequest = createPluginToolsRequest(mavenProject, pluginDescriptor)
+                    scanner.populatePluginDescriptor(pluginToolsRequest)
+                }
             }
         }
     }
 
-    private fun mavenProject(outputDirectory: File): MavenProject {
+    private fun mavenProject(sourcesDirs: FileCollection, outputDirectory: File): MavenProject {
         return MavenProject().also {
             it.groupId = project.group.toString()
             it.artifactId = project.name
@@ -99,8 +111,12 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
                 b.directory = this@GenerateMavenPluginDescriptorTask.outputDirectory.get().asFile.parent
             }
             // populate compileSourceRoots in order to extract meta data from JavaDoc
-            sourcesDirs.get().forEach { dir -> it.addCompileSourceRoot(dir.absolutePath) }
+            sourcesDirs.forEach { dir -> it.addCompileSourceRoot(dir.absolutePath) }
         }
     }
+
+    private fun getUpstreamProjects() = mojoDependencies.get().allDependencies
+                .filterIsInstance<ProjectDependency>()
+                .map { it.dependencyProject }
 }
 

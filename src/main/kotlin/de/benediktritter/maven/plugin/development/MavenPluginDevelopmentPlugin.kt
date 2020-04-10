@@ -59,8 +59,9 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
         // TODO declare help properties as input
         val generateTask = tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
             classesDirs.set(extension.pluginSourceSet.map { it.output.classesDirs })
-            sourcesDirs.set(extension.pluginSourceSet.map { it.allSource.sourceDirectories })
+            sourcesDirs.set(extension.pluginSourceSet.map { it.java.sourceDirectories })
             javaClassesDir.set(extension.pluginSourceSet.flatMap { it.java.classesDirectory })
+            mojoDependencies.set(project.configurations["runtimeClasspath"])
             outputDirectory.set(descriptorDir)
             pluginDescriptor.set(project.provider {
                 MavenPluginDescriptor(
