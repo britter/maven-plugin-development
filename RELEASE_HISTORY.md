@@ -2,6 +2,8 @@
 
 ## New Features
 
+* Define dedicated configuration for projects providing mojos
+  https://github.com/britter/maven-plugin-development/issues/11
 * Add support for mojos from other projects
   https://github.com/britter/maven-plugin-development/issues/3
 

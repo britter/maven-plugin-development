@@ -23,12 +23,10 @@ import de.benediktritter.maven.plugin.development.task.GenerateHelpMojoSourcesTa
 import de.benediktritter.maven.plugin.development.task.GenerateMavenPluginDescriptorTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.jvm.tasks.Jar
-import org.gradle.kotlin.dsl.apply
-import org.gradle.kotlin.dsl.create
-import org.gradle.kotlin.dsl.get
-import org.gradle.kotlin.dsl.register
+import org.gradle.kotlin.dsl.*
 
 class MavenPluginDevelopmentPlugin : Plugin<Project> {
 
@@ -57,11 +55,12 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             })
         }
         // TODO declare help properties as input
+        val mojoConfiguration = createConfiguration()
         val generateTask = tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
             classesDirs.set(extension.pluginSourceSet.map { it.output.classesDirs })
             sourcesDirs.set(extension.pluginSourceSet.map { it.java.sourceDirectories })
             javaClassesDir.set(extension.pluginSourceSet.flatMap { it.java.classesDirectory })
-            mojoDependencies.set(project.configurations["runtimeClasspath"])
+            mojoDependencies.set(mojoConfiguration)
             outputDirectory.set(descriptorDir)
             pluginDescriptor.set(project.provider {
                 MavenPluginDescriptor(
@@ -97,6 +96,15 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             tasks.findByName(sourceSet.jarTaskName)?.dependsOn(generateTask)
             tasks.named(sourceSet.compileJavaTaskName).configure { dependsOn(generateHelpMojoTask) }
         }
+    }
+
+    private fun Project.createConfiguration(): Configuration {
+        val mojoConfiguration = configurations.create("mojo") {
+            isCanBeConsumed = false
+            isCanBeResolved = true
+        }
+        configurations["implementation"].extendsFrom(mojoConfiguration)
+        return mojoConfiguration
     }
 
     private fun Project.createExtension() =

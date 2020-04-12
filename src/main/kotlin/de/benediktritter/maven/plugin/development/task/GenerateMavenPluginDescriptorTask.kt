@@ -115,7 +115,7 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
         }
     }
 
-    private fun getUpstreamProjects() = mojoDependencies.get().allDependencies
+    private fun getUpstreamProjects() = mojoDependencies.get().dependencies
                 .filterIsInstance<ProjectDependency>()
                 .map { it.dependencyProject }
 }

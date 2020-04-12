@@ -232,9 +232,13 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
         given:
         settingsFile.text = "rootProject.name = 'root-project'"
         buildFile.text = ""
-        subproject("mojo") { project ->
+        subproject("touch-mojo") { project ->
             project.withMavenPluginBuildConfiguration(false)
             project.javaMojo()
+        }
+        subproject("create-mojo") { project ->
+            project.withMavenPluginBuildConfiguration(false)
+            project.javaMojo("main", "create")
         }
         def pluginProject = subproject("plugin") { project ->
             project.buildFile << """
@@ -246,7 +250,8 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
                     mavenCentral()
                 }
                 dependencies {
-                    implementation project(":mojo") 
+                    mojo project(":touch-mojo") 
+                    implementation project(":create-mojo") 
                 }
             """
         }
@@ -256,6 +261,7 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
 
         then:
         pluginProject.pluginDescriptor.hasGoal("touch")
+        !pluginProject.pluginDescriptor.hasGoal("create")
         def mojo = pluginProject.pluginDescriptor.getMojo("touch")
         mojo.description == "A mojo written in Java that touches a file."
         mojo.parameters.size() == 2
