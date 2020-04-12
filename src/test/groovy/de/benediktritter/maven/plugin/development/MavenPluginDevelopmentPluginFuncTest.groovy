@@ -269,6 +269,30 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
         mojo.parameters.contains(new DescriptorFile.ParameterDeclaration("outputDirectory", File, false, true, "The output directory to put the file into."))
     }
 
+    def "provides control over plugin dependencies"() {
+        given:
+        javaMojo()
+        buildFile << """
+            configurations {
+              deps
+            }
+            dependencies {
+              deps "org.apache.commons:commons-lang3:3.9"
+              implementation "com.google.guava:guava:28.0-jre"
+            }
+            mavenPlugin {
+              dependencies = configurations.deps
+            }
+        """
+
+        when:
+        run(":generateMavenPluginDescriptor")
+
+        then:
+        pluginDescriptor.hasDependency('org.apache.commons:commons-lang3:3.9')
+        !pluginDescriptor.hasDependency('com.google.guava:guava:28.0-jre')
+    }
+
     @Unroll
     def "task is executed when #task lifecycle task is executed"() {
         given:

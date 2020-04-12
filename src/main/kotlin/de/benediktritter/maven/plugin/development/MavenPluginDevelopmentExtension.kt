@@ -16,6 +16,7 @@
 
 package de.benediktritter.maven.plugin.development
 
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.SourceSet
 
@@ -40,4 +41,11 @@ interface MavenPluginDevelopmentExtension {
     val goalPrefix: Property<String>
 
     val generateHelpMojo: Property<Boolean>
+
+    /**
+     * The set of dependencies to add to the plugin descriptor.
+     *
+     * Defaults to the runtime classpath of this projects.
+     */
+    val dependencies: Property<Configuration>
 }

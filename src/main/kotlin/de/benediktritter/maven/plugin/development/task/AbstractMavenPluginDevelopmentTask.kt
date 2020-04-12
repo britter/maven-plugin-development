@@ -17,15 +17,15 @@
 package de.benediktritter.maven.plugin.development.task
 
 import de.benediktritter.maven.plugin.development.model.MavenPluginDescriptor
-import de.benediktritter.maven.plugin.development.model.RuntimeDependencyDescriptor
 import org.apache.maven.plugin.descriptor.PluginDescriptor
 import org.apache.maven.project.MavenProject
 import org.apache.maven.tools.plugin.DefaultPluginToolsRequest
 import org.apache.maven.tools.plugin.PluginToolsRequest
 import org.codehaus.plexus.component.repository.ComponentDependency
 import org.gradle.api.DefaultTask
-import org.gradle.api.provider.ListProperty
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Nested
 
 abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
@@ -33,8 +33,8 @@ abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
     @get:Nested
     abstract val pluginDescriptor: Property<MavenPluginDescriptor>
 
-    @get:Nested
-    abstract val runtimeDependencies: ListProperty<RuntimeDependencyDescriptor>
+    @get:Input
+    abstract val runtimeDependencies: Property<Configuration>
 
     protected fun createPluginDescriptor(): PluginDescriptor {
         val pluginDescriptor = pluginDescriptor.get()
@@ -51,12 +51,12 @@ abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
     }
 
     private fun getComponentDependencies(): List<ComponentDependency> {
-        return runtimeDependencies.get().map { dependency ->
+        return runtimeDependencies.get().resolvedConfiguration.resolvedArtifacts.map { artifact ->
             ComponentDependency().also {
-                it.groupId = dependency.groupId
-                it.artifactId = dependency.artifactId
-                it.version = dependency.version
-                it.type = dependency.type
+                it.groupId = artifact.moduleVersion.id.group
+                it.artifactId = artifact.moduleVersion.id.name
+                it.version = artifact.moduleVersion.id.version
+                it.type = artifact.extension
             }
         }
     }

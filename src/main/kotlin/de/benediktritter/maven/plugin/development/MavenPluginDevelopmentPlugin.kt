@@ -18,7 +18,6 @@ package de.benediktritter.maven.plugin.development
 
 import de.benediktritter.maven.plugin.development.internal.DefaultMavenPluginDevelopmentExtension
 import de.benediktritter.maven.plugin.development.model.MavenPluginDescriptor
-import de.benediktritter.maven.plugin.development.model.RuntimeDependencyDescriptor
 import de.benediktritter.maven.plugin.development.task.GenerateHelpMojoSourcesTask
 import de.benediktritter.maven.plugin.development.task.GenerateMavenPluginDescriptorTask
 import org.gradle.api.Plugin
@@ -53,6 +52,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
                         extension.goalPrefix.orNull
                 )
             })
+            runtimeDependencies.set(extension.dependencies)
         }
         // TODO declare help properties as input
         val mojoConfiguration = createConfiguration()
@@ -72,17 +72,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
                         extension.goalPrefix.orNull
                 )
             })
-            runtimeDependencies.set(
-                    project.provider {
-                        project.configurations["runtimeClasspath"].resolvedConfiguration.resolvedArtifacts.map {
-                            RuntimeDependencyDescriptor(
-                                    it.moduleVersion.id.group,
-                                    it.moduleVersion.id.name,
-                                    it.moduleVersion.id.version,
-                                    it.extension
-                            )
-                        }
-                    })
+            runtimeDependencies.set(extension.dependencies)
 
             dependsOn(extension.pluginSourceSet.map { it.output }, generateHelpMojoTask)
         }

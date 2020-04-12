@@ -18,6 +18,7 @@ package de.benediktritter.maven.plugin.development.internal
 
 import de.benediktritter.maven.plugin.development.MavenPluginDevelopmentExtension
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
@@ -50,5 +51,8 @@ open class DefaultMavenPluginDevelopmentExtension @Inject constructor(project: P
 
     override val generateHelpMojo: Property<Boolean> = project.objects.property<Boolean>()
             .convention(false)
+
+    override val dependencies: Property<Configuration> = project.objects.property<Configuration>()
+            .convention(project.configurations["runtimeClasspath"])
 }
 

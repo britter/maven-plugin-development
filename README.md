@@ -73,6 +73,53 @@ dependencies {
 }
 ```
 
+## Controling plugin dependencies
+
+By default all dependencies from the runtime classpath will in added to the dependencies blog of the generated plugin descriptor.
+The can be changed by configuring the `dependencies` property on the `mavenPlugin` extension.
+In the following examples only `org.apache.commons:commons-lang3:3.9` will be added as a dependency to the plugin descriptor: 
+
+
+### Gradle Groovy DSL
+
+```groovy
+plugins {
+  id 'de.benediktritter.maven-plugin-development' version '0.1.0'
+}
+
+configurations {
+  deps
+}
+
+dependencies {
+  deps "org.apache.commons:commons-lang3:3.9"
+  implementation "com.google.guava:guava:28.0-jre"
+}
+
+mavenPlugin {
+  dependencies = configurations.deps
+}
+```
+
+### Gradle Kotlin DSL
+
+```kotlin
+plugins {
+  id("de.benediktritter.maven-plugin-development") version "0.1.0"
+}
+
+val deps by configurations.creating
+
+dependencies {
+  deps("org.apache.commons:commons-lang3:3.9")
+  implementation("com.google.guava:guava:28.0-jre")
+}
+
+mavenPlugin {
+  dependencies.set(deps)
+}
+```
+
 ## Contribution policy
 
 Contributions via GitHub pull requests are gladly accepted from their original author. Along with any pull requests, please state that the contribution is your original work and that you license the work to the project under the project's open source license. Whether or not you state this explicitly, by submitting any copyrighted material via pull request, email, or other means you agree to license the material under the project's open source license and warrant that you have the legal authority to do so.
