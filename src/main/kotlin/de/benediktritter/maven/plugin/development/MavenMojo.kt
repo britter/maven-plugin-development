@@ -20,6 +20,7 @@ import org.apache.maven.plugins.annotations.InstantiationStrategy
 import org.apache.maven.plugins.annotations.LifecyclePhase
 import org.apache.maven.plugins.annotations.ResolutionScope
 import org.gradle.api.Action
+
 /**
  * Representation of a mojo.
  *

@@ -17,7 +17,7 @@
 package de.benediktritter.maven.plugin.development
 
 /**
- * representation of a [@Parameter][org.apache.maven.plugins.annotations.Parameter] declaration.
+ * Representation of a [@Parameter][org.apache.maven.plugins.annotations.Parameter] declaration.
  *
  * @since 0.2.0
  */

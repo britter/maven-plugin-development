@@ -43,7 +43,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     api(platform("org.apache.maven.plugin-tools:maven-plugin-tools:3.6.0")) {
-        because("the version fors for other dependencies in api would be missing otherwise")
+        because("the version for other dependencies in api would be missing otherwise")
     }
     api("org.apache.maven.plugin-tools:maven-plugin-annotations") {
         because("MojoDeclaration references types from this artifact")

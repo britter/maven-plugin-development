@@ -103,9 +103,9 @@ class DescriptorFile {
         def coords = dependencyNotation.split(":")
         dependencies.any {
             it.groupId == coords[0] &&
-                    it.artifactId == coords[1] &&
-                    it.version == coords[2] &&
-                    it.type == "jar"
+            it.artifactId == coords[1] &&
+            it.version == coords[2] &&
+            it.type == "jar"
         }
     }
 
