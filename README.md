@@ -73,7 +73,7 @@ dependencies {
 }
 ```
 
-## Controling plugin dependencies
+## Controlling plugin dependencies
 
 By default all dependencies from the runtime classpath will in added to the dependencies blog of the generated plugin descriptor.
 The can be changed by configuring the `dependencies` property on the `mavenPlugin` extension.
@@ -117,6 +117,56 @@ dependencies {
 
 mavenPlugin {
   dependencies.set(deps)
+}
+```
+
+## Defining mojos in the build script
+
+If you can't or don't want to use auto detection of mojos there is also a DSL for defining mojos inside the build script:
+
+### Gradle Groovy DSL
+
+```groovy
+plugins {
+  id 'de.benediktritter.maven-plugin-development' version '0.1.0'
+}
+
+mavenPlugin {
+  mojos {
+    touch {
+      implementation = "com.example.MyMojo"
+      description = "A super fancy mojo defined in my build.gradle"
+      parameters {
+        parameter("outputDir", File) {
+          defaultValue = "\${project.build.outputDirectory}/myMojoOutput"
+          required = false
+        }
+      }
+    }
+  }
+}
+```
+
+### Gradle Kotlin DSL
+
+```kotlin
+plugins {
+  id("de.benediktritter.maven-plugin-development") version "0.1.0"
+}
+
+mavenPlugin {
+  mojos {
+    create<MavenMojo>("touch") {
+      implementation = "com.example.MyMojo"
+      description = "A super fancy mojo defined in my build.gradle"
+      parameters {
+        parameter("outputDir", File::class.java) {
+          defaultValue = "\${project.build.outputDirectory}/myMojoOutput"
+          required = false
+        }
+      }
+    }
+  }
 }
 ```
 

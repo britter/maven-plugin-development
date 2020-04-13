@@ -43,6 +43,7 @@ class DescriptorFile {
                 def param = new ParameterDeclaration(
                         it.name.text(),
                         ClassUtils.getClass(it.type.text()),
+                        it.alias.text(),
                         it.required.text().toBoolean(),
                         it.editable.text().toBoolean(),
                         it.description.text()
@@ -52,6 +53,8 @@ class DescriptorFile {
             def mojo = new MojoDeclaration(
                     it.goal.text(),
                     it.description.text(),
+                    it.requiresDependencyResolution.text(),
+                    it.requiresDependencyCollection.text(),
                     it.requiresDirectInvocation.text().toBoolean(),
                     it.requiresProject.text().toBoolean(),
                     it.requiresReports.text().toBoolean(),
@@ -63,6 +66,7 @@ class DescriptorFile {
                     it.language.text(),
                     it.instantiationStrategy.text(),
                     it.executionStrategy.text(),
+                    it.configurator.text(),
                     it.threadSafe.text().toBoolean(),
                     params
             )
@@ -121,6 +125,8 @@ class DescriptorFile {
     static class MojoDeclaration {
         String goal
         String description
+        String requiresDependencyResolution
+        String requiresDependencyCollection
         boolean requiresDirectInvocation
         boolean requiresProject
         boolean requiresReports
@@ -132,14 +138,20 @@ class DescriptorFile {
         String language
         String instantiationStrategy
         String executionStrategy
+        String configurator
         boolean threadSafe
         Set<ParameterDeclaration> parameters
+
+        ParameterDeclaration getParameter(String parameterName) {
+            parameters.find { it.name == parameterName }
+        }
     }
 
     @Immutable
     static class ParameterDeclaration {
         String name
         Class type
+        String alias
         boolean required
         boolean editable
         String description

@@ -2,10 +2,12 @@
 
 ## Breaking changes
 
-* Class `..model.RuntimeDependencyDescriptor` has been removed.
+* Package `de.benediktritter.maven.plugin.development.model` has been removed.
 
 ## New Features
 
+* Add DSL for declaring mojos in the build script
+  https://github.com/britter/maven-plugin-development/issues/4
 * Provide way to configure plugin dependencies
   https://github.com/britter/maven-plugin-development/issues/12
 * Define dedicated configuration for projects providing mojos

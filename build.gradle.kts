@@ -42,7 +42,12 @@ dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    implementation(platform("org.apache.maven.plugin-tools:maven-plugin-tools:3.6.0"))
+    api(platform("org.apache.maven.plugin-tools:maven-plugin-tools:3.6.0")) {
+        because("the version for other dependencies in api would be missing otherwise")
+    }
+    api("org.apache.maven.plugin-tools:maven-plugin-annotations") {
+        because("MavenMojo references types from this artifact")
+    }
     implementation("org.apache.maven.plugin-tools:maven-plugin-tools-api")
     implementation("org.apache.maven.plugin-tools:maven-plugin-tools-annotations")
     implementation("org.apache.maven.plugin-tools:maven-plugin-tools-java")

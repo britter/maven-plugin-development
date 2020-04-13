@@ -103,8 +103,8 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
         def mojo = pluginDescriptor.getMojo("touch")
         mojo.description == "A mojo written in Java that touches a file."
         mojo.parameters.size() == 2
-        mojo.parameters.contains(new DescriptorFile.ParameterDeclaration("fileName", File, false, true, "The name of the file to put into the output directory."))
-        mojo.parameters.contains(new DescriptorFile.ParameterDeclaration("outputDirectory", File, false, true, "The output directory to put the file into."))
+        mojo.parameters.contains(new DescriptorFile.ParameterDeclaration("fileName", File, "", false, true, "The name of the file to put into the output directory."))
+        mojo.parameters.contains(new DescriptorFile.ParameterDeclaration("outputDirectory", File, "", false, true, "The output directory to put the file into."))
     }
 
     def "warns against invalid coordinates"() {
@@ -265,8 +265,8 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
         def mojo = pluginProject.pluginDescriptor.getMojo("touch")
         mojo.description == "A mojo written in Java that touches a file."
         mojo.parameters.size() == 2
-        mojo.parameters.contains(new DescriptorFile.ParameterDeclaration("fileName", File, false, true, "The name of the file to put into the output directory."))
-        mojo.parameters.contains(new DescriptorFile.ParameterDeclaration("outputDirectory", File, false, true, "The output directory to put the file into."))
+        mojo.parameters.contains(new DescriptorFile.ParameterDeclaration("fileName", File, "", false, true, "The name of the file to put into the output directory."))
+        mojo.parameters.contains(new DescriptorFile.ParameterDeclaration("outputDirectory", File, "", false, true, "The output directory to put the file into."))
     }
 
     def "provides control over plugin dependencies"() {
