@@ -46,9 +46,10 @@ dependencies {
         because("the version for other dependencies in api would be missing otherwise")
     }
     api("org.apache.maven.plugin-tools:maven-plugin-annotations") {
-        because("MojoDeclaration references types from this artifact")
+        because("MavenMojo references types from this artifact")
     }
     implementation("org.apache.maven.plugin-tools:maven-plugin-tools-api")
+    implementation("org.apache.maven.plugin-tools:maven-plugin-tools-annotations")
     implementation("org.apache.maven.plugin-tools:maven-plugin-tools-java")
     implementation("org.apache.maven.plugin-tools:maven-plugin-tools-generators")
     implementation("org.apache.maven:maven-plugin-api:3.0")
