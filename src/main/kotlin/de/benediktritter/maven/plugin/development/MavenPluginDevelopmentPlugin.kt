@@ -55,7 +55,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             runtimeDependencies.set(extension.dependencies)
         }
         // TODO declare help properties as input
-        val mojoConfiguration = createConfiguration()
+        val mojoConfiguration = createConfiguration(project)
         val generateTask = tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
             classesDirs.set(extension.pluginSourceSet.map { it.output.classesDirs })
             sourcesDirs.set(extension.pluginSourceSet.map { it.java.sourceDirectories })
@@ -89,12 +89,12 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
         }
     }
 
-    private fun Project.createConfiguration(): Configuration {
-        val mojoConfiguration = configurations.create("mojo") {
+    private fun createConfiguration(project: Project): Configuration {
+        val mojoConfiguration = project.configurations.create("mojo") {
             isCanBeConsumed = false
             isCanBeResolved = true
         }
-        configurations["implementation"].extendsFrom(mojoConfiguration)
+        project.configurations.maybeCreate("implementation").extendsFrom(mojoConfiguration)
         return mojoConfiguration
     }
 

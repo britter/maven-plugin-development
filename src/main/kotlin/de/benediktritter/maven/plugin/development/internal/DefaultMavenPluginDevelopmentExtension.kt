@@ -58,6 +58,6 @@ open class DefaultMavenPluginDevelopmentExtension @Inject constructor(project: P
     override fun mojos(action: Action<in NamedDomainObjectContainer<out MavenMojo>>) = action.execute(mojos)
 
     override val dependencies: Property<Configuration> = project.objects.property<Configuration>()
-            .convention(project.configurations["runtimeClasspath"])
+            .convention(project.provider { project.configurations["runtimeClasspath"] })
 }
 
