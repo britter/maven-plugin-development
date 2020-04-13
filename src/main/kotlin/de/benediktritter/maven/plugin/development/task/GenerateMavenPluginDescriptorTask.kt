@@ -19,8 +19,10 @@ package de.benediktritter.maven.plugin.development.task
 import de.benediktritter.maven.plugin.development.internal.MavenLoggerAdapter
 import de.benediktritter.maven.plugin.development.internal.MavenServiceFactory
 import de.benediktritter.maven.plugin.development.model.MojoDeclaration
+import de.benediktritter.maven.plugin.development.model.ParameterDeclaration
 import org.apache.maven.model.Build
 import org.apache.maven.plugin.descriptor.MojoDescriptor
+import org.apache.maven.plugin.descriptor.Parameter
 import org.apache.maven.plugin.descriptor.PluginDescriptor
 import org.apache.maven.project.MavenProject
 import org.apache.maven.project.artifact.ProjectArtifact
@@ -131,6 +133,20 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
             it.isInheritedByDefault = mojo.isInheritByDefault
             it.componentConfigurator = mojo.configurator
             it.isThreadSafe = mojo.isThreadSafe
+            mojo.parameters.forEach { parameter -> it.addParameter(toParameter(parameter)) }
+        }
+    }
+
+    private fun toParameter(parameter: ParameterDeclaration): Parameter {
+        return Parameter().also {
+            it.name = parameter.name
+            it.type = parameter.type
+            it.description = parameter.description
+            it.alias = parameter.alias
+            it.defaultValue = parameter.defaultValue
+            it.expression = parameter.property
+            it.isRequired = parameter.isRequired
+            it.isEditable = !parameter.isReadonly
         }
     }
 

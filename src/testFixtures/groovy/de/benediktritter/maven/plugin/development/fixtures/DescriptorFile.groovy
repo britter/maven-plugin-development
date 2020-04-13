@@ -43,6 +43,7 @@ class DescriptorFile {
                 def param = new ParameterDeclaration(
                         it.name.text(),
                         ClassUtils.getClass(it.type.text()),
+                        it.alias.text(),
                         it.required.text().toBoolean(),
                         it.editable.text().toBoolean(),
                         it.description.text()
@@ -102,9 +103,9 @@ class DescriptorFile {
         def coords = dependencyNotation.split(":")
         dependencies.any {
             it.groupId == coords[0] &&
-            it.artifactId == coords[1] &&
-            it.version == coords[2] &&
-            it.type == "jar"
+                    it.artifactId == coords[1] &&
+                    it.version == coords[2] &&
+                    it.type == "jar"
         }
     }
 
@@ -140,12 +141,17 @@ class DescriptorFile {
         String configurator
         boolean threadSafe
         Set<ParameterDeclaration> parameters
+
+        ParameterDeclaration getParameter(String parameterName) {
+            parameters.find { it.name == parameterName }
+        }
     }
 
     @Immutable
     static class ParameterDeclaration {
         String name
         Class type
+        String alias
         boolean required
         boolean editable
         String description

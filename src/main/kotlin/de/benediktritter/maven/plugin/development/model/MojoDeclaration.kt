@@ -19,9 +19,14 @@ package de.benediktritter.maven.plugin.development.model
 import org.apache.maven.plugins.annotations.InstantiationStrategy
 import org.apache.maven.plugins.annotations.LifecyclePhase
 import org.apache.maven.plugins.annotations.ResolutionScope
+import org.gradle.api.Action
+import org.gradle.api.NamedDomainObjectContainer
+import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.Optional
+import org.gradle.kotlin.dsl.domainObjectContainer
 
 /**
  * Representation of a mojo.
@@ -31,7 +36,9 @@ import org.gradle.api.tasks.Optional
  *
  * @since 0.2.0
  */
-open class MojoDeclaration(@get:Input val name: String) {
+open class MojoDeclaration(@get:Input val name: String) : ParametersSpec {
+
+    val parameters = mutableListOf<ParameterDeclaration>()
 
     @get:Input
     @get:Optional
@@ -82,4 +89,24 @@ open class MojoDeclaration(@get:Input val name: String) {
 
     @get:Input
     var isThreadSafe: Boolean = false
+
+    fun parameters(configure: Action<in ParametersSpec>) = configure.execute(this)
+
+    override fun parameter(name: String, type: String) {
+        parameter(name, type) { }
+    }
+
+    override fun parameter(name: String, type: String, configure: Action<in ParameterDeclaration>) {
+        val parameter = ParameterDeclaration(name, type)
+        configure.execute(parameter)
+        parameters.add(parameter)
+    }
+
+    override fun parameter(name: String, type: Class<Any>) {
+        parameter(name, type.name)
+    }
+
+    override fun parameter(name: String, type: Class<Any>, configure: Action<in ParameterDeclaration>) {
+        parameter(name, type.name, configure)
+    }
 }
