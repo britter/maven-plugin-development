@@ -2,7 +2,7 @@
 
 ## Breaking changes
 
-* Class `..model.RuntimeDependencyDescriptor` has been removed.
+* Package `de.benediktritter.maven.plugin.development.model` has been removed.
 
 ## New Features
 

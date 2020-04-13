@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-package de.benediktritter.maven.plugin.development.model
+package de.benediktritter.maven.plugin.development
 
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Optional
+/**
+ * representation of a [@Parameter][org.apache.maven.plugins.annotations.Parameter] declaration.
+ *
+ * @since 0.2.0
+ */
+interface MavenMojoParameter {
 
-data class MavenPluginDescriptor(
-        @get:Input val groupId: String,
-        @get:Input val artifactId: String,
-        @get:Input val version: String,
-        @get:Input val name: String,
-        @get:Input val description: String,
-        @get:Input @get:Optional val goalPrefix: String?
-)
+    var description: String?
+
+    var alias: String?
+
+    var property: String?
+
+    var defaultValue: String?
+
+    var isRequired: Boolean
+
+    var isReadonly: Boolean
+}

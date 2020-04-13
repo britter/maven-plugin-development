@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package de.benediktritter.maven.plugin.development.model
+package de.benediktritter.maven.plugin.development.internal
 
-/**
- * Valid values for [@Mojo.executionStrategy()][org.apache.maven.plugins.annotations.Mojo.executionStrategy]
- *
- * @since 0.2.0
- */
-enum class ExecutionStrategy(private val id: String) {
-    ONCE_PER_SESSION("once-per-session"),
-    ALWAYS("always");
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Optional
 
-    fun id(): String = id
-}
+data class MavenPluginDescriptor(
+        @get:Input val groupId: String,
+        @get:Input val artifactId: String,
+        @get:Input val version: String,
+        @get:Input val name: String,
+        @get:Input val description: String,
+        @get:Input @get:Optional val goalPrefix: String?
+)

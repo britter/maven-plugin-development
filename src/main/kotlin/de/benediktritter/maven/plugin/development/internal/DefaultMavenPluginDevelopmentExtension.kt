@@ -16,8 +16,8 @@
 
 package de.benediktritter.maven.plugin.development.internal
 
+import de.benediktritter.maven.plugin.development.MavenMojo
 import de.benediktritter.maven.plugin.development.MavenPluginDevelopmentExtension
-import de.benediktritter.maven.plugin.development.model.MojoDeclaration
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
@@ -53,9 +53,9 @@ open class DefaultMavenPluginDevelopmentExtension @Inject constructor(project: P
     override val generateHelpMojo: Property<Boolean> = project.objects.property<Boolean>()
             .convention(false)
 
-    override val mojos: NamedDomainObjectContainer<MojoDeclaration> = project.objects.domainObjectContainer(MojoDeclaration::class.java)
+    override val mojos: NamedDomainObjectContainer<DefaultMavenMojo> = project.objects.domainObjectContainer(DefaultMavenMojo::class.java)
 
-    override fun mojos(action: Action<in NamedDomainObjectContainer<MojoDeclaration>>) = action.execute(mojos)
+    override fun mojos(action: Action<in NamedDomainObjectContainer<out MavenMojo>>) = action.execute(mojos)
 
     override val dependencies: Property<Configuration> = project.objects.property<Configuration>()
             .convention(project.configurations["runtimeClasspath"])

@@ -16,7 +16,7 @@
 
 package de.benediktritter.maven.plugin.development.task
 
-import de.benediktritter.maven.plugin.development.model.MavenPluginDescriptor
+import de.benediktritter.maven.plugin.development.internal.MavenPluginDescriptor
 import org.apache.maven.plugin.descriptor.PluginDescriptor
 import org.apache.maven.project.MavenProject
 import org.apache.maven.tools.plugin.DefaultPluginToolsRequest

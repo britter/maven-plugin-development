@@ -14,39 +14,33 @@
  * limitations under the License.
  */
 
-package de.benediktritter.maven.plugin.development.model
+package de.benediktritter.maven.plugin.development.internal
 
+import de.benediktritter.maven.plugin.development.MavenMojoParameter
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 
-/**
- * representation of a [@Parameter][org.apache.maven.plugins.annotations.Parameter] declaration.
- *
- * @since 0.2.0
- */
-open class ParameterDeclaration(@get:Input val name: String, @get:Input val type: String) {
+open class DefaultMavenMojoParameter(@get:Input val name: String, @get:Input val type: String) : MavenMojoParameter {
 
     @get:Input
     @get:Optional
-    var description: String? = null
+    override var description: String? = null
 
     @get:Input
     @get:Optional
-    var alias: String? = null
+    override var alias: String? = null
 
     @get:Input
     @get:Optional
-    var property: String? = null
+    override var property: String? = null
 
     @get:Input
     @get:Optional
-    var defaultValue: String? = null
+    override var defaultValue: String? = null
 
     @get:Input
-    @get:Optional
-    var isRequired: Boolean = false
+    override var isRequired: Boolean = false
 
     @get:Input
-    @get:Optional
-    var isReadonly: Boolean = false
+    override var isReadonly: Boolean = false
 }

@@ -18,8 +18,8 @@ package de.benediktritter.maven.plugin.development.task
 
 import de.benediktritter.maven.plugin.development.internal.MavenLoggerAdapter
 import de.benediktritter.maven.plugin.development.internal.MavenServiceFactory
-import de.benediktritter.maven.plugin.development.model.MojoDeclaration
-import de.benediktritter.maven.plugin.development.model.ParameterDeclaration
+import de.benediktritter.maven.plugin.development.internal.DefaultMavenMojo
+import de.benediktritter.maven.plugin.development.internal.DefaultMavenMojoParameter
 import org.apache.maven.model.Build
 import org.apache.maven.plugin.descriptor.MojoDescriptor
 import org.apache.maven.plugin.descriptor.Parameter
@@ -54,7 +54,7 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
     abstract val mojoDependencies: Property<Configuration>
 
     @get:Nested
-    abstract val additionalMojos: SetProperty<MojoDeclaration>
+    abstract val additionalMojos: SetProperty<DefaultMavenMojo>
 
     @get:OutputDirectory
     abstract val outputDirectory: DirectoryProperty
@@ -114,7 +114,7 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
         additionalMojos.get().map(::toMojoDescriptor).forEach { pluginDescriptor.addMojo(it) }
     }
 
-    private fun toMojoDescriptor(mojo: MojoDeclaration): MojoDescriptor {
+    private fun toMojoDescriptor(mojo: DefaultMavenMojo): MojoDescriptor {
         return ExtendedMojoDescriptor().also {
             it.goal = mojo.name
             it.description = mojo.description
@@ -137,7 +137,7 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
         }
     }
 
-    private fun toParameter(parameter: ParameterDeclaration): Parameter {
+    private fun toParameter(parameter: DefaultMavenMojoParameter): Parameter {
         return Parameter().also {
             it.name = parameter.name
             it.type = parameter.type

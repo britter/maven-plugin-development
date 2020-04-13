@@ -17,7 +17,7 @@
 package de.benediktritter.maven.plugin.development
 
 import de.benediktritter.maven.plugin.development.internal.DefaultMavenPluginDevelopmentExtension
-import de.benediktritter.maven.plugin.development.model.MavenPluginDescriptor
+import de.benediktritter.maven.plugin.development.internal.MavenPluginDescriptor
 import de.benediktritter.maven.plugin.development.task.GenerateHelpMojoSourcesTask
 import de.benediktritter.maven.plugin.development.task.GenerateMavenPluginDescriptorTask
 import org.gradle.api.Plugin

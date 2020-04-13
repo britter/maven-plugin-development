@@ -34,7 +34,7 @@ class BuildScriptMojoDslFuncTest extends AbstractPluginFuncTest {
                         requiresDependencyResolution = org.apache.maven.plugins.annotations.ResolutionScope.COMPILE
                         requiresDependencyCollection = org.apache.maven.plugins.annotations.ResolutionScope.TEST
                         instantiationStrategy = org.apache.maven.plugins.annotations.InstantiationStrategy.SINGLETON
-                        executionStrategy = de.benediktritter.maven.plugin.development.model.ExecutionStrategy.ALWAYS
+                        executionStrategy = de.benediktritter.maven.plugin.development.MavenMojo.ExecutionStrategy.ALWAYS
                         requiresProject = false
                         requiresReports = true
                         aggregator = true

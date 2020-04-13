@@ -16,7 +16,6 @@
 
 package de.benediktritter.maven.plugin.development
 
-import de.benediktritter.maven.plugin.development.model.MojoDeclaration
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.artifacts.Configuration
@@ -45,9 +44,9 @@ interface MavenPluginDevelopmentExtension {
 
     val generateHelpMojo: Property<Boolean>
 
-    val mojos: NamedDomainObjectContainer<MojoDeclaration>
+    val mojos: NamedDomainObjectContainer<out MavenMojo>
 
-    fun mojos(action: Action<in NamedDomainObjectContainer<MojoDeclaration>>)
+    fun mojos(action: Action<in NamedDomainObjectContainer<out MavenMojo>>)
 
     /**
      * The set of dependencies to add to the plugin descriptor.

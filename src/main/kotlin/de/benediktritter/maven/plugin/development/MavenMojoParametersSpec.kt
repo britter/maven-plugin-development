@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-package de.benediktritter.maven.plugin.development.model
+package de.benediktritter.maven.plugin.development
 
 import org.gradle.api.Action
 
-interface ParametersSpec {
+/**
+ * Configures additional mojo parameters.
+ *
+ * @since 0.2.0
+ */
+interface MavenMojoParametersSpec {
 
     fun parameter(name: String, type: String)
 
-    fun parameter(name: String, type: String, configure: Action<in ParameterDeclaration>)
+    fun parameter(name: String, type: String, configure: Action<in MavenMojoParameter>)
 
     fun parameter(name: String, type: Class<Any>)
 
-    fun parameter(name: String, type: Class<Any>, configure: Action<in ParameterDeclaration>)
+    fun parameter(name: String, type: Class<Any>, configure: Action<in MavenMojoParameter>)
 }
