@@ -293,6 +293,78 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
         !pluginDescriptor.hasDependency('com.google.guava:guava:28.0-jre')
     }
 
+    def "provides DSL for defining mojos in the build script"() {
+        given:
+        buildFile << """
+            mavenPlugin {
+                mojos {
+                    touch {
+                        description = "This is an awesome mojo!"
+                        implementation = "de.benediktritter.maven.SomeMojo"
+                        language = "kotlin"
+                        defaultPhase = org.apache.maven.plugins.annotations.LifecyclePhase.PROCESS_RESOURCES
+                        requiresDependencyResolution = org.apache.maven.plugins.annotations.ResolutionScope.COMPILE
+                        requiresDependencyCollection = org.apache.maven.plugins.annotations.ResolutionScope.TEST
+                        instantiationStrategy = org.apache.maven.plugins.annotations.InstantiationStrategy.SINGLETON
+                        executionStrategy = de.benediktritter.maven.plugin.development.model.ExecutionStrategy.ALWAYS
+                        requiresProject = false
+                        requiresReports = true
+                        aggregator = true
+                        requiresDirectInvocation = true
+                        requiresOnline = true
+                        inheritByDefault = false
+                        configurator = "de.benediktritter.maven.SomeConfigurer"
+                        threadSafe = true
+                    }
+                }
+            }
+        """
+
+        when:
+        run("generateMavenPluginDescriptor")
+
+        then:
+        pluginDescriptor.hasGoal("touch")
+        def mojo = pluginDescriptor.getMojo("touch")
+        mojo.description == "This is an awesome mojo!"
+        mojo.implementation == "de.benediktritter.maven.SomeMojo"
+        mojo.language == "kotlin"
+        mojo.phase == "process-resources"
+        mojo.requiresDependencyResolution == "compile"
+        mojo.requiresDependencyCollection == "test"
+        mojo.instantiationStrategy == "singleton"
+        mojo.executionStrategy == "always"
+        !mojo.requiresProject
+        mojo.requiresReports
+        mojo.aggregator
+        mojo.requiresDirectInvocation
+        mojo.requiresOnline
+        !mojo.inheritedByDefault
+        mojo.configurator == "de.benediktritter.maven.SomeConfigurer"
+        mojo.threadSafe
+    }
+
+    def "throws error when implementation is missing"() {
+        given:
+        buildFile << """
+            mavenPlugin {
+                mojos {
+                    touch {
+                        description = "This is an awesome mojo!"
+                    }
+                }
+            }
+        """
+
+        when:
+        def result = runAndFail("generateMavenPluginDescriptor")
+
+        then:
+        result.task(":generateMavenPluginDescriptor").outcome == TaskOutcome.FAILED
+        result.output.contains("implementation")
+        !result.output.contains("configurator")
+    }
+
     @Unroll
     def "task is executed when #task lifecycle task is executed"() {
         given:

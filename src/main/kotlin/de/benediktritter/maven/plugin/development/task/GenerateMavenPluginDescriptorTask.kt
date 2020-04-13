@@ -18,16 +18,20 @@ package de.benediktritter.maven.plugin.development.task
 
 import de.benediktritter.maven.plugin.development.internal.MavenLoggerAdapter
 import de.benediktritter.maven.plugin.development.internal.MavenServiceFactory
+import de.benediktritter.maven.plugin.development.model.MojoDeclaration
 import org.apache.maven.model.Build
+import org.apache.maven.plugin.descriptor.MojoDescriptor
 import org.apache.maven.plugin.descriptor.PluginDescriptor
 import org.apache.maven.project.MavenProject
 import org.apache.maven.project.artifact.ProjectArtifact
+import org.apache.maven.tools.plugin.ExtendedMojoDescriptor
 import org.apache.maven.tools.plugin.generator.PluginDescriptorGenerator
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.Property
+import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.*
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.the
@@ -46,6 +50,9 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
 
     @get:Input
     abstract val mojoDependencies: Property<Configuration>
+
+    @get:Nested
+    abstract val additionalMojos: SetProperty<MojoDeclaration>
 
     @get:OutputDirectory
     abstract val outputDirectory: DirectoryProperty
@@ -97,6 +104,33 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
                     scanner.populatePluginDescriptor(pluginToolsRequest)
                 }
             }
+            addAdditionalMojos(pluginDescriptor)
+        }
+    }
+
+    private fun addAdditionalMojos(pluginDescriptor: PluginDescriptor) {
+        additionalMojos.get().map(::toMojoDescriptor).forEach { pluginDescriptor.addMojo(it) }
+    }
+
+    private fun toMojoDescriptor(mojo: MojoDeclaration): MojoDescriptor {
+        return ExtendedMojoDescriptor().also {
+            it.goal = mojo.name
+            it.description = mojo.description
+            it.implementation = mojo.implementation
+            it.language = mojo.language
+            it.phase = mojo.defaultPhase.id()
+            it.dependencyResolutionRequired = mojo.requiresDependencyResolution.id()
+            it.dependencyCollectionRequired = mojo.requiresDependencyCollection.id()
+            it.instantiationStrategy = mojo.instantiationStrategy.id()
+            it.executionStrategy = mojo.executionStrategy.id()
+            it.isProjectRequired = mojo.isRequiresProject
+            it.isRequiresReports = mojo.isRequiresReports
+            it.isAggregator = mojo.isAggregator
+            it.isDirectInvocationOnly = mojo.isRequiresDirectInvocation
+            it.isOnlineRequired = mojo.isRequiresOnline
+            it.isInheritedByDefault = mojo.isInheritByDefault
+            it.componentConfigurator = mojo.configurator
+            it.isThreadSafe = mojo.isThreadSafe
         }
     }
 

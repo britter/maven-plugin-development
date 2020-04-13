@@ -35,13 +35,19 @@ abstract class AbstractPluginFuncTest extends Specification {
     }
 
     def run(String... args) {
-        def runner = GradleRunner.create()
+        runner(args).build()
+    }
+
+    def runAndFail(String... args) {
+        runner(args).buildAndFail()
+    }
+
+    private def runner(String... args) {
+        GradleRunner.create()
                 .forwardOutput()
                 .withDebug(ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0)
                 .withPluginClasspath()
                 .withArguments([*args, "-s"])
                 .withProjectDir(project.projectDir)
-
-        runner.build()
     }
 }
