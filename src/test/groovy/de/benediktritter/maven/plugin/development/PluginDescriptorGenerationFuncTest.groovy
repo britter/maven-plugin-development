@@ -17,10 +17,8 @@
 package de.benediktritter.maven.plugin.development
 
 import de.benediktritter.maven.plugin.development.fixtures.DescriptorFile
-import org.gradle.testkit.runner.TaskOutcome
-import spock.lang.Unroll
 
-class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
+class PluginDescriptorGenerationFuncTest extends AbstractPluginFuncTest {
 
     def "adds project metadata"() {
         given:
@@ -293,48 +291,4 @@ class MavenPluginDevelopmentPluginFuncTest extends AbstractPluginFuncTest {
         !pluginDescriptor.hasDependency('com.google.guava:guava:28.0-jre')
     }
 
-    @Unroll
-    def "task is executed when #task lifecycle task is executed"() {
-        given:
-        javaMojo()
-
-        when:
-        def result = run(task)
-
-        then:
-        result.task(":generateMavenPluginDescriptor").outcome == TaskOutcome.SUCCESS
-
-        and:
-        pluginJar.contains(pluginDescriptor)
-        pluginJar.contains(helpDescriptor)
-
-        where:
-        task << ["jar", "build"]
-    }
-
-    def "generates HelpMojo"() {
-        given:
-        javaMojo()
-        buildFile << "mavenPlugin.generateHelpMojo.set(true)"
-
-        when:
-        def result = run("generateMavenPluginDescriptor")
-
-        then:
-        result.task(":generateMavenPluginHelpMojoSources").outcome == TaskOutcome.SUCCESS
-
-        and:
-        pluginDescriptor.getMojo("help").implementation == "org.example.HelpMojo"
-    }
-
-    def "skips HelpMojo is not configured"() {
-        given:
-        javaMojo()
-
-        when:
-        def result = run("build")
-
-        then:
-        result.task(":generateMavenPluginHelpMojoSources").outcome == TaskOutcome.SKIPPED
-    }
 }

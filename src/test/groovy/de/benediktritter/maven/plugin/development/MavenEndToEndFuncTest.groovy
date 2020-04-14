@@ -18,7 +18,7 @@ package de.benediktritter.maven.plugin.development
 
 import de.benediktritter.maven.plugin.development.fixtures.DescriptorFile
 
-class MavenUsageFuncTest extends AbstractPluginFuncTest {
+class MavenEndToEndFuncTest extends AbstractPluginFuncTest {
 
     File mavenRepository
 
