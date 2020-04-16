@@ -1,8 +1,4 @@
-# 0.2.0 - TBA
-
-## Breaking changes
-
-* Package `de.benediktritter.maven.plugin.development.model` has been removed.
+# 0.2.0 - 2020-04-16
 
 ## New Features
 
@@ -19,6 +15,10 @@
 
 * Force version upgrade of qdox
   https://github.com/britter/maven-plugin-development/pull/9
+
+## Breaking changes
+
+* Package `de.benediktritter.maven.plugin.development.model` has been removed.
 
 # 0.1.0 - 2020-04-05
 

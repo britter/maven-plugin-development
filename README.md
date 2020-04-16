@@ -22,7 +22,7 @@ The only setting that users might want to configure is `generateHelpMojo` which 
 
 ```groovy
 plugins {
-  id 'de.benediktritter.maven-plugin-development' version '0.1.0'
+  id 'de.benediktritter.maven-plugin-development' version '0.2.0'
 }
 
 mavenPlugin {
@@ -35,7 +35,7 @@ mavenPlugin {
 
 ```kotlin
 plugins {
-  id("de.benediktritter.maven-plugin-development") version "0.1.0"
+  id("de.benediktritter.maven-plugin-development") version "0.2.0"
 }
 
 mavenPlugin {
@@ -53,7 +53,7 @@ All project dependencies added to this configuration will be searched for mojo i
 
 ```groovy
 plugins {
-  id 'de.benediktritter.maven-plugin-development' version '0.1.0'
+  id 'de.benediktritter.maven-plugin-development' version '0.2.0'
 }
 
 dependencies {
@@ -65,7 +65,7 @@ dependencies {
 
 ```kotlin
 plugins {
-  id("de.benediktritter.maven-plugin-development") version "0.1.0"
+  id("de.benediktritter.maven-plugin-development") version "0.2.0"
 }
 
 dependencies {
@@ -84,7 +84,7 @@ In the following examples only `org.apache.commons:commons-lang3:3.9` will be ad
 
 ```groovy
 plugins {
-  id 'de.benediktritter.maven-plugin-development' version '0.1.0'
+  id 'de.benediktritter.maven-plugin-development' version '0.2.0'
 }
 
 configurations {
@@ -105,7 +105,7 @@ mavenPlugin {
 
 ```kotlin
 plugins {
-  id("de.benediktritter.maven-plugin-development") version "0.1.0"
+  id("de.benediktritter.maven-plugin-development") version "0.2.0"
 }
 
 val deps by configurations.creating
@@ -128,7 +128,7 @@ If you can't or don't want to use auto detection of mojos there is also a DSL fo
 
 ```groovy
 plugins {
-  id 'de.benediktritter.maven-plugin-development' version '0.1.0'
+  id 'de.benediktritter.maven-plugin-development' version '0.2.0'
 }
 
 mavenPlugin {
@@ -151,7 +151,7 @@ mavenPlugin {
 
 ```kotlin
 plugins {
-  id("de.benediktritter.maven-plugin-development") version "0.1.0"
+  id("de.benediktritter.maven-plugin-development") version "0.2.0"
 }
 
 mavenPlugin {
