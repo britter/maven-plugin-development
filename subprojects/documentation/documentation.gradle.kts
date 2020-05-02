@@ -14,3 +14,35 @@
  * limitations under the License.
  */
 
+plugins {
+    id("groovy")
+    id("org.asciidoctor.jvm.convert") version "3.2.0"
+}
+
+repositories {
+    maven { url = uri("https://repo.gradle.org/gradle/libs") }
+}
+
+dependencies {
+    testImplementation("org.codehaus.groovy:groovy-all:2.5.8")
+    testImplementation(gradleTestKit())
+    testImplementation("org.gradle:sample-check:0.12.6")
+}
+
+tasks.asciidoctor {
+    outputOptions {
+        separateOutputDirs = false
+    }
+
+    attributes(mapOf(
+            "docinfodir" to "src/docs/asciidoc",
+            "docinfo" to "shared",
+            "source-highlighter" to "prettify",
+            "tabsize" to "4",
+            "toc" to "left",
+            "icons" to "font",
+            "sectanchors" to true,
+            "idprefix" to "",
+            "idseparator" to "-"
+    ))
+}
