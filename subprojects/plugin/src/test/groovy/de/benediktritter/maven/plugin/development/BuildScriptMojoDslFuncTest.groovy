@@ -16,7 +16,6 @@
 
 package de.benediktritter.maven.plugin.development
 
-import de.benediktritter.maven.plugin.development.fixtures.DescriptorFile
 import org.gradle.testkit.runner.TaskOutcome
 
 class BuildScriptMojoDslFuncTest extends AbstractPluginFuncTest {

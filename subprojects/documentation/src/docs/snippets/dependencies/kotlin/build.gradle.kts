@@ -13,3 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+plugins {
+    // TODO remove after 0.2.1 release
+    java
+    id("de.benediktritter.maven-plugin-development") version "0.2.0"
+}
+
+// tag::dependencies[]
+val deps by configurations.creating
+
+dependencies {
+    deps("org.apache.commons:commons-lang3:3.9")
+    implementation("com.google.guava:guava:28.0-jre")
+}
+
+mavenPlugin {
+    dependencies.set(deps)
+}
+// end::dependencies[]

@@ -13,3 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package de.benediktritter.maven.plugin.development.documentation
+
+import org.gradle.samples.test.runner.GradleSamplesRunner
+import org.gradle.samples.test.runner.SamplesRoot
+import org.junit.runner.RunWith
+
+@RunWith(GradleSamplesRunner)
+@SamplesRoot("src/docs/snippets")
+class DocumentationSnippetsTest {
+}
