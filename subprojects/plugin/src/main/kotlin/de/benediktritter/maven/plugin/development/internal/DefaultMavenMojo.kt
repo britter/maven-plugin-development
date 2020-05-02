@@ -95,11 +95,11 @@ open class DefaultMavenMojo(@get:Input val name: String) : MavenMojo, MavenMojoP
         parameters.add(parameter)
     }
 
-    override fun parameter(name: String, type: Class<Any>) {
+    override fun parameter(name: String, type: Class<*>) {
         parameter(name, type.name)
     }
 
-    override fun parameter(name: String, type: Class<Any>, configure: Action<in MavenMojoParameter>) {
+    override fun parameter(name: String, type: Class<*>, configure: Action<in MavenMojoParameter>) {
         parameter(name, type.name, configure)
     }
 }
