@@ -16,29 +16,33 @@ To do this the plugin wraps around the https://maven.apache.org/plugin-tools/[Ma
 
 Once applied, the plugin adds a https://github.com/britter/maven-plugin-development/blob/0.1.0/src/main/kotlin/de/benediktritter/maven/plugin/development/MavenPluginDevelopmentExtension.kt[`MavenPluginDevelopmentExtension`] with name `mavenPlugin` to the project.
 All meta data for the plugin, e.g. `groupId`, `artifactId`, `description` is extracted from the corresponding project properties.
-The only setting that users might want to configure is `generateHelpMojo` which is false be default, meaning not help mojo will be generated.
+
+[source.multi-language-sample,groovy,subs="attributes+,verbatim"]
+----
+plugins {
+    id 'de.benediktritter.maven-plugin-development' version '{gradle-project-version}'
+}
+----
+[source.multi-language-sample,kotlin,subs="attributes+"]
+----
+plugins {
+    id("de.benediktritter.maven-plugin-development") version "{gradle-project-version}"
+}
+----
+
+== HelpMojo generation
+
+It's possible to generate a help mojo that help users to discover the functionality of your Maven plugin.
+By default generation of a help mojo is disabled.
+To enable it add the following configuration
 
 [source.multi-language-sample,groovy]
 ----
-plugins {
-  id 'de.benediktritter.maven-plugin-development' version '0.2.0'
-}
-
-mavenPlugin {
-  // optional, false by default
-  generateHelpMojo = true
-}
+include::src/docs/snippets/help-mojo/groovy/build.gradle[tags=help-mojo]
 ----
 [source.multi-language-sample,kotlin]
 ----
-plugins {
-  id("de.benediktritter.maven-plugin-development") version "0.2.0"
-}
-
-mavenPlugin {
-  // optional, false by default
-  generateHelpMojo.set(true)
-}
+include::src/docs/snippets/help-mojo/kotlin/build.gradle.kts[tags=help-mojo]
 ----
 
 == Extracting mojos from other subprojects
@@ -48,23 +52,11 @@ All project dependencies added to this configuration will be searched for mojo i
 
 [source.multi-language-sample,groovy]
 ----
-plugins {
-  id 'de.benediktritter.maven-plugin-development' version '0.2.0'
-}
-
-dependencies {
-  mojo project(":mojo-subproject")
-}
+include::src/docs/snippets/mojo-subproject/groovy/plugin/build.gradle[tags=mojo-subproject]
 ----
 [source.multi-language-sample,kotlin]
 ----
-plugins {
-  id("de.benediktritter.maven-plugin-development") version "0.2.0"
-}
-
-dependencies {
-  mojo(project(":mojo-subproject"))
-}
+include::src/docs/snippets/mojo-subproject/kotlin/plugin/build.gradle.kts[tags=mojo-subproject]
 ----
 
 == Controlling plugin dependencies
@@ -75,39 +67,11 @@ In the following examples only `org.apache.commons:commons-lang3:3.9` will be ad
 
 [source.multi-language-sample,groovy]
 ----
-plugins {
-  id 'de.benediktritter.maven-plugin-development' version '0.2.0'
-}
-
-configurations {
-  deps
-}
-
-dependencies {
-  deps "org.apache.commons:commons-lang3:3.9"
-  implementation "com.google.guava:guava:28.0-jre"
-}
-
-mavenPlugin {
-  dependencies = configurations.deps
-}
+include::src/docs/snippets/dependencies/groovy/build.gradle[tags=dependencies]
 ----
 [source.multi-language-sample,kotlin]
 ----
-plugins {
-  id("de.benediktritter.maven-plugin-development") version "0.2.0"
-}
-
-val deps by configurations.creating
-
-dependencies {
-  deps("org.apache.commons:commons-lang3:3.9")
-  implementation("com.google.guava:guava:28.0-jre")
-}
-
-mavenPlugin {
-  dependencies.set(deps)
-}
+include::src/docs/snippets/dependencies/kotlin/build.gradle.kts[tags=dependencies]
 ----
 
 == Defining mojos in the build script
@@ -116,43 +80,9 @@ If you can't or don't want to use auto detection of mojos there is also a DSL fo
 
 [source.multi-language-sample,groovy]
 ----
-plugins {
-  id 'de.benediktritter.maven-plugin-development' version '0.2.0'
-}
-
-mavenPlugin {
-  mojos {
-    touch {
-      implementation = "com.example.MyMojo"
-      description = "A super fancy mojo defined in my build.gradle"
-      parameters {
-        parameter("outputDir", File) {
-          defaultValue = "\${project.build.outputDirectory}/myMojoOutput"
-          required = false
-        }
-      }
-    }
-  }
-}
+include::src/docs/snippets/buildscript-dsl/groovy/build.gradle[tags=buildscript-dsl]
 ----
 [source.multi-language-sample,kotlin]
 ----
-plugins {
-  id("de.benediktritter.maven-plugin-development") version "0.2.0"
-}
-
-mavenPlugin {
-  mojos {
-    create<MavenMojo>("touch") {
-      implementation = "com.example.MyMojo"
-      description = "A super fancy mojo defined in my build.gradle"
-      parameters {
-        parameter("outputDir", File::class.java) {
-          defaultValue = "\${project.build.outputDirectory}/myMojoOutput"
-          required = false
-        }
-      }
-    }
-  }
-}
+include::src/docs/snippets/buildscript-dsl/kotlin/build.gradle.kts[tags=buildscript-dsl]
 ----

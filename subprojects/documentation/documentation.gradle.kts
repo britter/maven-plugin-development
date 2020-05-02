@@ -29,20 +29,26 @@ dependencies {
     testImplementation("org.gradle:sample-check:0.12.6")
 }
 
-tasks.asciidoctor {
-    outputOptions {
-        separateOutputDirs = false
+tasks {
+    test {
+        inputs.dir("src/docs/snippets")
     }
 
-    attributes(mapOf(
-            "docinfodir" to "src/docs/asciidoc",
-            "docinfo" to "shared",
-            "source-highlighter" to "prettify",
-            "tabsize" to "4",
-            "toc" to "left",
-            "icons" to "font",
-            "sectanchors" to true,
-            "idprefix" to "",
-            "idseparator" to "-"
-    ))
+    asciidoctor {
+        outputOptions {
+            separateOutputDirs = false
+        }
+
+        attributes(mapOf(
+                "docinfodir" to "src/docs/asciidoc",
+                "docinfo" to "shared",
+                "source-highlighter" to "prettify",
+                "tabsize" to "4",
+                "toc" to "left",
+                "icons" to "font",
+                "sectanchors" to true,
+                "idprefix" to "",
+                "idseparator" to "-"
+        ))
+    }
 }
