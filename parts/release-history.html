@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<title>Maven Plugin Development Gradle Plugin</title>
+<title>Release History</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -507,221 +507,38 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Maven Plugin Development Gradle Plugin</h1>
+<h1>Release History</h1>
 <div class="details">
 <span id="revnumber">version 0.2.1-SNAPSHOT</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#features">Features</a></li>
-<li><a href="#usage">Usage</a>
+<li><a href="#0-2-1">0.2.1</a>
 <ul class="sectlevel2">
-<li><a href="#helpmojo-generation">HelpMojo generation</a></li>
-<li><a href="#extracting-mojos-from-other-subprojects">Extracting mojos from other subprojects</a></li>
-<li><a href="#controlling-plugin-dependencies">Controlling plugin dependencies</a></li>
-<li><a href="#defining-mojos-in-the-build-script">Defining mojos in the build script</a></li>
+<li><a href="#bug-fixes">Bug Fixes</a></li>
 </ul>
 </li>
-<li><a href="#release-history">Appendix A: Release History</a>
+<li><a href="#0-2-0">0.2.0</a>
 <ul class="sectlevel2">
-<li><a href="#0-2-1">0.2.1</a></li>
-<li><a href="#0-2-0">0.2.0</a></li>
+<li><a href="#new-features">New Features</a></li>
+<li><a href="#bug-fixes-2">Bug Fixes</a></li>
+<li><a href="#breaking-changes">Breaking changes</a></li>
+</ul>
+</li>
 <li><a href="#0-1-0">0.1.0</a></li>
-</ul>
-</li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p><span class="image"><a class="image" href="https://actions-badge.atrox.dev/britter/maven-plugin-development/goto?ref=master"><img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fbritter%2Fmaven-plugin-development%2Fbadge%3Fref%3Dmaster&amp;style=flat" alt="Build Status"></a></span>
-<span class="image"><a class="image" href="https://plugins.gradle.org/plugin/de.benediktritter.maven-plugin-development"><img src="https://img.shields.io/maven-metadata/v?label=Plugin%20Portal&amp;metadataUrl=https%3A%2F%2Fplugins.gradle.org%2Fm2%2Fde%2Fbenediktritter%2Fmaven-plugin-development%2Fde.benediktritter.maven-plugin-development.gradle.plugin%2Fmaven-metadata.xml" alt="Gradle Plugin Portal"></a></span></p>
-</div>
-<div class="paragraph">
-<p>This plugin aims to fill the tiny gap for people who need to create an <a href="https://maven.apacke.org">Apache Maven</a> plugin from a Gradle build.
-To do this the plugin wraps around the <a href="https://maven.apache.org/plugin-tools/">Maven Plugin Tools API</a> and feeds it with the right inputs from the Gradle build.</p>
-</div>
-</div>
-</div>
 <div class="sect1">
-<h2 id="features"><a class="anchor" href="#features"></a>Features</h2>
+<h2 id="0-2-1"><a class="anchor" href="#0-2-1"></a>0.2.1</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Automatic generation of a maven plugin descriptor containing all mojos in the selected source set (by default the plugin looks for mojo implementations in the main source set)</p>
-</li>
-<li>
-<p>Support for annotation and JavaDoc tag based mojo implementations</p>
-</li>
-<li>
-<p>Optional generation of a help mojo implementation</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="usage"><a class="anchor" href="#usage"></a>Usage</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Once applied, the plugin adds a <a href="https://github.com/britter/maven-plugin-development/blob/0.1.0/src/main/kotlin/de/benediktritter/maven/plugin/development/MavenPluginDevelopmentExtension.kt"><code>MavenPluginDevelopmentExtension</code></a> with name <code>mavenPlugin</code> to the project.
-All meta data for the plugin, e.g. <code>groupId</code>, <code>artifactId</code>, <code>description</code> is extracted from the corresponding project properties.</p>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">plugins {
-    id 'de.benediktritter.maven-plugin-development' version '0.2.1-SNAPSHOT'
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="kotlin">plugins {
-    id("de.benediktritter.maven-plugin-development") version "0.2.1-SNAPSHOT"
-}</code></pre>
-</div>
-</div>
-<div class="sect2">
-<h3 id="helpmojo-generation"><a class="anchor" href="#helpmojo-generation"></a>HelpMojo generation</h3>
-<div class="paragraph">
-<p>It&#8217;s possible to generate a help mojo that help users to discover the functionality of your Maven plugin.
-By default generation of a help mojo is disabled.
-To enable it add the following configuration</p>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">mavenPlugin {
-    // optional, false by default
-    generateHelpMojo = true
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="kotlin">mavenPlugin {
-    // optional, false by default
-    generateHelpMojo.set(true)
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="extracting-mojos-from-other-subprojects"><a class="anchor" href="#extracting-mojos-from-other-subprojects"></a>Extracting mojos from other subprojects</h3>
-<div class="paragraph">
-<p>The plugin will create a configuration called <code>mojo</code> and add it to the project.
-All project dependencies added to this configuration will be searched for mojo implementations.</p>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">dependencies {
-    mojo project(":mojo-subproject")
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="kotlin">dependencies {
-    mojo(project(":mojo-subproject"))
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="controlling-plugin-dependencies"><a class="anchor" href="#controlling-plugin-dependencies"></a>Controlling plugin dependencies</h3>
-<div class="paragraph">
-<p>By default all dependencies from the runtime classpath will in added to the dependencies blog of the generated plugin descriptor.
-The can be changed by configuring the <code>dependencies</code> property on the <code>mavenPlugin</code> extension.
-In the following examples only <code>org.apache.commons:commons-lang3:3.9</code> will be added as a dependency to the plugin descriptor:</p>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">configurations {
-    deps
-}
-
-dependencies {
-    deps "org.apache.commons:commons-lang3:3.9"
-    implementation "com.google.guava:guava:28.0-jre"
-}
-
-mavenPlugin {
-    dependencies = configurations.deps
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="kotlin">val deps by configurations.creating
-
-dependencies {
-    deps("org.apache.commons:commons-lang3:3.9")
-    implementation("com.google.guava:guava:28.0-jre")
-}
-
-mavenPlugin {
-    dependencies.set(deps)
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="defining-mojos-in-the-build-script"><a class="anchor" href="#defining-mojos-in-the-build-script"></a>Defining mojos in the build script</h3>
-<div class="paragraph">
-<p>If you can&#8217;t or don&#8217;t want to use auto detection of mojos there is also a DSL for defining mojos inside the build script:</p>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">mavenPlugin {
-    mojos {
-        touch {
-            implementation = "com.example.MyMojo"
-            description = "A super fancy mojo defined in my build.gradle"
-            parameters {
-                parameter("outputDir", File) {
-                    defaultValue = "\${project.build.outputDirectory}/myMojoOutput"
-                    required = false
-                }
-            }
-        }
-    }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="kotlin">mavenPlugin {
-    mojos {
-        create("touch") {
-            implementation = "com.example.MyMojo"
-            description = "A super fancy mojo defined in my build.gradle"
-            parameters {
-                parameter("outputDir", "java.io.File") {
-                    defaultValue = "\${project.build.outputDirectory}/myMojoOutput"
-                    isRequired = false
-                }
-            }
-        }
-    }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="release-history"><a class="anchor" href="#release-history"></a>Appendix A: Release History</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="0-2-1"><a class="anchor" href="#0-2-1"></a>0.2.1</h3>
 <div class="paragraph">
 <p>Release date: tba</p>
 </div>
-<div class="sect3">
-<h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
+<div class="sect2">
+<h3 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -731,13 +548,15 @@ mavenPlugin {
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="0-2-0"><a class="anchor" href="#0-2-0"></a>0.2.0</h3>
+</div>
+<div class="sect1">
+<h2 id="0-2-0"><a class="anchor" href="#0-2-0"></a>0.2.0</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Release date: 2020-04-16</p>
 </div>
-<div class="sect3">
-<h4 id="new-features"><a class="anchor" href="#new-features"></a>New Features</h4>
+<div class="sect2">
+<h3 id="new-features"><a class="anchor" href="#new-features"></a>New Features</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -755,8 +574,8 @@ mavenPlugin {
 </ul>
 </div>
 </div>
-<div class="sect3">
-<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
+<div class="sect2">
+<h3 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -765,8 +584,8 @@ mavenPlugin {
 </ul>
 </div>
 </div>
-<div class="sect3">
-<h4 id="breaking-changes"><a class="anchor" href="#breaking-changes"></a>Breaking changes</h4>
+<div class="sect2">
+<h3 id="breaking-changes"><a class="anchor" href="#breaking-changes"></a>Breaking changes</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -776,14 +595,15 @@ mavenPlugin {
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="0-1-0"><a class="anchor" href="#0-1-0"></a>0.1.0</h3>
+</div>
+<div class="sect1">
+<h2 id="0-1-0"><a class="anchor" href="#0-1-0"></a>0.1.0</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Release date: 2020-04-05</p>
 </div>
 <div class="paragraph">
 <p>Initial release</p>
-</div>
 </div>
 </div>
 </div>
