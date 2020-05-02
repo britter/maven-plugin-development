@@ -1,3 +1,10 @@
+# 0.2.1 - tba
+
+## Bug Fixes
+
+* Build fails when `java` plugin is not applied explicitly
+  https://github.com/britter/maven-plugin-development/issues/19
+
 # 0.2.0 - 2020-04-16
 
 ## New Features

@@ -21,11 +21,12 @@ import spock.lang.Unroll
 
 class BuildLifecycleFuncTest extends AbstractPluginFuncTest {
 
+    def setup() {
+        javaMojo()
+    }
+
     @Unroll
     def "task is executed when #task lifecycle task is executed"() {
-        given:
-        javaMojo()
-
         when:
         def result = run(task)
 
@@ -38,5 +39,13 @@ class BuildLifecycleFuncTest extends AbstractPluginFuncTest {
 
         where:
         task << ["jar", "build"]
+    }
+
+    def "works without applying other plugins"() {
+        when:
+        buildFile.text = buildFile.text.replace("id 'java'", "")
+
+        then:
+        run("build")
     }
 }
