@@ -7,6 +7,7 @@ Release date: tba
 === Bug Fixes
 
 * Build fails when `java` plugin is not applied explicitly ({gh-issue}19[#19])
+* Tasks provide proper descriptions ({gh-issue}22[#22])
 
 == 0.2.0
 

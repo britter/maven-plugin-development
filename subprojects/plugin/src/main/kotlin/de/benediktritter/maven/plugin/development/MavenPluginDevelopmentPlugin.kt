@@ -31,6 +31,10 @@ import org.gradle.kotlin.dsl.register
 
 class MavenPluginDevelopmentPlugin : Plugin<Project> {
 
+    companion object {
+        const val TASK_GROUP_NAME = "Maven Plugin Development"
+    }
+
     override fun apply(project: Project): Unit = project.run {
         pluginManager.apply(JavaPlugin::class)
 
@@ -41,6 +45,9 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
         val extension = createExtension() as DefaultMavenPluginDevelopmentExtension
 
         val generateHelpMojoTask = tasks.register<GenerateHelpMojoSourcesTask>("generateMavenPluginHelpMojoSources") {
+            group = TASK_GROUP_NAME
+            description = "Generates the Maven plugin descriptor file"
+
             onlyIf { extension.generateHelpMojo.get() }
             outputDirectory.set(helpMojoDir)
             helpPropertiesFile.set(pluginOutputDirectory.map { it.file("maven-plugin-help.properties") })
@@ -59,6 +66,9 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
         // TODO declare help properties as input
         val mojoConfiguration = createConfiguration(project)
         val generateTask = tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
+            group = TASK_GROUP_NAME
+            description = "Generates a Maven help mojo that documents the usage of the Maven plugin"
+
             classesDirs.set(extension.pluginSourceSet.map { it.output.classesDirs })
             sourcesDirs.set(extension.pluginSourceSet.map { it.java.sourceDirectories })
             javaClassesDir.set(extension.pluginSourceSet.flatMap { it.java.classesDirectory })

@@ -48,4 +48,14 @@ class BuildLifecycleFuncTest extends AbstractPluginFuncTest {
         then:
         run("build")
     }
+
+    def "tasks are documented"() {
+        when:
+        def result = run("tasks")
+
+        then:
+        result.output.contains("Maven Plugin Development tasks")
+        result.output.contains("generateMavenPluginDescriptor")
+        result.output.contains("generateMavenPluginHelpMojoSources")
+    }
 }
