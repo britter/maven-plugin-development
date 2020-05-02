@@ -29,7 +29,7 @@ interface MavenMojoParametersSpec {
 
     fun parameter(name: String, type: String, configure: Action<in MavenMojoParameter>)
 
-    fun parameter(name: String, type: Class<Any>)
+    fun parameter(name: String, type: Class<*>)
 
-    fun parameter(name: String, type: Class<Any>, configure: Action<in MavenMojoParameter>)
+    fun parameter(name: String, type: Class<*>, configure: Action<in MavenMojoParameter>)
 }

@@ -4,10 +4,14 @@
 
 Release date: tba
 
+=== New Features
+
+* Tasks provide proper descriptions ({gh-issue}22[#22])
+
 === Bug Fixes
 
 * Build fails when `java` plugin is not applied explicitly ({gh-issue}19[#19])
-* Tasks provide proper descriptions ({gh-issue}22[#22])
+* Typing of `parameters` API is incorrect ({gh-issue}23[#23])
 
 == 0.2.0
 
