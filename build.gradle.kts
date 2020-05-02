@@ -13,3 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+val publishPlugin = tasks.findByPath(":plugin:publishPlugins")
+val publishDocs = tasks.findByPath(":documentation:gitPublishPush")
+
+tasks.register("release") {
+    dependsOn(publishPlugin, publishDocs)
+}
