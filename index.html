@@ -509,7 +509,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Maven Plugin Development Gradle Plugin</h1>
 <div class="details">
-<span id="revnumber">version 0.2.1-SNAPSHOT</span>
+<span id="revnumber">version 0.2.1</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -574,14 +574,14 @@ All meta data for the plugin, e.g. <code>groupId</code>, <code>artifactId</code>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">plugins {
-    id 'de.benediktritter.maven-plugin-development' version '0.2.1-SNAPSHOT'
+    id 'de.benediktritter.maven-plugin-development' version '0.2.1'
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="kotlin">plugins {
-    id("de.benediktritter.maven-plugin-development") version "0.2.1-SNAPSHOT"
+    id("de.benediktritter.maven-plugin-development") version "0.2.1"
 }</code></pre>
 </div>
 </div>
@@ -721,11 +721,24 @@ mavenPlugin {
 <p>Release date: tba</p>
 </div>
 <div class="sect3">
+<h4 id="new-features"><a class="anchor" href="#new-features"></a>New Features</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Tasks provide proper descriptions (<a href="https://github.com/britter/maven-plugin-development/issues/22">#22</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
 <h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
 <p>Build fails when <code>java</code> plugin is not applied explicitly (<a href="https://github.com/britter/maven-plugin-development/issues/19">#19</a>)</p>
+</li>
+<li>
+<p>Typing of <code>parameters</code> API is incorrect (<a href="https://github.com/britter/maven-plugin-development/issues/23">#23</a>)</p>
 </li>
 </ul>
 </div>
@@ -737,7 +750,7 @@ mavenPlugin {
 <p>Release date: 2020-04-16</p>
 </div>
 <div class="sect3">
-<h4 id="new-features"><a class="anchor" href="#new-features"></a>New Features</h4>
+<h4 id="new-features-2"><a class="anchor" href="#new-features-2"></a>New Features</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -790,8 +803,8 @@ mavenPlugin {
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.2.1-SNAPSHOT<br>
-Last updated 2020-05-02 17:02:35 +0200
+Version 0.2.1<br>
+Last updated 2020-05-02 17:23:09 +0200
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
