@@ -17,6 +17,7 @@
 plugins {
     id("groovy")
     id("org.asciidoctor.jvm.convert") version "3.2.0"
+    id("org.ajoberstar.git-publish") version "3.0.0-rc.1"
 }
 
 repositories {
@@ -52,5 +53,17 @@ tasks {
                 "gh-issue" to "https://github.com/britter/maven-plugin-development/issues/",
                 "snippets-path" to "$projectDir/src/docs/snippets"
         ))
+    }
+}
+
+val asciidoctor by tasks.existing
+
+gitPublish {
+    repoUri.set("https://github.com/britter/maven-plugin-development")
+    branch.set("gh-pages")
+    sign.set(false)
+
+    contents {
+        from(asciidoctor)
     }
 }

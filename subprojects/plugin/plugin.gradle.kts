@@ -80,12 +80,10 @@ gradlePlugin {
     }
 }
 
-val repoUrl = "https://github.com/britter/maven-plugin-development"
-
 pluginBundle {
     description = project.description
-    website = repoUrl
-    vcsUrl = repoUrl
+    website = "https://britter.github.io/maven-plugin-development"
+    vcsUrl = "https://github.com/britter/maven-plugin-development"
     tags = listOf("maven", "mojo", "maven plugin")
 }
 
