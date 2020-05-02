@@ -507,10 +507,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
+<h1>Maven Plugin Development Gradle Plugin</h1>
+<div class="details">
+<span id="revnumber">version 0.2.1-SNAPSHOT</span>
+</div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
-<ul class="sectlevel0">
-<li><a href="#maven-plugin-development-gradle-plugin">Maven Plugin Development Gradle Plugin</a>
 <ul class="sectlevel1">
 <li><a href="#features">Features</a></li>
 <li><a href="#usage">Usage</a>
@@ -529,15 +531,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 </ul>
-</li>
-</ul>
 </div>
 </div>
 <div id="content">
-<div class="paragraph">
-<p><a href="https://your-url" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#64CEAA; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style></p>
-</div>
-<h1 id="maven-plugin-development-gradle-plugin" class="sect0"><a class="anchor" href="#maven-plugin-development-gradle-plugin"></a>Maven Plugin Development Gradle Plugin</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
 <p><span class="image"><a class="image" href="https://actions-badge.atrox.dev/britter/maven-plugin-development/goto?ref=master"><img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fbritter%2Fmaven-plugin-development%2Fbadge%3Fref%3Dmaster&amp;style=flat" alt="Build Status"></a></span>
 <span class="image"><a class="image" href="https://plugins.gradle.org/plugin/de.benediktritter.maven-plugin-development"><img src="https://img.shields.io/maven-metadata/v?label=Plugin%20Portal&amp;metadataUrl=https%3A%2F%2Fplugins.gradle.org%2Fm2%2Fde%2Fbenediktritter%2Fmaven-plugin-development%2Fde.benediktritter.maven-plugin-development.gradle.plugin%2Fmaven-metadata.xml" alt="Gradle Plugin Portal"></a></span></p>
@@ -545,6 +543,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>This plugin aims to fill the tiny gap for people who need to create an <a href="https://maven.apacke.org">Apache Maven</a> plugin from a Gradle build.
 To do this the plugin wraps around the <a href="https://maven.apache.org/plugin-tools/">Maven Plugin Tools API</a> and feeds it with the right inputs from the Gradle build.</p>
+</div>
+</div>
 </div>
 <div class="sect1">
 <h2 id="features"><a class="anchor" href="#features"></a>Features</h2>
@@ -791,7 +791,7 @@ mavenPlugin {
 <div id="footer">
 <div id="footer-text">
 Version 0.2.1-SNAPSHOT<br>
-Last updated 2020-05-02 17:15:47 +0200
+Last updated 2020-05-02 17:02:35 +0200
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
