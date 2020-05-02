@@ -2,7 +2,7 @@
 
 == 0.2.1
 
-Release date: tba
+Release date: 2020-05-02
 
 === New Features
 
