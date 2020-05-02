@@ -48,7 +48,9 @@ tasks {
                 "icons" to "font",
                 "sectanchors" to true,
                 "idprefix" to "",
-                "idseparator" to "-"
+                "idseparator" to "-",
+                "gh-issue" to "https://github.com/britter/maven-plugin-development/issues/",
+                "snippets-path" to "$projectDir/src/docs/snippets"
         ))
     }
 }

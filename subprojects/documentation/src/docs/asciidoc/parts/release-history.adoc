@@ -1,0 +1,34 @@
+= Release History
+
+== 0.2.1
+
+Release date: tba
+
+=== Bug Fixes
+
+* Build fails when `java` plugin is not applied explicitly ({gh-issue}19[#19])
+
+== 0.2.0
+
+Release date: 2020-04-16
+
+=== New Features
+
+* Add DSL for declaring mojos in the build script ({gh-issue}4[#4])
+* Provide way to configure plugin dependencies ({gh-issue}12[#12])
+* Define dedicated configuration for projects providing mojos ({gh-issue}11[#11])
+* Add support for mojos from other projects ({gh-issue}3[#3])
+
+=== Bug Fixes
+
+* Force version upgrade of qdox ({gh-issue}9[#9])
+
+=== Breaking changes
+
+* Package `de.benediktritter.maven.plugin.development.model` has been removed.
+
+== 0.1.0
+
+Release date: 2020-04-05
+
+Initial release
