@@ -23,14 +23,16 @@ import de.benediktritter.maven.plugin.development.task.GenerateMavenPluginDescri
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
-import org.gradle.api.plugins.JavaBasePlugin
+import org.gradle.api.plugins.JavaPlugin
 import org.gradle.jvm.tasks.Jar
-import org.gradle.kotlin.dsl.*
+import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.register
 
 class MavenPluginDevelopmentPlugin : Plugin<Project> {
 
     override fun apply(project: Project): Unit = project.run {
-        pluginManager.apply(JavaBasePlugin::class)
+        pluginManager.apply(JavaPlugin::class)
 
         val pluginOutputDirectory = layout.buildDirectory.dir("mavenPlugin")
         val descriptorDir = pluginOutputDirectory.map { it.dir("descriptor") }
