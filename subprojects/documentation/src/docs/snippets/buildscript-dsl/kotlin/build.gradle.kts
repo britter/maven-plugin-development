@@ -16,9 +16,7 @@
 import org.gradle.kotlin.dsl.*
 
 plugins {
-    // TODO remove after 0.2.1 release
-    java
-    id("de.benediktritter.maven-plugin-development") version "0.2.0"
+    id("de.benediktritter.maven-plugin-development")
 }
 
 // tag::buildscript-dsl[]

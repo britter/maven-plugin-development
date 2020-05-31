@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 plugins {
-    id 'java'
-    id 'de.benediktritter.maven-plugin-development' version '0.2.0'
+    id 'de.benediktritter.maven-plugin-development'
 }
 
 // tag::buildscript-dsl[]

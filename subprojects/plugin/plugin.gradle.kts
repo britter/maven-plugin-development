@@ -99,3 +99,11 @@ publishing {
         }
     }
 }
+
+val pluginUnderTestMetadata by tasks.existing(PluginUnderTestMetadata::class)
+
+configurations.create("pluginUnderTestMetadata") {
+    isCanBeConsumed = true
+    isCanBeResolved = false
+    outgoing.artifact(pluginUnderTestMetadata.flatMap { it.outputDirectory })
+}

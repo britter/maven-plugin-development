@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 plugins {
-    // TODO remove after 0.2.1 release
-    java
-    id("de.benediktritter.maven-plugin-development") version "0.2.0"
+    id("de.benediktritter.maven-plugin-development")
 }
 
 // tag::help-mojo[]

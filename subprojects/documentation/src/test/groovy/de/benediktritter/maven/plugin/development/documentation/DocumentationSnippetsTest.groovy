@@ -16,11 +16,10 @@
 
 package de.benediktritter.maven.plugin.development.documentation
 
-import org.gradle.samples.test.runner.GradleSamplesRunner
 import org.gradle.samples.test.runner.SamplesRoot
 import org.junit.runner.RunWith
 
-@RunWith(GradleSamplesRunner)
+@RunWith(PluginUnderTestAwareGradleSamplesRunner)
 @SamplesRoot("src/docs/snippets")
 class DocumentationSnippetsTest {
 }
