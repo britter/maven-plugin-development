@@ -68,7 +68,7 @@ dependencies {
 
     testImplementation("org.spockframework:spock-core:1.3-groovy-2.5")
     testFixturesImplementation("junit:junit:4.12")
-    testFixturesImplementation("org.apache.commons:commons-lang3:3.8")
+    testFixturesImplementation("org.apache.commons:commons-lang3:3.10")
 }
 
 gradlePlugin {
