@@ -53,6 +53,8 @@ open class DefaultMavenPluginDevelopmentExtension @Inject constructor(project: P
     override val generateHelpMojo: Property<Boolean> = project.objects.property<Boolean>()
             .convention(false)
 
+    override val helpMojoPackage: Property<String> = project.objects.property()
+
     override val mojos: NamedDomainObjectContainer<DefaultMavenMojo> = project.objects.domainObjectContainer(DefaultMavenMojo::class.java)
 
     override fun mojos(action: Action<in NamedDomainObjectContainer<out MavenMojo>>) = action.execute(mojos)
