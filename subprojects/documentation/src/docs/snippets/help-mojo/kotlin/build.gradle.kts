@@ -19,7 +19,6 @@ plugins {
 
 // tag::help-mojo[]
 mavenPlugin {
-    // optional, false by default
-    generateHelpMojo.set(true)
+    helpMojoPackage.set("org.example.help")
 }
 // end::help-mojo[]

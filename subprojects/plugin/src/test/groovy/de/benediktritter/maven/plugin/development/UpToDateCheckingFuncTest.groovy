@@ -16,7 +16,6 @@
 
 package de.benediktritter.maven.plugin.development
 
-
 import org.gradle.testkit.runner.TaskOutcome
 
 class UpToDateCheckingFuncTest extends AbstractPluginFuncTest {
@@ -26,7 +25,7 @@ class UpToDateCheckingFuncTest extends AbstractPluginFuncTest {
         javaMojo()
         buildFile << """
             mavenPlugin {
-                generateHelpMojo = true
+                helpMojoPackage = 'org.example.help'
             }
         """
 
@@ -41,8 +40,7 @@ class UpToDateCheckingFuncTest extends AbstractPluginFuncTest {
         result = run(":build")
 
         then:
-        // see https://github.com/britter/maven-plugin-development/issues/16
-        result.task(":generateMavenPluginHelpMojoSources").outcome == TaskOutcome.SUCCESS
+        result.task(":generateMavenPluginHelpMojoSources").outcome == TaskOutcome.UP_TO_DATE
         result.task(":generateMavenPluginDescriptor").outcome == TaskOutcome.UP_TO_DATE
     }
 }

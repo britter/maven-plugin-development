@@ -48,7 +48,14 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             group = TASK_GROUP_NAME
             description = "Generates the Maven plugin descriptor file"
 
-            onlyIf { extension.generateHelpMojo.get() }
+            onlyIf {
+                if(extension.generateHelpMojo.get()) {
+                    it.logger.error("generateHelpMojo is deprecated and setting it has no effect! Use helpMojoPackage instead.")
+                }
+                return@onlyIf extension.helpMojoPackage.isPresent
+            }
+
+            helpMojoPackage.set(extension.helpMojoPackage)
             outputDirectory.set(helpMojoDir)
             helpPropertiesFile.set(pluginOutputDirectory.map { it.file("maven-plugin-help.properties") })
             pluginDescriptor.set(project.provider {

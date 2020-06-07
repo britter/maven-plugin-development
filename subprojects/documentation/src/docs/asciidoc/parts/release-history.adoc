@@ -1,5 +1,27 @@
 = Release History
 
+== 0.2.2
+
+Release date: TBA
+
+*Note:* This release includes a change in behavior of the HelpMojo generation.
+Before 0.3.0 generation of a HelpMojo could be turned on by setting `generateHelpMojo` to `true`.
+Starting with 0.3.0 `generateHelpMojo` is deprecated and replaced by `helpMojoPackage`.
+Users now need to define the package of the HelpMojo.
+This fixes problems with up-to-date checking (see {gh-issue}16[#16]).
+
+=== Bug fixes
+
+* Help mojo task is never up to date because descriptor tasks modifies outputs ({gh-issue}16[#16])
+
+=== Deprecations
+
+* The `generateHelpMojo` setting has been deprecated in favor of `helpMojoPackage`
+
+=== Breaking changes
+
+* Class `de.benediktritter.maven.plugin.development.task.HelpGeneratorAccessor` has been removed
+
 == 0.2.1
 
 Release date: 2020-05-02

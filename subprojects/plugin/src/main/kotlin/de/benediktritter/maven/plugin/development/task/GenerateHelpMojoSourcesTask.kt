@@ -25,6 +25,8 @@ import org.codehaus.plexus.velocity.DefaultVelocityComponent
 import org.codehaus.plexus.velocity.VelocityComponent
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
@@ -39,6 +41,9 @@ abstract class GenerateHelpMojoSourcesTask : AbstractMavenPluginDevelopmentTask(
     @get:OutputFile
     abstract val helpPropertiesFile: RegularFileProperty
 
+    @get:Input
+    abstract val helpMojoPackage: Property<String>
+
     private val loggerAdapter = MavenLoggerAdapter(logger)
 
     private val generator = PluginHelpGenerator().also { gen ->
@@ -48,6 +53,7 @@ abstract class GenerateHelpMojoSourcesTask : AbstractMavenPluginDevelopmentTask(
 
     @TaskAction
     fun generateHelpMojo() {
+        generator.setHelpPackageName(helpMojoPackage.get())
         generator.execute(outputDirectory.get().asFile, createPluginToolsRequest(mavenProject(), createPluginDescriptor()))
     }
 

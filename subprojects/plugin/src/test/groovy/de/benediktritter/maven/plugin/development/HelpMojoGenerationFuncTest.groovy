@@ -20,10 +20,13 @@ import org.gradle.testkit.runner.TaskOutcome
 
 class HelpMojoGenerationFuncTest extends AbstractPluginFuncTest {
 
+    def setup() {
+        javaMojo()
+    }
+
     def "generates HelpMojo"() {
         given:
-        javaMojo()
-        buildFile << "mavenPlugin.generateHelpMojo.set(true)"
+        buildFile << "mavenPlugin.helpMojoPackage.set('org.example.help')"
 
         when:
         def result = run("generateMavenPluginDescriptor")
@@ -32,17 +35,25 @@ class HelpMojoGenerationFuncTest extends AbstractPluginFuncTest {
         result.task(":generateMavenPluginHelpMojoSources").outcome == TaskOutcome.SUCCESS
 
         and:
-        pluginDescriptor.getMojo("help").implementation == "org.example.HelpMojo"
+        pluginDescriptor.getMojo("help").implementation == "org.example.help.HelpMojo"
     }
 
     def "skips HelpMojo is not configured"() {
-        given:
-        javaMojo()
-
         when:
         def result = run("build")
 
         then:
         result.task(":generateMavenPluginHelpMojoSources").outcome == TaskOutcome.SKIPPED
+    }
+
+    def "logs error if deprecated property is used"() {
+        given:
+        buildFile << "mavenPlugin.generateHelpMojo.set(true)"
+
+        when:
+        def result = run("build")
+
+        then:
+        result.output.contains("generateHelpMojo is deprecated")
     }
 }

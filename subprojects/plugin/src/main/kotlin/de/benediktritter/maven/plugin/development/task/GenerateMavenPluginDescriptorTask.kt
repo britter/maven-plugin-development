@@ -70,7 +70,6 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
         checkArtifactId()
 
         val pluginDescriptor = extractPluginDescriptor()
-        rewriteHelpMojo(pluginDescriptor)
         writeDescriptor(pluginDescriptor)
     }
 
@@ -84,11 +83,6 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
     private fun writeDescriptor(pluginDescriptor: PluginDescriptor) {
         val mavenProject = mavenProject(sourcesDirs.get(), outputDirectory.asFile.get())
         generator.execute(outputDirectory.dir("META-INF/maven").get().asFile, createPluginToolsRequest(mavenProject, pluginDescriptor))
-    }
-
-    private fun rewriteHelpMojo(pluginDescriptor: PluginDescriptor) {
-        val mavenProject = mavenProject(sourcesDirs.get(), javaClassesDir.get().asFile)
-        HelpGeneratorAccessor.rewriteHelpMojo(createPluginToolsRequest(mavenProject, pluginDescriptor), loggerAdapter)
     }
 
     private fun extractPluginDescriptor(): PluginDescriptor {

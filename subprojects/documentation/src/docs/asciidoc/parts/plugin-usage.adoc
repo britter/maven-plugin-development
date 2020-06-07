@@ -18,7 +18,7 @@ plugins {
 
 It's possible to generate a help mojo that help users to discover the functionality of your Maven plugin.
 By default generation of a help mojo is disabled.
-To enable it add the following configuration
+To enable it specify the package the HelpMojo should be generated in:
 
 [source.multi-language-sample,groovy]
 ----
