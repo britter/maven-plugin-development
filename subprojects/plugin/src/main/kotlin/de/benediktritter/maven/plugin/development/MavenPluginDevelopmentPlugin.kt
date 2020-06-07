@@ -46,7 +46,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
 
         val generateHelpMojoTask = tasks.register<GenerateHelpMojoSourcesTask>("generateMavenPluginHelpMojoSources") {
             group = TASK_GROUP_NAME
-            description = "Generates the Maven plugin descriptor file"
+            description = "Generates a Maven help mojo that documents the usage of the Maven plugin"
 
             onlyIf {
                 if(extension.generateHelpMojo.get()) {
@@ -74,7 +74,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
         val mojoConfiguration = createConfiguration(project)
         val generateTask = tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
             group = TASK_GROUP_NAME
-            description = "Generates a Maven help mojo that documents the usage of the Maven plugin"
+            description = "Generates the Maven plugin descriptor file"
 
             classesDirs.set(extension.pluginSourceSet.map { it.output.classesDirs })
             sourcesDirs.set(extension.pluginSourceSet.map { it.java.sourceDirectories })
