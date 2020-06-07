@@ -12,6 +12,7 @@ This fixes problems with up-to-date checking (see {gh-issue}16[#16]).
 
 === Bug fixes
 
+* Task descriptions for help and descriptor task are swapped ({gh-issue}34[#34])
 * Help mojo task is never up to date because descriptor tasks modifies outputs ({gh-issue}16[#16])
 
 === Deprecations

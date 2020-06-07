@@ -55,7 +55,7 @@ class BuildLifecycleFuncTest extends AbstractPluginFuncTest {
 
         then:
         result.output.contains("Maven Plugin Development tasks")
-        result.output.contains("generateMavenPluginDescriptor")
-        result.output.contains("generateMavenPluginHelpMojoSources")
+        result.output.contains("generateMavenPluginDescriptor - Generates the Maven plugin descriptor file")
+        result.output.contains("generateMavenPluginHelpMojoSources - Generates a Maven help mojo that documents the usage of the Maven plugin")
     }
 }
