@@ -39,6 +39,7 @@ import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.the
 import java.io.File
 
+@CacheableTask
 abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmentTask() {
 
     @get:Input

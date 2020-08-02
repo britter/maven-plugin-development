@@ -1,5 +1,13 @@
 = Release History
 
+== 0.3.1
+
+Release date: TBA
+
+=== New Features
+
+* Build cache support ({gh-issue}7[#7])
+
 == 0.3.0
 
 Release date: 2020-08-02
