@@ -15,6 +15,7 @@ To do this the plugin wraps around the [Maven Plugin Tools API](https://maven.ap
 ## Usage
 
 Please see the [plugin documentation](https://britter.github.io/maven-plugin-development).
+For a self contained example please the the [example folder](https://github.com/britter/maven-plugin-development/tree/master/example).
 
 ## How to release
 
