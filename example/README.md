@@ -7,21 +7,22 @@ This folder contains a sample for how to build a Maven plugin using the `de.bene
 The producing Gradle build is contained in the `gradle-producer-build` folder.
 It's configured to build and publish a `hello-maven-plugin` like the one described in the [Maven Guides](https://maven.apache.org/guides/plugin/guide-java-plugin-development.html).
 The `maven-consumer-build` contains a Maven build that applies the plugin created from the Gradle build.
-In order to run the Maven build you first need to publish the plugin you local Maven repository.
+In order to run the Maven build you first need to publish the plugin to your local Maven repository.
 
 ## Publishing the plugin to the local Maven repository
 
-First you need to publish the plugin from the Gradle build in `gradle-producer-build` to you local Maven repository (note that `pTML` is a shortcut for `publishToMavenLocal`):
+First you need to publish the plugin from the Gradle build in `gradle-producer-build` to your local Maven repository.
+Inside the `gradle-producer-build` folder run:
 
 ```shell
-❯ gradle pTML
+❯ gradle publishToMavenLocal
 Starting a Gradle Daemon (subsequent builds will be faster)
 
 BUILD SUCCESSFUL in 13s
 6 actionable tasks: 6 executed
 ```
 
-Then you can run the Maven build in `maven-consumer-build`:
+Then you can run the Maven build in `maven-consumer-build` folder:
 
 ```shell
 ❯ mvn hello:sayhi
@@ -44,7 +45,7 @@ Then you can run the Maven build in `maven-consumer-build`:
 ## Publishing the plugin to a remote repository
 
 The `gradle-producer-build` also contains some configuration to publish to another repository.
-In this case the repository URI of the `buildFolder` repository points into the build folder of the project.
+In this case the repository URI of the `buildFolder` repository points into the build folder of the project (see [`gradle-producer-build/build.gradle.kts`](https://github.com/britter/maven-plugin-development/blob/master/example/gradle-producer-build/build.gradle.kts)).
 By running `gradle publishMavenPluginPublicationToBuildFolderRepository` you can publish the plugin to the `buildFolder` repository.
 This should result in the following file tree (timestamps in filenames will be different):
 
