@@ -46,6 +46,10 @@ trait TestProject {
         file("settings.gradle")
     }
 
+    File getBuildDir() {
+        file("build")
+    }
+
     File getBuildFile() {
         file("build.gradle")
     }
