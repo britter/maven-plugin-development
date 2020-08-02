@@ -23,6 +23,7 @@ For a self contained example please the the [example folder](https://github.com/
 - Commit and tag the change
 - Run `./gradlew release -Prelease`
 - Update the version in `gradle.properties` to the next development version
+- Update the version in `example/gradle-producer-build/build.gradle.kts` to the released version
 - Commit the change
 - Push changes and release tag
 
