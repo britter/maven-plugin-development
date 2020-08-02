@@ -525,14 +525,14 @@ All meta data for the plugin, e.g. <code>groupId</code>, <code>artifactId</code>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">plugins {
-    id 'de.benediktritter.maven-plugin-development' version '0.2.1'
+    id 'de.benediktritter.maven-plugin-development' version '0.3.0'
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="kotlin">plugins {
-    id("de.benediktritter.maven-plugin-development") version "0.2.1"
+    id("de.benediktritter.maven-plugin-development") version "0.3.0"
 }</code></pre>
 </div>
 </div>
@@ -542,21 +542,19 @@ All meta data for the plugin, e.g. <code>groupId</code>, <code>artifactId</code>
 <div class="paragraph">
 <p>It&#8217;s possible to generate a help mojo that help users to discover the functionality of your Maven plugin.
 By default generation of a help mojo is disabled.
-To enable it add the following configuration</p>
+To enable it specify the package the HelpMojo should be generated in:</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">mavenPlugin {
-    // optional, false by default
-    generateHelpMojo = true
+    helpMojoPackage = 'org.example.help'
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="kotlin">mavenPlugin {
-    // optional, false by default
-    generateHelpMojo.set(true)
+    helpMojoPackage.set("org.example.help")
 }</code></pre>
 </div>
 </div>
@@ -672,8 +670,8 @@ mavenPlugin {
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.2.1<br>
-Last updated 2020-05-02 17:02:35 +0200
+Version 0.3.0<br>
+Last updated 2020-06-07 16:51:01 +0200
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
