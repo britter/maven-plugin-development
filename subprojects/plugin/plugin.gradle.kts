@@ -100,10 +100,13 @@ publishing {
     }
 }
 
-val pluginUnderTestMetadata by tasks.existing(PluginUnderTestMetadata::class)
+// workaround for https://github.com/gradle/gradle/issues/13980
+if (!hasProperty("release")) {
+    val pluginUnderTestMetadata by tasks.existing(PluginUnderTestMetadata::class)
 
-configurations.create("pluginUnderTestMetadata") {
-    isCanBeConsumed = true
-    isCanBeResolved = false
-    outgoing.artifact(pluginUnderTestMetadata.flatMap { it.outputDirectory })
+    configurations.create("pluginUnderTestMetadata") {
+        isCanBeConsumed = true
+        isCanBeResolved = false
+        outgoing.artifact(pluginUnderTestMetadata.flatMap { it.outputDirectory })
+    }
 }

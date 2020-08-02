@@ -16,6 +16,15 @@ To do this the plugin wraps around the [Maven Plugin Tools API](https://maven.ap
 
 Please see the [plugin documentation](https://britter.github.io/maven-plugin-development).
 
+## How to release
+
+- Set the version to be released in `gradle.properties`
+- Commit and tag the change
+- Run `./gradlew release -Prelease`
+- Update the version in `gradle.properties` to the next development version
+- Commit the change
+- Push changes and release tag
+
 ## Contribution policy
 
 Contributions via GitHub pull requests are gladly accepted from their original author. Along with any pull requests, please state that the contribution is your original work and that you license the work to the project under the project's open source license. Whether or not you state this explicitly, by submitting any copyrighted material via pull request, email, or other means you agree to license the material under the project's open source license and warrant that you have the legal authority to do so.
