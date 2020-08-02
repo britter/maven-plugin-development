@@ -14,14 +14,5 @@
  * limitations under the License.
  */
 
-
-rootProject.name = "maven-plugin-development"
-
-include(":documentation")
-include(":plugin")
-includeBuild("example/gradle-producer-build")
-
-rootProject.children.forEach {
-    it.projectDir = file("subprojects/${it.name}")
-    it.buildFileName = "${it.name}.gradle.kts"
-}
+// this sets the artifactId of the Maven plugin
+rootProject.name = "hello-maven-plugin"
