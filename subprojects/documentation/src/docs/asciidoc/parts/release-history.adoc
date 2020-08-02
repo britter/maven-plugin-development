@@ -1,8 +1,8 @@
 = Release History
 
-== 0.2.2
+== 0.3.0
 
-Release date: TBA
+Release date: 2020-08-02
 
 *Note:* This release includes a change in behavior of the HelpMojo generation.
 Before 0.3.0 generation of a HelpMojo could be turned on by setting `generateHelpMojo` to `true`.
