@@ -20,7 +20,7 @@ plugins {
     `maven-publish`
     groovy
     id("org.jetbrains.kotlin.jvm") version "1.3.61"
-    id("com.gradle.plugin-publish") version "0.11.0"
+    id("com.gradle.plugin-publish") version "0.12.0"
 }
 
 group = "de.benediktritter"
