@@ -525,14 +525,14 @@ All meta data for the plugin, e.g. <code>groupId</code>, <code>artifactId</code>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">plugins {
-    id 'de.benediktritter.maven-plugin-development' version '0.3.0'
+    id 'de.benediktritter.maven-plugin-development' version '0.3.1'
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="kotlin">plugins {
-    id("de.benediktritter.maven-plugin-development") version "0.3.0"
+    id("de.benediktritter.maven-plugin-development") version "0.3.1"
 }</code></pre>
 </div>
 </div>
@@ -587,8 +587,8 @@ All project dependencies added to this configuration will be searched for mojo i
 <h2 id="controlling-plugin-dependencies"><a class="anchor" href="#controlling-plugin-dependencies"></a>Controlling plugin dependencies</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>By default all dependencies from the runtime classpath will in added to the dependencies blog of the generated plugin descriptor.
-The can be changed by configuring the <code>dependencies</code> property on the <code>mavenPlugin</code> extension.
+<p>By default, all dependencies from the runtime classpath will be added to the dependencies block of the generated plugin descriptor.
+This can be changed by configuring the <code>dependencies</code> property on the <code>mavenPlugin</code> extension.
 In the following examples only <code>org.apache.commons:commons-lang3:3.9</code> will be added as a dependency to the plugin descriptor:</p>
 </div>
 <div class="listingblock multi-language-sample">
@@ -670,8 +670,8 @@ mavenPlugin {
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.3.0<br>
-Last updated 2020-06-07 16:51:01 +0200
+Version 0.3.1<br>
+Last updated 2020-09-27 13:50:33 +0200
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">

@@ -509,7 +509,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Maven Plugin Development Gradle Plugin</h1>
 <div class="details">
-<span id="revnumber">version 0.3.0</span>
+<span id="revnumber">version 0.3.1</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -525,6 +525,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#release-history">Appendix A: Release History</a>
 <ul class="sectlevel2">
+<li><a href="#0-3-1">0.3.1</a></li>
 <li><a href="#0-3-0">0.3.0</a></li>
 <li><a href="#0-2-1">0.2.1</a></li>
 <li><a href="#0-2-0">0.2.0</a></li>
@@ -575,14 +576,14 @@ All meta data for the plugin, e.g. <code>groupId</code>, <code>artifactId</code>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">plugins {
-    id 'de.benediktritter.maven-plugin-development' version '0.3.0'
+    id 'de.benediktritter.maven-plugin-development' version '0.3.1'
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="kotlin">plugins {
-    id("de.benediktritter.maven-plugin-development") version "0.3.0"
+    id("de.benediktritter.maven-plugin-development") version "0.3.1"
 }</code></pre>
 </div>
 </div>
@@ -632,8 +633,8 @@ All project dependencies added to this configuration will be searched for mojo i
 <div class="sect2">
 <h3 id="controlling-plugin-dependencies"><a class="anchor" href="#controlling-plugin-dependencies"></a>Controlling plugin dependencies</h3>
 <div class="paragraph">
-<p>By default all dependencies from the runtime classpath will in added to the dependencies blog of the generated plugin descriptor.
-The can be changed by configuring the <code>dependencies</code> property on the <code>mavenPlugin</code> extension.
+<p>By default, all dependencies from the runtime classpath will be added to the dependencies block of the generated plugin descriptor.
+This can be changed by configuring the <code>dependencies</code> property on the <code>mavenPlugin</code> extension.
 In the following examples only <code>org.apache.commons:commons-lang3:3.9</code> will be added as a dependency to the plugin descriptor:</p>
 </div>
 <div class="listingblock multi-language-sample">
@@ -714,6 +715,31 @@ mavenPlugin {
 <div class="sect1">
 <h2 id="release-history"><a class="anchor" href="#release-history"></a>Appendix A: Release History</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="0-3-1"><a class="anchor" href="#0-3-1"></a>0.3.1</h3>
+<div class="paragraph">
+<p>Release date: 2020-09-27</p>
+</div>
+<div class="sect3">
+<h4 id="changes"><a class="anchor" href="#changes"></a>Changes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Build cache support (<a href="https://github.com/britter/maven-plugin-development/issues/7">#7</a>)</p>
+</li>
+<li>
+<p>Plugin jar contains LICENSE file (<a href="https://github.com/britter/maven-plugin-development/issues/26">#26</a>)</p>
+</li>
+<li>
+<p>Additional project metadata added to published plugin POMs (<a href="https://github.com/britter/maven-plugin-development/issues/47">#47</a>)</p>
+</li>
+<li>
+<p>More idiomatic task dependency modelling (<a href="https://github.com/britter/maven-plugin-development/issues/35">#35</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
 <div class="sect2">
 <h3 id="0-3-0"><a class="anchor" href="#0-3-0"></a>0.3.0</h3>
 <div class="paragraph">
@@ -848,7 +874,7 @@ This fixes problems with up-to-date checking (see <a href="https://github.com/br
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.3.0<br>
+Version 0.3.1<br>
 Last updated 2020-05-02 17:23:09 +0200
 </div>
 </div>
