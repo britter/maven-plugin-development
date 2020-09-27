@@ -45,8 +45,8 @@ include::{snippets-path}/mojo-subproject/kotlin/plugin/build.gradle.kts[tags=moj
 
 == Controlling plugin dependencies
 
-By default all dependencies from the runtime classpath will in added to the dependencies blog of the generated plugin descriptor.
-The can be changed by configuring the `dependencies` property on the `mavenPlugin` extension.
+By default, all dependencies from the runtime classpath will be added to the dependencies block of the generated plugin descriptor.
+This can be changed by configuring the `dependencies` property on the `mavenPlugin` extension.
 In the following examples only `org.apache.commons:commons-lang3:3.9` will be added as a dependency to the plugin descriptor:
 
 [source.multi-language-sample,groovy]
