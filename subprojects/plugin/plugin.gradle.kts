@@ -71,6 +71,12 @@ dependencies {
     testFixturesImplementation("org.apache.commons:commons-lang3:3.10")
 }
 
+tasks.jar {
+    from(rootProject.file("LICENSE.txt")) {
+        into("META-INF")
+    }
+}
+
 gradlePlugin {
     plugins.create("mavenPluginDevelopment") {
         id = "de.benediktritter.maven-plugin-development"

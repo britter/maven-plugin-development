@@ -4,9 +4,10 @@
 
 Release date: TBA
 
-=== New Features
+=== Changes
 
 * Build cache support ({gh-issue}7[#7])
+* Plugin jar contains LICENSE file ({gh-issue}26[#26])
 
 == 0.3.0
 
