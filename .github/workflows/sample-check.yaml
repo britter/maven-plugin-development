@@ -1,4 +1,4 @@
-name: Sample project
+name: Sample Project
 
 on:
   push:
@@ -22,4 +22,4 @@ jobs:
           build-root-directory: sample/gradle-producer-build
           arguments: publishToMavenLocal
       - name: "Consume plugin"
-        run: mvn -f sample/maven-consumer-build/pom.xml hello:sayhi
+        run: mvn -B -f sample/maven-consumer-build/pom.xml hello:sayhi
