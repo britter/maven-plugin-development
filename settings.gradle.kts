@@ -19,7 +19,7 @@ rootProject.name = "maven-plugin-development"
 
 include(":documentation")
 include(":plugin")
-includeBuild("example/gradle-producer-build")
+includeBuild("sample/gradle-producer-build")
 
 rootProject.children.forEach {
     it.projectDir = file("subprojects/${it.name}")
