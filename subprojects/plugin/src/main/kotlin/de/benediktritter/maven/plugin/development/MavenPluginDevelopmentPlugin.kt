@@ -70,7 +70,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             })
             runtimeDependencies.set(extension.dependencies)
         }
-        // TODO declare help properties as input
+
         val mojoConfiguration = createConfiguration(project)
         val generateTask = tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
             group = TASK_GROUP_NAME
@@ -100,11 +100,8 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
         project.afterEvaluate {
             val sourceSet = extension.pluginSourceSet.get()
             val jarTask: Jar? = tasks.findByName(sourceSet.jarTaskName) as Jar?
-            jarTask?.dependsOn(generateTask)
-            jarTask?.from(descriptorDir)
-            sourceSet.java.srcDir(helpMojoDir)
-            tasks.findByName(sourceSet.jarTaskName)?.dependsOn(generateTask)
-            tasks.named(sourceSet.compileJavaTaskName).configure { dependsOn(generateHelpMojoTask) }
+            jarTask?.from(generateTask)
+            sourceSet.java.srcDir(generateHelpMojoTask.map { it.outputDirectory })
         }
     }
 
