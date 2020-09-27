@@ -8,6 +8,7 @@ Release date: TBA
 
 * Build cache support ({gh-issue}7[#7])
 * Plugin jar contains LICENSE file ({gh-issue}26[#26])
+* Additional project metadata added to published plugin POMs ({gh-issue}47[#47])
 
 == 0.3.0
 

@@ -103,6 +103,21 @@ publishing {
                 fromResolutionResult()
             }
         }
+        pom {
+            description.set(project.description)
+            url.set("https://github.com/britter/maven-development-plugin")
+            licenses {
+                license {
+                    name.set("Apache-2.0")
+                    url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                }
+            }
+            scm {
+                connection.set("scm:git:git://github.com/britter/maven-development-plugin.git")
+                developerConnection.set("scm:git:ssh://github.com/britter/maven-development-plugin.git")
+                url.set("https://github.com/britter/maven-development-plugin")
+            }
+        }
     }
 }
 
