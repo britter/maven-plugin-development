@@ -20,6 +20,7 @@ For a self contained example please the the [example folder](https://github.com/
 ## How to release
 
 - Set the version to be released in `gradle.properties`
+- Set the release date for the version to be released in `release-history.adoc`
 - Commit and tag the change
 - Run `./gradlew release -Prelease`
 - Update the version in `gradle.properties` to the next development version
