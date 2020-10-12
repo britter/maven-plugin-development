@@ -17,6 +17,6 @@ jobs:
         with:
           java-version: 11
       - name: "./gradlew check"
-        uses: eskatos/gradle-command-action@v1
+        uses: eskatos/gradle-command-action@v1.3.3
         with:
           arguments: check
