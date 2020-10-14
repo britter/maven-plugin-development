@@ -1,4 +1,4 @@
-name: Gradle Build
+name: CI Build
 
 on:
   push:
@@ -17,6 +17,20 @@ jobs:
         with:
           java-version: 11
       - name: "./gradlew check"
+        id: gradle
         uses: eskatos/gradle-command-action@v1.3.3
         with:
           arguments: check
+      - name: "Comment build scan url"
+        uses: actions/github-script@v3
+        if: github.event_name == 'pull_request' && failure()
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ Build failed: ${{ steps.gradle.outputs.build-scan-url }}'
+            })
+
