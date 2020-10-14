@@ -31,6 +31,6 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '❌ Build failed: ${{ steps.gradle.outputs.build-scan-url }}'
+              body: '❌ ${{ github.action }} failed: ${{ steps.gradle.outputs.build-scan-url }}'
             })
 
