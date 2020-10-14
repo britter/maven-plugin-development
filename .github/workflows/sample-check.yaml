@@ -21,7 +21,7 @@ jobs:
         uses: eskatos/gradle-command-action@v1.3.3
         with:
           build-root-directory: sample/gradle-producer-build
-          arguments: publishToMavenLocal
+          arguments: publishToMavenLocal --scan
       - name: "Comment build scan url"
         uses: actions/github-script@v3
         if: github.event_name == 'pull_request' && failure()
@@ -32,7 +32,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '❌ ${{ github.action }} failed: ${{ steps.gradle.outputs.build-scan-url }}'
+              body: '❌ ${{ github.workflow }} failed: ${{ steps.gradle.outputs.build-scan-url }}'
             })
       - name: "Consume plugin"
         run: mvn -B -f sample/maven-consumer-build/pom.xml hello:sayhi
