@@ -37,5 +37,6 @@ class BuildCachingFuncTest extends AbstractPluginFuncTest {
         then:
         result.task(":generateMavenPluginHelpMojoSources").outcome == TaskOutcome.FROM_CACHE
         result.task(":generateMavenPluginDescriptor").outcome == TaskOutcome.FROM_CACHE
+        false
     }
 }
