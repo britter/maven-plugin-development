@@ -17,7 +17,6 @@ jobs:
         with:
           java-version: 11
       - name: "Produce plugin"
-        id: gradle
         uses: eskatos/gradle-command-action@v1.3.3
         with:
           build-root-directory: sample/gradle-producer-build
