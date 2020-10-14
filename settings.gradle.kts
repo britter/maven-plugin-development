@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+plugins {
+    id("com.gradle.enterprise") version("3.4.1")
+}
 
 rootProject.name = "maven-plugin-development"
 
@@ -24,4 +26,14 @@ includeBuild("sample/gradle-producer-build")
 rootProject.children.forEach {
     it.projectDir = file("subprojects/${it.name}")
     it.buildFileName = "${it.name}.gradle.kts"
+}
+
+if (System.getenv("CI") == "true") {
+    gradleEnterprise {
+        buildScan {
+            publishAlways()
+            termsOfServiceUrl = "https://gradle.com/terms-of-service"
+            termsOfServiceAgree = "yes"
+        }
+    }
 }
