@@ -40,4 +40,9 @@ class FileExtensions {
     static boolean contains(File self, DescriptorFile descriptor) {
         contains(self, descriptor.path)
     }
+
+    static void replace(File self, String text, String replacement) {
+        def oldText = self.text
+        self.text = oldText.replace(text, replacement)
+    }
 }
