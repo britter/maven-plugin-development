@@ -228,27 +228,14 @@ class PluginDescriptorGenerationFuncTest extends AbstractPluginFuncTest {
 
     def "finds mojos in project dependencies"() {
         given:
-        settingsFile.text = "rootProject.name = 'root-project'"
-        buildFile.text = ""
-        subproject("touch-mojo") { project ->
-            project.withMavenPluginBuildConfiguration(false)
-            project.javaMojo()
-        }
+        multiProjectSetup()
         subproject("create-mojo") { project ->
             project.withMavenPluginBuildConfiguration(false)
             project.javaMojo("main", "create")
         }
         def pluginProject = subproject("plugin") { project ->
             project.buildFile << """
-                plugins {
-                    id 'java'
-                    id 'de.benediktritter.maven-plugin-development'
-                }
-                repositories {
-                    mavenCentral()
-                }
                 dependencies {
-                    mojo project(":touch-mojo") 
                     implementation project(":create-mojo") 
                 }
             """

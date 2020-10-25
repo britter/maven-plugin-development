@@ -42,12 +42,41 @@ class TestRootProject extends ExternalResource implements TestProject {
     }
 
     TestProject subproject(String projectName, @DelegatesTo(TestProject) Closure<TestProject> configureProject) {
-        settingsFile << """
-            include '$projectName'
-        """
-        def sub = new TestSubproject(dir(projectName))
+        if (!settingsFile.text.contains(projectName)) {
+            settingsFile << """
+                include '$projectName'
+            """
+        }
+        TestSubproject sub = subproject(projectName)
         configureProject.delegate = sub
         configureProject.call(sub)
         sub
+    }
+
+    TestSubproject subproject(String projectName) {
+        new TestSubproject(dir(projectName))
+    }
+
+    def multiProjectSetup() {
+        settingsFile.text = "rootProject.name = 'root-project'"
+        buildFile.text = ""
+        subproject("touch-mojo") { project ->
+            project.withMavenPluginBuildConfiguration(false)
+            project.javaMojo()
+        }
+        subproject("plugin") { project ->
+            project.buildFile << """
+                plugins {
+                    id 'java'
+                    id 'de.benediktritter.maven-plugin-development'
+                }
+                repositories {
+                    mavenCentral()
+                }
+                dependencies {
+                    mojo project(":touch-mojo") 
+                }
+            """
+        }
     }
 }

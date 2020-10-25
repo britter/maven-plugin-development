@@ -1,5 +1,13 @@
 = Release History
 
+== 0.3.2
+
+Release date: tba
+
+=== Bug fixes
+
+* Descriptor generation is up to date although mojo dependency changed ({gh-issue}13[#13])
+
 == 0.3.1
 
 Release date: 2020-09-27

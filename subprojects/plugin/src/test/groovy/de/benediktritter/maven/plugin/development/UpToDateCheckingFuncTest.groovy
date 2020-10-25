@@ -43,4 +43,26 @@ class UpToDateCheckingFuncTest extends AbstractPluginFuncTest {
         result.task(":generateMavenPluginHelpMojoSources").outcome == TaskOutcome.UP_TO_DATE
         result.task(":generateMavenPluginDescriptor").outcome == TaskOutcome.UP_TO_DATE
     }
+
+    def "is not up to date if mojo dependency changes"() {
+        given:
+        multiProjectSetup()
+
+        when:
+        def result = run("build")
+
+        then:
+        result.task(":plugin:generateMavenPluginDescriptor").outcome == TaskOutcome.SUCCESS
+
+        when:
+        subproject("touch-mojo") { project ->
+            project.file("src/main/java/org/example/TouchMojo.java").replace("LifecyclePhase.PROCESS_SOURCES", "LifecyclePhase.COMPILE")
+        }
+
+        and:
+        result = run("build")
+
+        then:
+        result.task(":plugin:generateMavenPluginDescriptor").outcome == TaskOutcome.SUCCESS
+    }
 }

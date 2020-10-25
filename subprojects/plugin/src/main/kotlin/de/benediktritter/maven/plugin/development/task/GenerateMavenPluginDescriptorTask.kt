@@ -51,7 +51,7 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
     @get:Input
     abstract val sourcesDirs: Property<FileCollection>
 
-    @get:Input
+    @get:Internal
     abstract val mojoDependencies: Property<Configuration>
 
     @get:Nested
@@ -163,5 +163,8 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
     private fun getUpstreamProjects() = mojoDependencies.get().dependencies
                 .filterIsInstance<ProjectDependency>()
                 .map { it.dependencyProject }
+
+    @InputFiles @PathSensitive(PathSensitivity.NAME_ONLY)
+    fun getMojoProjectSourceDirectories() = getUpstreamProjects().flatMap { it.the<SourceSetContainer>()["main"].java.sourceDirectories }
 }
 
