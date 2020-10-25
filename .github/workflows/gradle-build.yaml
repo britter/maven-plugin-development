@@ -7,7 +7,14 @@ on:
     branches: [ master ]
 
 jobs:
+  validate-wrapper:
+    name: "Gradle Wrapper Validation"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1.0.3
   build:
+    name: "CI Build"
     runs-on: ubuntu-latest
     steps:
       - name: git clone
