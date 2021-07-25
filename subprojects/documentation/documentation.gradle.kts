@@ -32,9 +32,9 @@ repositories {
 }
 
 dependencies {
-    testImplementation("org.codehaus.groovy:groovy:3.0.8")
+    testImplementation(libs.groovy)
     testImplementation(gradleTestKit())
-    testImplementation("org.gradle:sample-check:0.12.6")
+    testImplementation(libs.exemplar.sampleCheck)
     testRuntimeOnly(project(":plugin", "pluginUnderTestMetadata"))
 }
 

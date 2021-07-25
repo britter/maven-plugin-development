@@ -37,40 +37,37 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation(platform(libs.kotlin.bom))
+    implementation(libs.kotlin.stdlibJdk8)
 
-    api(platform("org.apache.maven.plugin-tools:maven-plugin-tools:3.6.0")) {
+    api(platform(libs.mavenPluginTools.bom)) {
         because("the version for other dependencies in api would be missing otherwise")
     }
-    api("org.apache.maven.plugin-tools:maven-plugin-annotations") {
+    implementation(libs.mavenPluginTools.api)
+    implementation(libs.mavenPluginTools.annotations)
+    implementation(libs.mavenPluginTools.java)
+    implementation(libs.mavenPluginTools.generators)
+
+    api(libs.mavenPlugin.annotations) {
         because("MavenMojo references types from this artifact")
     }
-    implementation("org.apache.maven.plugin-tools:maven-plugin-tools-api")
-    implementation("org.apache.maven.plugin-tools:maven-plugin-tools-annotations")
-    implementation("org.apache.maven.plugin-tools:maven-plugin-tools-java")
-    implementation("org.apache.maven.plugin-tools:maven-plugin-tools-generators")
-    implementation("org.apache.maven:maven-plugin-api:3.0")
-    implementation("org.sonatype.sisu:sisu-inject-plexus:1.4.2") {
+    implementation(libs.mavenPlugin.api)
+
+    implementation(libs.sisu.injectPlexus) {
         because("it is needed to implement the plexus logging adapter")
     }
-    implementation("org.codehaus.plexus:plexus-velocity:1.1.8") {
+    implementation(libs.plexus.velocity) {
         because("it is needed to generate the help mojo")
     }
     constraints {
-        implementation("com.thoughtworks.qdox:qdox") {
-            version {
-                require("2.0-M9")
-                prefer("2.0.0")
-            }
+        implementation(libs.qdox) {
             because("we need the fix for https://github.com/paul-hammant/qdox/issues/43")
         }
     }
 
-    testImplementation("org.spockframework:spock-core:2.0-groovy-3.0")
-    testImplementation("org.spockframework:spock-junit4:2.0-groovy-3.0")
-    testFixturesImplementation("junit:junit:4.13.1")
-    testFixturesImplementation("org.apache.commons:commons-lang3:3.11")
+    testImplementation(libs.bundles.spock)
+    testFixturesImplementation(libs.junit4)
+    testFixturesImplementation(libs.commonsLang)
 }
 
 tasks.jar {

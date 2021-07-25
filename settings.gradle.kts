@@ -37,3 +37,5 @@ if (System.getenv("CI") == "true") {
         }
     }
 }
+
+enableFeaturePreview("VERSION_CATALOGS")

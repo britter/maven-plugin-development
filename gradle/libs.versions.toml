@@ -1,0 +1,26 @@
+[versions]
+spock = "2.0-groovy-3.0"
+
+[libraries]
+kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom" }
+kotlin-stdlibJdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8" }
+groovy = { module = "org.codehaus.groovy:groovy", version = "3.0.8" }
+mavenPlugin-annotations = { module = "org.apache.maven.plugin-tools:maven-plugin-annotations" }
+mavenPluginTools-bom = { module = "org.apache.maven.plugin-tools:maven-plugin-tools", version = "3.6.0" }
+mavenPluginTools-api = { module = "org.apache.maven.plugin-tools:maven-plugin-tools-api" }
+mavenPluginTools-annotations = { module = "org.apache.maven.plugin-tools:maven-plugin-tools-annotations" }
+mavenPluginTools-java = { module = "org.apache.maven.plugin-tools:maven-plugin-tools-java" }
+mavenPluginTools-generators = { module = "org.apache.maven.plugin-tools:maven-plugin-tools-generators" }
+mavenPlugin-api = { module = "org.apache.maven:maven-plugin-api", version = "3.0" }
+sisu-injectPlexus = { module = "org.sonatype.sisu:sisu-inject-plexus", version = "1.4.2" }
+plexus-velocity = { module = "org.codehaus.plexus:plexus-velocity", version = "1.1.8" }
+qdox = { module = "com.thoughtworks.qdox:qdox", version = { require = "2.0-M9", prefer = "2.0.0" } }
+spock-core = { module = "org.spockframework:spock-core", version.ref = "spock" }
+spock-junit4 = { module = "org.spockframework:spock-junit4", version.ref = "spock" }
+junit4 = { module = "junit:junit", version = "4.13.1" }
+commonsLang = { module = "org.apache.commons:commons-lang3", version = "3.11" }
+exemplar-sampleCheck = { module = "org.gradle:sample-check", version = "0.12.6" }
+
+[bundles]
+mavenPluginTools-deps = ["mavenPluginTools-api", "mavenPluginTools-annotations", "mavenPluginTools-java", "mavenPluginTools-generators"]
+spock = ["spock-core", "spock-junit4"]
