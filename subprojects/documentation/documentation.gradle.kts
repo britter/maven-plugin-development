@@ -21,9 +21,11 @@ plugins {
 }
 
 repositories {
-    maven {
-        url = uri("https://repo.gradle.org/gradle/libs")
-        content {
+    exclusiveContent {
+        forRepository {
+            maven(url = uri("https://repo.gradle.org/gradle/libs"))
+        }
+        filter {
             includeModule("org.gradle", "sample-check")
             includeModule("org.gradle", "sample-discovery")
         }
