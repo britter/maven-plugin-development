@@ -67,7 +67,8 @@ dependencies {
         }
     }
 
-    testImplementation("org.spockframework:spock-core:1.3-groovy-2.5")
+    testImplementation("org.spockframework:spock-core:2.0-groovy-3.0")
+    testImplementation("org.spockframework:spock-junit4:2.0-groovy-3.0")
     testFixturesImplementation("junit:junit:4.13.1")
     testFixturesImplementation("org.apache.commons:commons-lang3:3.11")
 }
