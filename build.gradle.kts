@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply(from = "gradle/build-scan-user-data.gradle")
-
 val publishPlugin = tasks.findByPath(":plugin:publishPlugins")
 val publishDocs = tasks.findByPath(":documentation:gitPublishPush")
 
