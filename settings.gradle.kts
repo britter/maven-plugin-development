@@ -26,7 +26,6 @@ includeBuild("sample/gradle-producer-build")
 
 rootProject.children.forEach {
     it.projectDir = file("subprojects/${it.name}")
-    it.buildFileName = "${it.name}.gradle.kts"
 }
 
 if (System.getenv("CI") == "true") {
