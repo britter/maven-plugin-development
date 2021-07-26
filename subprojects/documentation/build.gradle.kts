@@ -20,19 +20,6 @@ plugins {
     id("org.ajoberstar.git-publish") version "3.0.0"
 }
 
-repositories {
-    exclusiveContent {
-        forRepository {
-            maven(url = uri("https://repo.gradle.org/gradle/libs"))
-        }
-        filter {
-            includeModule("org.gradle", "sample-check")
-            includeModule("org.gradle", "sample-discovery")
-        }
-    }
-    mavenCentral()
-}
-
 dependencies {
     testImplementation(libs.groovy)
     testImplementation(gradleTestKit())

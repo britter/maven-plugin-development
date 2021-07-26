@@ -32,10 +32,6 @@ java {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation(platform(libs.kotlin.bom))
     implementation(libs.kotlin.stdlibJdk8)

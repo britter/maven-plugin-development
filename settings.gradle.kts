@@ -18,6 +18,21 @@ plugins {
     id("com.gradle.common-custom-user-data-gradle-plugin") version "1.4.2"
 }
 
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        exclusiveContent {
+            forRepository {
+                maven(url = uri("https://repo.gradle.org/gradle/libs"))
+            }
+            filter {
+                includeModule("org.gradle", "sample-check")
+                includeModule("org.gradle", "sample-discovery")
+            }
+        }
+    }
+}
+
 rootProject.name = "maven-plugin-development"
 
 include(":documentation")
