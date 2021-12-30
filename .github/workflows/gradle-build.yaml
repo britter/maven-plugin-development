@@ -34,7 +34,7 @@ jobs:
           java-version: 11
       - name: "./gradlew check"
         id: gradle
-        uses: eskatos/gradle-command-action@v1.3.3
+        uses: eskatos/gradle-command-action@v2.0.1
         with:
           arguments: check
       - name: "Comment build scan url"
