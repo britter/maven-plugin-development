@@ -16,7 +16,7 @@
 
 package de.benediktritter.maven.plugin.development.documentation
 
-import org.gradle.samples.executor.CommandExecutor
+import org.gradle.exemplar.executor.CommandExecutor
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 

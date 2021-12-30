@@ -16,12 +16,12 @@
 
 package de.benediktritter.maven.plugin.development.documentation
 
-import org.gradle.samples.executor.CliCommandExecutor
-import org.gradle.samples.executor.CommandExecutor
-import org.gradle.samples.executor.ExecutionMetadata
-import org.gradle.samples.executor.GradleRunnerCommandExecutor
-import org.gradle.samples.model.Command
-import org.gradle.samples.test.runner.SamplesRunner
+import org.gradle.exemplar.executor.CliCommandExecutor
+import org.gradle.exemplar.executor.CommandExecutor
+import org.gradle.exemplar.executor.ExecutionMetadata
+import org.gradle.exemplar.executor.GradleRunnerCommandExecutor
+import org.gradle.exemplar.model.Command
+import org.gradle.exemplar.test.runner.SamplesRunner
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import org.junit.runners.model.InitializationError
