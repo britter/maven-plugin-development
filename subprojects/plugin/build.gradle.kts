@@ -66,9 +66,14 @@ dependencies {
     testFixturesImplementation(libs.commonsLang)
 }
 
-tasks.jar {
-    from(rootProject.file("LICENSE.txt")) {
-        into("META-INF")
+tasks {
+    withType<Test> {
+        useJUnitPlatform()
+    }
+    jar {
+        from(rootProject.file("LICENSE.txt")) {
+            into("META-INF")
+        }
     }
 }
 
