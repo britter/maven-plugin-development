@@ -44,6 +44,7 @@ abstract class AbstractPluginFuncTest extends Specification {
 
     private def runner(String... args) {
         GradleRunner.create()
+                .withGradleVersion(System.getProperty("compat.gradle.version"))
                 .forwardOutput()
                 .withDebug(ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0)
                 .withPluginClasspath()

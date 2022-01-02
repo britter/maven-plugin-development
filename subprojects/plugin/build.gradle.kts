@@ -19,8 +19,10 @@ plugins {
     `kotlin-dsl`
     `maven-publish`
     groovy
+    idea
     id("org.jetbrains.kotlin.jvm") version "1.4.10"
     id("com.gradle.plugin-publish") version "0.12.0"
+    id("org.ajoberstar.stutter") version "0.6.0"
 }
 
 group = "de.benediktritter"
@@ -61,9 +63,25 @@ dependencies {
         }
     }
 
-    testImplementation(libs.bundles.spock)
+    compatTestImplementation(libs.bundles.spock)
+    compatTestImplementation(testFixtures(project))
     testFixturesImplementation(libs.junit4)
     testFixturesImplementation(libs.commonsLang)
+}
+
+stutter {
+    java(8) {
+        compatibleRange("5.5.1")
+    }
+}
+
+idea {
+    project {
+        module {
+            testSourceDirs.addAll(sourceSets["compatTest"].allSource.sourceDirectories.files)
+            testResourceDirs.addAll(sourceSets["compatTest"].resources.sourceDirectories.files)
+        }
+    }
 }
 
 tasks {
