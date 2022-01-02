@@ -6,6 +6,8 @@
 This plugin aims to fill the tiny gap for people who need to create an [Apache Maven](https://maven.apacke.org) plugin from a Gradle build.
 To do this the plugin wraps around the [Maven Plugin Tools API](https://maven.apache.org/plugin-tools/) and feeds it with the right inputs from the Gradle build.
 
+Compatible with Gradle 5.5.1 or later.
+
 ## Features
 
 - Automatic generation of a maven plugin descriptor containing all mojos in the selected source set (by default the plugin looks for mojo implementations in the main source set)
@@ -15,7 +17,7 @@ To do this the plugin wraps around the [Maven Plugin Tools API](https://maven.ap
 ## Usage
 
 Please see the [plugin documentation](https://britter.github.io/maven-plugin-development).
-For a self contained example please the the [example folder](https://github.com/britter/maven-plugin-development/tree/main/sample).
+For a self-contained example please the [example folder](https://github.com/britter/maven-plugin-development/tree/main/sample).
 
 ## How to release
 
