@@ -93,6 +93,20 @@ tasks {
             into("META-INF")
         }
     }
+    register("writeVersions") {
+        inputs.file(".stutter/java8.lock")
+            .withPropertyName("stutter lock")
+            .withPathSensitivity(PathSensitivity.NONE)
+        outputs.file("$buildDir/ci/gradle-versions.json")
+        doLast {
+            val output = file("$buildDir/ci/gradle-versions.json")
+            mkdir(output.parentFile)
+            val json = file(".stutter/java8.lock").readLines()
+                .filterNot { it.startsWith("#") }
+                .joinToString(prefix = "[", postfix = "]") { "\"$it\"" }
+            output.writeText(json)
+        }
+    }
 }
 
 gradlePlugin {
