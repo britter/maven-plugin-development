@@ -1,0 +1,58 @@
+name: Cross version tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  provide-versions:
+    name: "Provide versions for testing"
+    runs-on: ubuntu-latest
+    steps:
+      - name: git clone
+        uses: actions/checkout@v2
+      - name: Write version data
+        id: write-versions
+        uses: gradle/gradle-build-action@v2.1.0
+        with:
+          arguments: :plugin:writeVersions
+      - name: Export versions output
+        id: export-versions
+        run: echo "::set-output name=versions::$(cat subprojects/plugin/build/ci/gradle-versions.json)"
+    outputs:
+      versions: ${{ steps.export-versions.outputs.versions }}
+  cross-version-tests:
+    name: "Gradle cross version tests"
+    needs: provide-versions
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ${{ fromJson(needs.provide-versions.outputs.versions) }}
+    steps:
+      - name: git clone
+        uses: actions/checkout@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2.5.0
+        with:
+          distribution: 'zulu'
+          java-version: 11
+      - name: "Test Gradle ${{ matrix.version }}"
+        id: gradle
+        uses: gradle/gradle-build-action@v2.1.0
+        with:
+          arguments: :plugin:compatTest${{ matrix.version }}"
+      - name: "Comment build scan url"
+        uses: actions/github-script@v5
+        if: github.event_name == 'pull_request' && failure()
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ ${{ github.workflow }} failed: ${{ steps.gradle.outputs.build-scan-url }}'
+            })

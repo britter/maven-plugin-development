@@ -18,9 +18,8 @@ jobs:
           distribution: 'zulu'
           java-version: 11
       - name: "Produce plugin"
-        uses: eskatos/gradle-command-action@v1.3.3
+        uses: gradle/gradle-build-action@v2.1.0
         with:
-          build-root-directory: sample/gradle-producer-build
-          arguments: publishToMavenLocal
+          arguments: :gradle-producer-build:publishToMavenLocal
       - name: "Consume plugin"
         run: mvn -B -f sample/maven-consumer-build/pom.xml hello:sayhi
