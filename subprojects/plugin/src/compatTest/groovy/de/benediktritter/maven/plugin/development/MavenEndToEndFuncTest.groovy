@@ -24,13 +24,13 @@ class MavenEndToEndFuncTest extends AbstractPluginFuncTest {
 
     def setup() {
         mavenRepository = dir("maven-repository")
-        def buildFileContens = buildFile.text
+        def buildFileContents = buildFile.text
         buildFile.text = """
             plugins {
                 id 'maven-publish'
             }
 
-            $buildFileContens
+            $buildFileContents
 
             publishing {
                 publications {
