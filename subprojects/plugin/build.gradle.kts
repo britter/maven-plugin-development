@@ -86,7 +86,11 @@ idea {
 
 tasks {
     withType<Test> {
+        dependsOn("publishAllPublicationsToTestRepoRepository")
+        inputs.dir("$buildDir/test-repo")
+            .withPathSensitivity(PathSensitivity.NONE)
         useJUnitPlatform()
+        systemProperty("test-repo.path", "$buildDir/test-repo")
     }
     jar {
         from(rootProject.file("LICENSE.txt")) {
@@ -149,6 +153,12 @@ publishing {
                 developerConnection.set("scm:git:ssh://github.com/britter/maven-development-plugin.git")
                 url.set("https://github.com/britter/maven-development-plugin")
             }
+        }
+    }
+    repositories {
+        maven {
+            name = "TestRepo"
+            url = uri("$buildDir/test-repo")
         }
     }
 }

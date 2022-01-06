@@ -72,7 +72,7 @@ trait TestProject {
 
 
     def withMavenPluginBuildConfiguration(boolean applyPlugin = true) {
-        def pluginApplication = applyPlugin ? "id 'de.benediktritter.maven-plugin-development'" : ""
+        def pluginApplication = applyPlugin ? "id 'de.benediktritter.maven-plugin-development' version '0.3.2-SNAPSHOT'" : ""
         buildFile << """
             plugins {
                 id 'java'

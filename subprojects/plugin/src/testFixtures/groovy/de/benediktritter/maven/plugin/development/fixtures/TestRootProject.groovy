@@ -42,9 +42,10 @@ class TestRootProject extends ExternalResource implements TestProject {
     }
 
     TestProject subproject(String projectName, @DelegatesTo(TestProject) Closure<TestProject> configureProject) {
-        if (!settingsFile.text.contains(projectName)) {
+        def includeStatement = "include '$projectName'"
+        if (!settingsFile.text.contains(includeStatement)) {
             settingsFile << """
-                include '$projectName'
+                $includeStatement
             """
         }
         TestSubproject sub = subproject(projectName)
