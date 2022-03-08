@@ -17,6 +17,7 @@
 package de.benediktritter.maven.plugin.development.issues
 
 import de.benediktritter.maven.plugin.development.AbstractPluginFuncTest
+import de.benediktritter.maven.plugin.development.fixtures.DescriptorFile
 import de.benediktritter.maven.plugin.development.fixtures.TestProject
 import spock.lang.Issue
 
@@ -58,7 +59,7 @@ class Issue73FuncTest extends AbstractPluginFuncTest {
         TestProject mojoProject = subproject("greeting-mojo") { project ->
             project.withMavenPluginBuildConfiguration()
             project.buildFile << """
-                dependencies.implementation project(':base-mojo')
+                dependencies.mojo project(':base-mojo')
             """
             project.file("src/main/java/sample/plugin/GreetingMojo.java") << """
                 package sample.plugin;
@@ -90,9 +91,9 @@ class Issue73FuncTest extends AbstractPluginFuncTest {
         }
 
         when:
-        run("build")
+        run(":greeting-mojo:build")
 
         then:
-        mojoProject.pluginDescriptor.getMojo("sayhi").parameters.contains("name")
+        mojoProject.pluginDescriptor.getMojo("sayhi").parameters.contains(new DescriptorFile.ParameterDeclaration("name", String, "", false, true, ""))
     }
 }
