@@ -121,23 +121,6 @@ class PluginDescriptorGenerationFuncTest extends AbstractPluginFuncTest {
         result.output.contains("ArtifactIds of the form maven-___-plugin are reserved for plugins of the maven team. Please change the plugin artifactId to the format ___-maven-plugin.")
     }
 
-    def "works even if weird enums are present"() {
-        given:
-        file("src/main/java/TypedEnum.java") << """
-        import java.util.List;
-        public enum TypedEnum {
-            ENUM_VALUE {
-                private <T> List<T> genericMethod(List<T> list) {
-                    return list;
-                }
-            }
-        }
-        """
-
-        expect:
-        run("generateMavenPluginDescriptor")
-    }
-
     def "generates a plugin and help descriptor for mojos in the main source set"() {
         given:
         buildFile << """
