@@ -74,7 +74,7 @@ class TestRootProject extends ExternalResource implements TestProject {
                     mavenCentral()
                 }
                 dependencies {
-                    mojo project(":touch-mojo") 
+                    implementation project(":touch-mojo") 
                 }
             """
         }

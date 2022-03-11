@@ -20,14 +20,20 @@ import de.benediktritter.maven.plugin.development.internal.DefaultMavenPluginDev
 import de.benediktritter.maven.plugin.development.internal.MavenPluginDescriptor
 import de.benediktritter.maven.plugin.development.task.GenerateHelpMojoSourcesTask
 import de.benediktritter.maven.plugin.development.task.GenerateMavenPluginDescriptorTask
+import de.benediktritter.maven.plugin.development.task.UpstreamProjectDescriptor
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
+import org.gradle.api.artifacts.ProjectDependency
+import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.register
+import org.gradle.kotlin.dsl.the
 
 class MavenPluginDevelopmentPlugin : Plugin<Project> {
 
@@ -71,7 +77,6 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             runtimeDependencies.set(extension.dependencies)
         }
 
-        val mojoConfiguration = createConfiguration(project)
         val generateTask = tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
             group = TASK_GROUP_NAME
             description = "Generates the Maven plugin descriptor file"
@@ -79,7 +84,22 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             classesDirs.set(extension.pluginSourceSet.map { it.output.classesDirs })
             sourcesDirs.set(extension.pluginSourceSet.map { it.java.sourceDirectories })
             javaClassesDir.set(extension.pluginSourceSet.flatMap { it.java.classesDirectory })
-            mojoDependencies.set(mojoConfiguration)
+            upstreamProjects.convention(provider {
+                val compileClasspath = configurations.getByName(JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME)
+                compileClasspath.incoming.dependencies
+                    .filterIsInstance<ProjectDependency>()
+                    .map { it.dependencyProject }
+                    .map {
+                        val mainSourceSet = it.the<SourceSetContainer>()["main"]
+                        UpstreamProjectDescriptor(
+                            it.group.toString(),
+                            it.name,
+                            it.version.toString(),
+                            mainSourceSet.output.classesDirs,
+                            mainSourceSet.java.sourceDirectories
+                        )
+                    }
+            })
             outputDirectory.set(descriptorDir)
             pluginDescriptor.set(project.provider {
                 MavenPluginDescriptor(
@@ -103,15 +123,6 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             jarTask?.from(generateTask)
             sourceSet.java.srcDir(generateHelpMojoTask.map { it.outputDirectory })
         }
-    }
-
-    private fun createConfiguration(project: Project): Configuration {
-        val mojoConfiguration = project.configurations.create("mojo") {
-            isCanBeConsumed = false
-            isCanBeResolved = true
-        }
-        project.configurations.maybeCreate("implementation").extendsFrom(mojoConfiguration)
-        return mojoConfiguration
     }
 
     private fun Project.createExtension() =

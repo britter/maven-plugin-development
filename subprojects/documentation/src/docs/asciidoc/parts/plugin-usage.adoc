@@ -31,8 +31,9 @@ include::{snippets-path}/help-mojo/kotlin/build.gradle.kts[tags=help-mojo]
 
 == Extracting mojos from other subprojects
 
-The plugin will create a configuration called `mojo` and add it to the project.
-All project dependencies added to this configuration will be searched for mojo implementations.
+The plugin searches the compile classpath for mojo implementations and extracts plugin descriptors
+from all _project_ dependencies. This means that mojos are not scanned in binary dependencies, only
+in dependencies that are build from modules of the build that applies this plugin.
 
 [source.multi-language-sample,groovy]
 ----
