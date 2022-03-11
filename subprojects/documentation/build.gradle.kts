@@ -30,9 +30,14 @@ dependencies {
 tasks {
     test {
         inputs.dir("src/docs/snippets")
+            .withPathSensitivity(PathSensitivity.RELATIVE)
+            .withPropertyName("snippets")
     }
 
     asciidoctor {
+        inputs.dir("src/docs/snippets")
+            .withPathSensitivity(PathSensitivity.RELATIVE)
+            .withPropertyName("snippets")
         outputOptions {
             separateOutputDirs = false
         }
