@@ -59,7 +59,7 @@ class Issue73FuncTest extends AbstractPluginFuncTest {
         TestProject mojoProject = subproject("greeting-mojo") { project ->
             project.withMavenPluginBuildConfiguration()
             project.buildFile << """
-                dependencies.mojo project(':base-mojo')
+                dependencies.implementation project(':base-mojo')
             """
             project.file("src/main/java/sample/plugin/GreetingMojo.java") << """
                 package sample.plugin;

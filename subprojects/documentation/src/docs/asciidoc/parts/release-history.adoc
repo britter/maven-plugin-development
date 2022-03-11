@@ -1,12 +1,19 @@
 = Release History
 
-== 0.3.2
+== 0.4.0
 
 Release date: tba
 
 === Bug fixes
 
 * Descriptor generation is up to date although mojo dependency changed ({gh-issue}13[#13])
+* `@Parameter` in abstract classes in other modules are ignored ({gh-issue}73[#73])
+
+=== Breaking changes
+
+* The `mojo` configuration was removed without replacement.
+  The plugin now searches the compile classpath instead.
+* Property `mojoDependencies` dropped from `GenerateMavenPluginDescriptorTask` without replacement.
 
 == 0.3.1
 
