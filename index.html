@@ -540,7 +540,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="image"><a class="image" href="https://actions-badge.atrox.dev/britter/maven-plugin-development/goto?ref=master"><img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fbritter%2Fmaven-plugin-development%2Fbadge%3Fref%3Dmaster&amp;style=flat" alt="Build Status"></a></span>
+<p><span class="image"><a class="image" href="https://actions-badge.atrox.dev/britter/maven-plugin-development/goto?ref=main"><img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fbritter%2Fmaven-plugin-development%2Fbadge%3Fref%3Dmain&amp;style=flat" alt="Build Status"></a></span>
 <span class="image"><a class="image" href="https://plugins.gradle.org/plugin/de.benediktritter.maven-plugin-development"><img src="https://img.shields.io/maven-metadata/v?label=Plugin%20Portal&amp;metadataUrl=https%3A%2F%2Fplugins.gradle.org%2Fm2%2Fde%2Fbenediktritter%2Fmaven-plugin-development%2Fde.benediktritter.maven-plugin-development.gradle.plugin%2Fmaven-metadata.xml" alt="Gradle Plugin Portal"></a></span></p>
 </div>
 <div class="paragraph">
@@ -623,14 +623,14 @@ in dependencies that are build from modules of the build that applies this plugi
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">dependencies {
-    mojo project(":mojo-subproject")
+    implementation project(":mojo-subproject")
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="kotlin">dependencies {
-    mojo(project(":mojo-subproject"))
+    implementation(project(":mojo-subproject"))
 }</code></pre>
 </div>
 </div>
@@ -913,7 +913,7 @@ This fixes problems with up-to-date checking (see <a href="https://github.com/br
 <div id="footer">
 <div id="footer-text">
 Version 0.4.0<br>
-Last updated 2022-01-04 19:33:55 +0100
+Last updated 2022-03-11 22:09:56 +0100
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
