@@ -106,14 +106,6 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
                 }
                 scanner.populatePluginDescriptor(pluginToolsRequest)
             }
-            getUpstreamProjects().forEach {
-                val main = it.the<SourceSetContainer>()["main"]
-                main.output.classesDirs.forEach { classesDir ->
-                    val mavenProject = mavenProject(it, main.java.sourceDirectories, classesDir)
-                    val pluginToolsRequest = createPluginToolsRequest(mavenProject, pluginDescriptor)
-                    scanner.populatePluginDescriptor(pluginToolsRequest)
-                }
-            }
             addAdditionalMojos(pluginDescriptor)
         }
     }
