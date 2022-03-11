@@ -2,7 +2,7 @@
 
 == 0.4.0
 
-Release date: tba
+Release date: 2022-03-11
 
 === Bug fixes
 
