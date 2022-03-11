@@ -509,11 +509,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Release History</h1>
 <div class="details">
-<span id="revnumber">version 0.3.1</span>
+<span id="revnumber">version 0.4.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
+<li><a href="#0-4-0">0.4.0</a>
+<ul class="sectlevel2">
+<li><a href="#bug-fixes">Bug fixes</a></li>
+<li><a href="#breaking-changes">Breaking changes</a></li>
+</ul>
+</li>
 <li><a href="#0-3-1">0.3.1</a>
 <ul class="sectlevel2">
 <li><a href="#changes">Changes</a></li>
@@ -521,22 +527,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#0-3-0">0.3.0</a>
 <ul class="sectlevel2">
-<li><a href="#bug-fixes">Bug fixes</a></li>
+<li><a href="#bug-fixes-2">Bug fixes</a></li>
 <li><a href="#deprecations">Deprecations</a></li>
-<li><a href="#breaking-changes">Breaking changes</a></li>
+<li><a href="#breaking-changes-2">Breaking changes</a></li>
 </ul>
 </li>
 <li><a href="#0-2-1">0.2.1</a>
 <ul class="sectlevel2">
 <li><a href="#new-features">New Features</a></li>
-<li><a href="#bug-fixes-2">Bug Fixes</a></li>
+<li><a href="#bug-fixes-3">Bug Fixes</a></li>
 </ul>
 </li>
 <li><a href="#0-2-0">0.2.0</a>
 <ul class="sectlevel2">
 <li><a href="#new-features-2">New Features</a></li>
-<li><a href="#bug-fixes-3">Bug Fixes</a></li>
-<li><a href="#breaking-changes-2">Breaking changes</a></li>
+<li><a href="#bug-fixes-4">Bug Fixes</a></li>
+<li><a href="#breaking-changes-3">Breaking changes</a></li>
 </ul>
 </li>
 <li><a href="#0-1-0">0.1.0</a></li>
@@ -544,6 +550,41 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div id="content">
+<div class="sect1">
+<h2 id="0-4-0"><a class="anchor" href="#0-4-0"></a>0.4.0</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Release date: 2022-03-11</p>
+</div>
+<div class="sect2">
+<h3 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug fixes</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Descriptor generation is up to date although mojo dependency changed (<a href="https://github.com/britter/maven-plugin-development/issues/13">#13</a>)</p>
+</li>
+<li>
+<p><code>@Parameter</code> in abstract classes in other modules are ignored (<a href="https://github.com/britter/maven-plugin-development/issues/73">#73</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="breaking-changes"><a class="anchor" href="#breaking-changes"></a>Breaking changes</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>mojo</code> configuration was removed without replacement.
+The plugin now searches the compile classpath instead.</p>
+</li>
+<li>
+<p>Property <code>mojoDependencies</code> dropped from <code>GenerateMavenPluginDescriptorTask</code> without replacement.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
 <div class="sect1">
 <h2 id="0-3-1"><a class="anchor" href="#0-3-1"></a>0.3.1</h2>
 <div class="sectionbody">
@@ -585,7 +626,7 @@ Users now need to define the package of the HelpMojo.
 This fixes problems with up-to-date checking (see <a href="https://github.com/britter/maven-plugin-development/issues/16">#16</a>).</p>
 </div>
 <div class="sect2">
-<h3 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug fixes</h3>
+<h3 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug fixes</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -608,7 +649,7 @@ This fixes problems with up-to-date checking (see <a href="https://github.com/br
 </div>
 </div>
 <div class="sect2">
-<h3 id="breaking-changes"><a class="anchor" href="#breaking-changes"></a>Breaking changes</h3>
+<h3 id="breaking-changes-2"><a class="anchor" href="#breaking-changes-2"></a>Breaking changes</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -636,7 +677,7 @@ This fixes problems with up-to-date checking (see <a href="https://github.com/br
 </div>
 </div>
 <div class="sect2">
-<h3 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h3>
+<h3 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -676,7 +717,7 @@ This fixes problems with up-to-date checking (see <a href="https://github.com/br
 </div>
 </div>
 <div class="sect2">
-<h3 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h3>
+<h3 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -686,7 +727,7 @@ This fixes problems with up-to-date checking (see <a href="https://github.com/br
 </div>
 </div>
 <div class="sect2">
-<h3 id="breaking-changes-2"><a class="anchor" href="#breaking-changes-2"></a>Breaking changes</h3>
+<h3 id="breaking-changes-3"><a class="anchor" href="#breaking-changes-3"></a>Breaking changes</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -711,8 +752,8 @@ This fixes problems with up-to-date checking (see <a href="https://github.com/br
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.3.1<br>
-Last updated 2020-09-27 16:51:13 +0200
+Version 0.4.0<br>
+Last updated 2022-03-11 21:46:25 +0100
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">

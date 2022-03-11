@@ -525,14 +525,14 @@ All meta data for the plugin, e.g. <code>groupId</code>, <code>artifactId</code>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">plugins {
-    id 'de.benediktritter.maven-plugin-development' version '0.3.1'
+    id 'de.benediktritter.maven-plugin-development' version '0.4.0'
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="kotlin">plugins {
-    id("de.benediktritter.maven-plugin-development") version "0.3.1"
+    id("de.benediktritter.maven-plugin-development") version "0.4.0"
 }</code></pre>
 </div>
 </div>
@@ -564,8 +564,9 @@ To enable it specify the package the HelpMojo should be generated in:</p>
 <h2 id="extracting-mojos-from-other-subprojects"><a class="anchor" href="#extracting-mojos-from-other-subprojects"></a>Extracting mojos from other subprojects</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The plugin will create a configuration called <code>mojo</code> and add it to the project.
-All project dependencies added to this configuration will be searched for mojo implementations.</p>
+<p>The plugin searches the compile classpath for mojo implementations and extracts plugin descriptors
+from all <em>project</em> dependencies. This means that mojos are not scanned in binary dependencies, only
+in dependencies that are build from modules of the build that applies this plugin.</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
@@ -670,8 +671,8 @@ mavenPlugin {
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.3.1<br>
-Last updated 2020-09-27 13:50:33 +0200
+Version 0.4.0<br>
+Last updated 2022-03-11 21:42:02 +0100
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
