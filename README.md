@@ -21,6 +21,7 @@ For a self-contained example please the [example folder](https://github.com/brit
 
 ## How to release
 
+- Pull latest changes
 - Set the version to be released in `gradle.properties`
 - Set the release date for the version to be released in `release-history.adoc`
 - Commit and tag the change
