@@ -21,8 +21,8 @@ plugins {
     groovy
     idea
     id("org.jetbrains.kotlin.jvm") version "1.4.10"
-    id("com.gradle.plugin-publish") version "0.12.0"
-    id("org.ajoberstar.stutter") version "0.6.0"
+    id("com.gradle.plugin-publish") version "0.20.0"
+    id("org.ajoberstar.stutter") version "0.7.1"
 }
 
 group = "de.benediktritter"
@@ -70,8 +70,16 @@ dependencies {
 }
 
 stutter {
-    java(8) {
-        compatibleRange("5.5.1")
+    matrices {
+        sparse.set(false)
+        create("java8") {
+            javaToolchain {
+                languageVersion.set(JavaLanguageVersion.of(8))
+            }
+            gradleVersions {
+                compatibleRange("5.5.1")
+            }
+        }
     }
 }
 
@@ -127,14 +135,6 @@ pluginBundle {
 
 publishing {
     publications.withType<MavenPublication>() {
-        versionMapping {
-            usage("java-api") {
-                fromResolutionResult()
-            }
-            usage("java-runtime") {
-                fromResolutionResult()
-            }
-        }
         pom {
             description.set(project.description)
             url.set("https://github.com/britter/maven-development-plugin")

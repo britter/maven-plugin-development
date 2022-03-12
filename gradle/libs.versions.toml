@@ -1,10 +1,10 @@
 [versions]
-spock = "2.0-groovy-3.0"
+spock = "2.1-groovy-3.0"
 
 [libraries]
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom" }
 kotlin-stdlibJdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8" }
-groovy = { module = "org.codehaus.groovy:groovy", version = "3.0.8" }
+groovy = { module = "org.codehaus.groovy:groovy", version = "3.0.10" }
 mavenPlugin-annotations = { module = "org.apache.maven.plugin-tools:maven-plugin-annotations" }
 mavenPluginTools-bom = { module = "org.apache.maven.plugin-tools:maven-plugin-tools", version = "3.6.0" }
 mavenPluginTools-api = { module = "org.apache.maven.plugin-tools:maven-plugin-tools-api" }
@@ -18,7 +18,7 @@ qdox = { module = "com.thoughtworks.qdox:qdox", version = { require = "2.0-M9", 
 spock-core = { module = "org.spockframework:spock-core", version.ref = "spock" }
 spock-junit4 = { module = "org.spockframework:spock-junit4", version.ref = "spock" }
 junit4 = { module = "junit:junit", version = "4.13.1" }
-commonsLang = { module = "org.apache.commons:commons-lang3", version = "3.11" }
+commonsLang = { module = "org.apache.commons:commons-lang3", version = "3.12.0" }
 exemplar-sampleCheck = { module = "org.gradle.exemplar:samples-check", version = "1.0.0" }
 
 [bundles]
