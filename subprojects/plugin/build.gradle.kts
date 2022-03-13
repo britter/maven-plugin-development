@@ -20,9 +20,9 @@ plugins {
     `maven-publish`
     groovy
     idea
-    id("org.jetbrains.kotlin.jvm") version "1.4.10"
-    id("com.gradle.plugin-publish") version "0.20.0"
-    id("org.ajoberstar.stutter") version "0.7.1"
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.pluginPublish)
+    alias(libs.plugins.stutter)
 }
 
 group = "de.benediktritter"

@@ -16,8 +16,8 @@
 
 plugins {
     id("groovy")
-    id("org.asciidoctor.jvm.convert") version "3.3.2"
-    id("org.ajoberstar.git-publish") version "4.1.0"
+    alias(libs.plugins.asciidoctor)
+    alias(libs.plugins.gitPublish)
 }
 
 dependencies {
