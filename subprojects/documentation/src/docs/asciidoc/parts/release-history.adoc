@@ -1,5 +1,13 @@
 = Release History
 
+== 0.4.1
+
+Release date: 2023-01-20
+
+=== Bug fixes
+
+* Make plugin compatible with Java 17 ({gh-pr}89[#89])
+
 == 0.4.0
 
 Release date: 2022-03-11

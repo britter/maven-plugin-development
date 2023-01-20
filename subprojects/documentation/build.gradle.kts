@@ -53,6 +53,7 @@ tasks {
                 "idprefix" to "",
                 "idseparator" to "-",
                 "gh-issue" to "https://github.com/britter/maven-plugin-development/issues/",
+                "gh-pr" to "https://github.com/britter/maven-plugin-development/pull/",
                 "snippets-path" to "$projectDir/src/docs/snippets"
         ))
     }
