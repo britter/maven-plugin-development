@@ -15,7 +15,7 @@
  */
 
 plugins {
-    id("de.benediktritter.maven-plugin-development") version "0.3.1"
+    id("de.benediktritter.maven-plugin-development") version "0.4.1"
     // necessary for publishing the plugin to maven local or remote repositories
     // see https://docs.gradle.org/current/userguide/publishing_maven.html for more information
     `maven-publish`
