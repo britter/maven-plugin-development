@@ -110,19 +110,15 @@ tasks {
 }
 
 gradlePlugin {
+    website.set("https://britter.github.io/maven-plugin-development")
+    vcsUrl.set("https://github.com/britter/maven-plugin-development")
     plugins.create("mavenPluginDevelopment") {
         id = "de.benediktritter.maven-plugin-development"
         displayName = "Maven plugin development plugin"
         description = project.description
         implementationClass = "de.benediktritter.maven.plugin.development.MavenPluginDevelopmentPlugin"
+        tags.set(listOf("maven", "mojo", "maven plugin"))
     }
-}
-
-pluginBundle {
-    description = project.description
-    website = "https://britter.github.io/maven-plugin-development"
-    vcsUrl = "https://github.com/britter/maven-plugin-development"
-    tags = listOf("maven", "mojo", "maven plugin")
 }
 
 publishing {
