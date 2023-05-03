@@ -27,6 +27,7 @@ import org.gradle.api.artifacts.Configuration
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Nested
+import org.gradle.kotlin.dsl.get
 
 abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
 
@@ -34,7 +35,7 @@ abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
     abstract val pluginDescriptor: Property<MavenPluginDescriptor>
 
     @get:Input
-    abstract val runtimeDependencies: Property<Configuration>
+    abstract val runtimeDependenciesConfigurationName: Property<String>
 
     protected fun createPluginDescriptor(): PluginDescriptor {
         val pluginDescriptor = pluginDescriptor.get()
@@ -51,7 +52,7 @@ abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
     }
 
     private fun getComponentDependencies(): List<ComponentDependency> {
-        return runtimeDependencies.get().resolvedConfiguration.resolvedArtifacts.map { artifact ->
+        return getConfiguration().resolvedConfiguration.resolvedArtifacts.map { artifact ->
             ComponentDependency().also {
                 it.groupId = artifact.moduleVersion.id.group
                 it.artifactId = artifact.moduleVersion.id.name
@@ -59,6 +60,10 @@ abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
                 it.type = artifact.extension
             }
         }
+    }
+
+    private fun getConfiguration(): Configuration {
+        return project.configurations[runtimeDependenciesConfigurationName.get()]
     }
 
     protected fun createPluginToolsRequest(mavenProject: MavenProject, pluginDescriptor: PluginDescriptor): PluginToolsRequest {

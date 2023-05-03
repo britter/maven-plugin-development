@@ -23,9 +23,7 @@ import de.benediktritter.maven.plugin.development.task.GenerateMavenPluginDescri
 import de.benediktritter.maven.plugin.development.task.UpstreamProjectDescriptor
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ProjectDependency
-import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.jvm.tasks.Jar
@@ -74,7 +72,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
                         extension.goalPrefix.orNull
                 )
             })
-            runtimeDependencies.set(extension.dependencies)
+            runtimeDependenciesConfigurationName.set(extension.dependencies.map { it.name })
         }
 
         val generateTask = tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
@@ -112,7 +110,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
                 )
             })
             additionalMojos.set(extension.mojos)
-            runtimeDependencies.set(extension.dependencies)
+            runtimeDependenciesConfigurationName.set(extension.dependencies.map { it.name })
 
             dependsOn(extension.pluginSourceSet.map { it.output }, generateHelpMojoTask)
         }
