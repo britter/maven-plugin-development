@@ -18,7 +18,7 @@ qdox = { module = "com.thoughtworks.qdox:qdox", version = { require = "2.0-M9", 
 spock-core = { module = "org.spockframework:spock-core", version.ref = "spock" }
 spock-junit4 = { module = "org.spockframework:spock-junit4", version.ref = "spock" }
 junit4 = { module = "junit:junit", version = "4.13.1" }
-commonsLang = { module = "org.apache.commons:commons-lang3", version = "3.11" }
+commonsLang = { module = "org.apache.commons:commons-lang3", version = "3.12.0" }
 exemplar-sampleCheck = { module = "org.gradle.exemplar:samples-check", version = "1.0.0" }
 
 [bundles]
