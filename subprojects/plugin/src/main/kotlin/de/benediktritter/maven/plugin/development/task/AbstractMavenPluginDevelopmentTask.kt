@@ -25,7 +25,8 @@ import org.codehaus.plexus.component.repository.ComponentDependency
 import org.gradle.api.DefaultTask
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Classpath
+import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Nested
 
 abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
@@ -33,7 +34,7 @@ abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
     @get:Nested
     abstract val pluginDescriptor: Property<MavenPluginDescriptor>
 
-    @get:Input
+    @get:[InputFiles Classpath]
     abstract val runtimeDependencies: Property<Configuration>
 
     protected fun createPluginDescriptor(): PluginDescriptor {

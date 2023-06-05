@@ -42,13 +42,13 @@ import java.io.File
 @CacheableTask
 abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmentTask() {
 
-    @get:Input
+    @get:[InputFiles Classpath]
     abstract val classesDirs: Property<FileCollection>
 
     @get:Internal
     abstract val javaClassesDir: DirectoryProperty
 
-    @get:Input
+    @get:[InputFiles PathSensitive(PathSensitivity.RELATIVE)]
     abstract val sourcesDirs: Property<FileCollection>
 
     @get:Nested

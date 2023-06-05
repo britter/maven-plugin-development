@@ -23,9 +23,7 @@ import de.benediktritter.maven.plugin.development.task.GenerateMavenPluginDescri
 import de.benediktritter.maven.plugin.development.task.UpstreamProjectDescriptor
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ProjectDependency
-import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.jvm.tasks.Jar
