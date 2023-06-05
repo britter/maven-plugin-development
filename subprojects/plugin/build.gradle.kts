@@ -70,6 +70,7 @@ dependencies {
 }
 
 stutter {
+    isSparse = true
     java(8) {
         compatibleRange("5.5.1")
     }
