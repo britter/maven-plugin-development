@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 plugins {
-    `java-gradle-plugin`
-    `java-test-fixtures`
+    id("groovy")
+    id("idea")
+    id("java-gradle-plugin")
+    id("java-test-fixtures")
+    id("maven-publish")
     `kotlin-dsl`
-    `maven-publish`
-    groovy
-    idea
     alias(libs.plugins.kotlin)
     alias(libs.plugins.pluginPublish)
     alias(libs.plugins.stutter)
