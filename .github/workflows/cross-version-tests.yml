@@ -13,11 +13,11 @@ jobs:
     steps:
       - name: git clone
         uses: actions/checkout@v2
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2.1.0
       - name: Write version data
         id: write-versions
-        uses: gradle/gradle-build-action@v2.1.0
-        with:
-          arguments: :plugin:writeVersions
+        run: "./gradlew :plugin:writeVersions"
       - name: Export versions output
         id: export-versions
         run: echo "::set-output name=versions::$(cat subprojects/plugin/build/ci/gradle-versions.json)"
@@ -39,20 +39,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 11
-      - name: "Test Gradle ${{ matrix.version }}"
-        id: gradle
+      - name: Setup Gradle
         uses: gradle/gradle-build-action@v2.1.0
-        with:
-          arguments: :plugin:compatTest${{ matrix.version }}"
-      - name: "Comment build scan url"
-        uses: actions/github-script@v5
-        if: github.event_name == 'pull_request' && failure()
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '❌ ${{ github.workflow }} failed: ${{ steps.gradle.outputs.build-scan-url }}'
-            })
+      - name: "Test Gradle ${{ matrix.version }}"
+        run: "./gradlew :plugin:compatTest${{ matrix.version }}"
