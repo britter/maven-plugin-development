@@ -153,7 +153,7 @@ publishing {
 if (!hasProperty("release")) {
     val pluginUnderTestMetadata by tasks.existing(PluginUnderTestMetadata::class)
 
-    val publication = configurations.create("pluginUnderTestMetadata") {
+    configurations.create("pluginUnderTestMetadata") {
         isCanBeConsumed = true
         isCanBeResolved = false
         outgoing.artifact(pluginUnderTestMetadata.flatMap { it.outputDirectory })
