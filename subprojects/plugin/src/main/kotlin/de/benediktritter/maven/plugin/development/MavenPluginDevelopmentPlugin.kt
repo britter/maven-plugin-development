@@ -72,7 +72,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
                         extension.goalPrefix.orNull
                 )
             })
-            runtimeDependenciesConfigurationName.set(extension.dependencies.map { it.name })
+            runtimeDependencies.set(extension.dependencies)
         }
 
         val generateTask = tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
@@ -110,7 +110,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
                 )
             })
             additionalMojos.set(extension.mojos)
-            runtimeDependenciesConfigurationName.set(extension.dependencies.map { it.name })
+            runtimeDependencies.set(extension.dependencies)
 
             dependsOn(extension.pluginSourceSet.map { it.output }, generateHelpMojoTask)
         }

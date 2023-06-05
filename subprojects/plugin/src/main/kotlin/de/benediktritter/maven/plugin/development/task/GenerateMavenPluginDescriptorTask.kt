@@ -32,7 +32,9 @@ import org.apache.maven.tools.plugin.ExtendedMojoDescriptor
 import org.apache.maven.tools.plugin.generator.PluginDescriptorGenerator
 import org.gradle.api.Project
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.ListProperty
+import org.gradle.api.provider.Property
 import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.*
 import java.io.File
@@ -40,14 +42,14 @@ import java.io.File
 @CacheableTask
 abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmentTask() {
 
-    @get:Input
-    abstract val classesDirs: SetProperty<File>
+    @get:[InputFiles Classpath]
+    abstract val classesDirs: Property<FileCollection>
 
     @get:Internal
     abstract val javaClassesDir: DirectoryProperty
 
-    @get:Input
-    abstract val sourcesDirs: SetProperty<File>
+    @get:[InputFiles PathSensitive(PathSensitivity.RELATIVE)]
+    abstract val sourcesDirs: Property<FileCollection>
 
     @get:Nested
     abstract val upstreamProjects: ListProperty<UpstreamProjectDescriptor>
@@ -97,7 +99,7 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
                             artifact.file = classesDir
                         }
                         pluginToolsRequest.dependencies.add(artifact)
-                        mavenProject.addProjectReference(mavenProject(it.group, it.name, it.version, it.sourceDirectories.files, classesDir))
+                        mavenProject.addProjectReference(mavenProject(it.group, it.name, it.version, it.sourceDirectories, classesDir))
                     }
                 }
                 scanner.populatePluginDescriptor(pluginToolsRequest)
@@ -105,7 +107,7 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
             // process upstream projects again in order to find mojo implementations
             upstreamProjects.get().forEach {
                 it.classesDirs.forEach { classesDir ->
-                    val mavenProject = mavenProject(it.group, it.name, it.version, it.sourceDirectories.files, classesDir)
+                    val mavenProject = mavenProject(it.group, it.name, it.version, it.sourceDirectories, classesDir)
                     val pluginToolsRequest = createPluginToolsRequest(mavenProject, pluginDescriptor)
                     scanner.populatePluginDescriptor(pluginToolsRequest)
                 }
@@ -154,14 +156,14 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
         }
     }
 
-    private fun mavenProject(project: Project, sourcesDirs: Set<File>, outputDirectory: File): MavenProject =
+    private fun mavenProject(project: Project, sourcesDirs: FileCollection, outputDirectory: File): MavenProject =
         mavenProject(project.group.toString(), project.name, project.version.toString(), sourcesDirs, outputDirectory)
 
     private fun mavenProject(
         groupId: String,
         artifactId: String,
         version: String,
-        sourcesDirs: Set<File>,
+        sourcesDirs: FileCollection,
         outputDirectory: File
     ): MavenProject {
         return MavenProject().also {

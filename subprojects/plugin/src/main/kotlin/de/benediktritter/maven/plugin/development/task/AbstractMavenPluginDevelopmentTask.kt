@@ -25,17 +25,17 @@ import org.codehaus.plexus.component.repository.ComponentDependency
 import org.gradle.api.DefaultTask
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Classpath
+import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Nested
-import org.gradle.kotlin.dsl.get
 
 abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
 
     @get:Nested
     abstract val pluginDescriptor: Property<MavenPluginDescriptor>
 
-    @get:Input
-    abstract val runtimeDependenciesConfigurationName: Property<String>
+    @get:[InputFiles Classpath]
+    abstract val runtimeDependencies: Property<Configuration>
 
     protected fun createPluginDescriptor(): PluginDescriptor {
         val pluginDescriptor = pluginDescriptor.get()
@@ -52,7 +52,7 @@ abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
     }
 
     private fun getComponentDependencies(): List<ComponentDependency> {
-        return getConfiguration().resolvedConfiguration.resolvedArtifacts.map { artifact ->
+        return runtimeDependencies.get().resolvedConfiguration.resolvedArtifacts.map { artifact ->
             ComponentDependency().also {
                 it.groupId = artifact.moduleVersion.id.group
                 it.artifactId = artifact.moduleVersion.id.name
@@ -60,10 +60,6 @@ abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
                 it.type = artifact.extension
             }
         }
-    }
-
-    private fun getConfiguration(): Configuration {
-        return project.configurations[runtimeDependenciesConfigurationName.get()]
     }
 
     protected fun createPluginToolsRequest(mavenProject: MavenProject, pluginDescriptor: PluginDescriptor): PluginToolsRequest {
