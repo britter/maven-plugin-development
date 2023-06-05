@@ -78,8 +78,8 @@ stutter {
 idea {
     project {
         module {
-            testSourceDirs.addAll(sourceSets["compatTest"].allSource.sourceDirectories.files)
-            testResourceDirs.addAll(sourceSets["compatTest"].resources.sourceDirectories.files)
+            testSources.from(sourceSets["compatTest"].allSource.sourceDirectories)
+            testResources.from(sourceSets["compatTest"].resources.sourceDirectories)
         }
     }
 }
