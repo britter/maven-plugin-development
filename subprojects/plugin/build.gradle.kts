@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 plugins {
-    `java-gradle-plugin`
-    `java-test-fixtures`
+    id("groovy")
+    id("idea")
+    id("java-gradle-plugin")
+    id("java-test-fixtures")
+    id("maven-publish")
     `kotlin-dsl`
-    `maven-publish`
-    groovy
-    idea
-    id("org.jetbrains.kotlin.jvm") version "1.4.10"
-    id("com.gradle.plugin-publish") version "1.1.0"
-    id("org.ajoberstar.stutter") version "0.6.0"
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.pluginPublish)
+    alias(libs.plugins.stutter)
 }
 
 group = "de.benediktritter"
@@ -78,8 +78,8 @@ stutter {
 idea {
     project {
         module {
-            testSourceDirs.addAll(sourceSets["compatTest"].allSource.sourceDirectories.files)
-            testResourceDirs.addAll(sourceSets["compatTest"].resources.sourceDirectories.files)
+            testSources.from(sourceSets["compatTest"].allSource.sourceDirectories)
+            testResources.from(sourceSets["compatTest"].resources.sourceDirectories)
         }
     }
 }
@@ -153,7 +153,7 @@ publishing {
 if (!hasProperty("release")) {
     val pluginUnderTestMetadata by tasks.existing(PluginUnderTestMetadata::class)
 
-    val publication = configurations.create("pluginUnderTestMetadata") {
+    configurations.create("pluginUnderTestMetadata") {
         isCanBeConsumed = true
         isCanBeResolved = false
         outgoing.artifact(pluginUnderTestMetadata.flatMap { it.outputDirectory })
