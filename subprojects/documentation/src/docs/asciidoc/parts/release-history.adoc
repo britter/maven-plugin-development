@@ -1,5 +1,13 @@
 = Release History
 
+== 0.4.2
+
+Release date: 2023-06-03
+
+=== Bug fixes
+
+* Make plugin compatible with Gradle 8.x ({gh-pr}94[#94])
+
 == 0.4.1
 
 Release date: 2023-01-20
