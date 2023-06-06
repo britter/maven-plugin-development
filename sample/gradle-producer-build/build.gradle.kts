@@ -33,7 +33,7 @@ dependencies {
     // required dependencies for building a Maven Plugin
     implementation("org.apache.maven:maven-plugin-api:3.0")
     // annotations are only needed at compile time
-    compileOnly("org.apache.maven.plugin-tools:maven-plugin-annotations:3.4")
+    compileOnly("org.apache.maven.plugin-tools:maven-plugin-annotations:3.9.0")
 }
 
 publishing {
