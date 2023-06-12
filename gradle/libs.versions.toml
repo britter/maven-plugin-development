@@ -1,5 +1,5 @@
 [versions]
-spock = "2.0-groovy-3.0"
+spock = "2.3-groovy-3.0"
 
 [libraries]
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom" }
