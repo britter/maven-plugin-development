@@ -14,7 +14,7 @@ jobs:
       - name: git clone
         uses: actions/checkout@v3
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2.4.2
+        uses: gradle/gradle-build-action@v2.5.0
       - name: Write version data
         id: write-versions
         run: "./gradlew :plugin:writeVersions"
@@ -40,6 +40,6 @@ jobs:
           distribution: 'zulu'
           java-version: 11
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2.4.2
+        uses: gradle/gradle-build-action@v2.5.0
       - name: "Test Gradle ${{ matrix.version }}"
         run: "./gradlew :plugin:compatTest${{ matrix.version }}"
