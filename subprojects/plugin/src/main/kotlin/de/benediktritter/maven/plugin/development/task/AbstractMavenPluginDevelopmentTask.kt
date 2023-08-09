@@ -24,7 +24,10 @@ import org.apache.maven.tools.plugin.PluginToolsRequest
 import org.codehaus.plexus.component.repository.ComponentDependency
 import org.gradle.api.DefaultTask
 import org.gradle.api.artifacts.Configuration
+import org.gradle.api.artifacts.ResolvedArtifact
+import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.Property
+import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Nested
@@ -36,6 +39,9 @@ abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
 
     @get:[InputFiles Classpath]
     abstract val runtimeDependencies: Property<Configuration>
+
+    @get:Nested
+    abstract val projectInfo:Property<ProjectInfo>
 
     protected fun createPluginDescriptor(): PluginDescriptor {
         val pluginDescriptor = pluginDescriptor.get()

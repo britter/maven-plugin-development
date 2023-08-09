@@ -18,9 +18,7 @@ package de.benediktritter.maven.plugin.development
 
 import de.benediktritter.maven.plugin.development.internal.DefaultMavenPluginDevelopmentExtension
 import de.benediktritter.maven.plugin.development.internal.MavenPluginDescriptor
-import de.benediktritter.maven.plugin.development.task.GenerateHelpMojoSourcesTask
-import de.benediktritter.maven.plugin.development.task.GenerateMavenPluginDescriptorTask
-import de.benediktritter.maven.plugin.development.task.UpstreamProjectDescriptor
+import de.benediktritter.maven.plugin.development.task.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
@@ -73,6 +71,13 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
                 )
             })
             runtimeDependencies.set(extension.dependencies)
+            projectInfo.set(
+                ProjectInfo(
+                    project.group.toString(),
+                    project.name,
+                    project.version.toString()
+                )
+            )
         }
 
         val generateTask = tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
@@ -112,6 +117,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             additionalMojos.set(extension.mojos)
             runtimeDependencies.set(extension.dependencies)
 
+
             dependsOn(extension.pluginSourceSet.map { it.output }, generateHelpMojoTask)
         }
 
@@ -120,6 +126,14 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             val jarTask: Jar? = tasks.findByName(sourceSet.jarTaskName) as Jar?
             jarTask?.from(generateTask)
             sourceSet.java.srcDir(generateHelpMojoTask.map { it.outputDirectory })
+            val pInfo = ProjectInfo(
+                project.group.toString(),
+                project.name,
+                project.version.toString()
+            )
+            tasks.withType(AbstractMavenPluginDevelopmentTask::class.java).configureEach {
+                projectInfo.set(pInfo)
+            }
         }
     }
 

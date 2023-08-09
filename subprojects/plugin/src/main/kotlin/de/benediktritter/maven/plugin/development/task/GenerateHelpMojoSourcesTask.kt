@@ -42,32 +42,38 @@ abstract class GenerateHelpMojoSourcesTask : AbstractMavenPluginDevelopmentTask(
     @get:Input
     abstract val helpMojoPackage: Property<String>
 
-    private val loggerAdapter = MavenLoggerAdapter(logger)
 
-    private val generator = PluginHelpGenerator().also { gen ->
-        gen.enableLogging(loggerAdapter)
-        gen.velocityComponent = createVelocityComponent()
-    }
 
     @TaskAction
     fun generateHelpMojo() {
+        val loggerAdapter = MavenLoggerAdapter(logger)
+
+        val generator = PluginHelpGenerator().also { gen ->
+            gen.enableLogging(loggerAdapter)
+            gen.velocityComponent = createVelocityComponent(loggerAdapter)
+        }
         generator.setHelpPackageName(helpMojoPackage.get())
-        generator.execute(outputDirectory.get().asFile, createPluginToolsRequest(mavenProject(), createPluginDescriptor()))
+        generator.execute(
+            outputDirectory.get().asFile,
+            createPluginToolsRequest(mavenProject(), createPluginDescriptor())
+        )
     }
 
     private fun mavenProject(): MavenProject {
         val propertiesDirectory = helpPropertiesFile.get().asFile.parentFile
         propertiesDirectory.mkdirs()
-        return MavenProject().also {
-            it.groupId = project.group.toString()
-            it.artifactId = project.name
-            it.version = project.version.toString()
-            it.artifact = ProjectArtifact(it)
-            it.build = Build().also { b -> b.directory = propertiesDirectory.absolutePath }
-        }
+        return projectInfo.map { project ->
+            MavenProject().also {
+                it.groupId = project.group
+                it.artifactId = project.name
+                it.version = project.version
+                it.artifact = ProjectArtifact(it)
+                it.build = Build().also { b -> b.directory = propertiesDirectory.absolutePath }
+            }
+        }.get()
     }
 
-    private fun createVelocityComponent(): VelocityComponent {
+    private fun createVelocityComponent(loggerAdapter: MavenLoggerAdapter): VelocityComponent {
         val velocityComponent = DefaultVelocityComponent()
         velocityComponent.enableLogging(loggerAdapter)
         // initialization as defined by org.codehaus.plexus:plexus-velocity:1.1.8:META-INF/plexus/components.xml
