@@ -29,5 +29,5 @@ spock = ["spock-core", "spock-junit4"]
 asciidoctor = { id = "org.asciidoctor.jvm.convert", version = "3.3.2" }
 gitPublish = { id = "org.ajoberstar.git-publish", version = "4.2.0" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version = "1.9.0" }
-pluginPublish = { id = "com.gradle.plugin-publish", version = "1.2.0" }
+pluginPublish = { id = "com.gradle.plugin-publish", version = "1.2.1" }
 stutter = { id = "org.ajoberstar.stutter", version = "0.6.0" }
