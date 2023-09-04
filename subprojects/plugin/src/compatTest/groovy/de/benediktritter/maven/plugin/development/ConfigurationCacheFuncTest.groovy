@@ -33,6 +33,7 @@ class ConfigurationCacheFuncTest extends AbstractPluginFuncTest {
         def result = run("build", "--configuration-cache")
 
         then:
+        Exception e = thrown()
         result.task(":generateMavenPluginHelpMojoSources").outcome == TaskOutcome.SUCCESS
         result.task(":generateMavenPluginDescriptor").outcome == TaskOutcome.SUCCESS
     }

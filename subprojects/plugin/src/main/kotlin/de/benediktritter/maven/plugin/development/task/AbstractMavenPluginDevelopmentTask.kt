@@ -16,6 +16,7 @@
 
 package de.benediktritter.maven.plugin.development.task
 
+import de.benediktritter.maven.plugin.development.internal.Gavt
 import de.benediktritter.maven.plugin.development.internal.MavenPluginDescriptor
 import org.apache.maven.plugin.descriptor.PluginDescriptor
 import org.apache.maven.project.MavenProject
@@ -23,12 +24,11 @@ import org.apache.maven.tools.plugin.DefaultPluginToolsRequest
 import org.apache.maven.tools.plugin.PluginToolsRequest
 import org.codehaus.plexus.component.repository.ComponentDependency
 import org.gradle.api.DefaultTask
-import org.gradle.api.artifacts.Configuration
-import org.gradle.api.artifacts.ResolvedArtifact
-import org.gradle.api.file.FileCollection
+import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
-import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.Classpath
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Nested
 
@@ -38,7 +38,10 @@ abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
     abstract val pluginDescriptor: Property<MavenPluginDescriptor>
 
     @get:[InputFiles Classpath]
-    abstract val runtimeDependencies: Property<Configuration>
+    abstract val runtimeDependenciesFiles: ConfigurableFileCollection
+
+    @get:Input
+    abstract val runtimeDependenciesMetadata: ListProperty<Gavt>
 
     @get:Nested
     abstract val projectInfo:Property<ProjectInfo>
@@ -53,24 +56,25 @@ abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
             it.goalPrefix = pluginDescriptor.goalPrefix ?: PluginDescriptor.getGoalPrefixFromArtifactId(artifactId)
             it.name = pluginDescriptor.name
             it.description = pluginDescriptor.description
-            it.dependencies = getComponentDependencies()
+            it.dependencies = toComponentDependencies(runtimeDependenciesMetadata.get())
         }
     }
 
-    private fun getComponentDependencies(): List<ComponentDependency> {
-        return runtimeDependencies.get().resolvedConfiguration.resolvedArtifacts.map { artifact ->
-            ComponentDependency().also {
-                it.groupId = artifact.moduleVersion.id.group
-                it.artifactId = artifact.moduleVersion.id.name
-                it.version = artifact.moduleVersion.id.version
-                it.type = artifact.extension
-            }
-        }
-    }
 
     protected fun createPluginToolsRequest(mavenProject: MavenProject, pluginDescriptor: PluginDescriptor): PluginToolsRequest {
         return DefaultPluginToolsRequest(mavenProject, pluginDescriptor).also {
             it.isSkipErrorNoDescriptorsFound = true
+        }
+    }
+
+    private fun toComponentDependencies(list: List<Gavt>): List<ComponentDependency> {
+        return list.map { artifact ->
+            ComponentDependency().also {
+                it.groupId = artifact.groupId
+                it.artifactId = artifact.artifactId
+                it.version = artifact.version
+                it.type = artifact.type
+            }
         }
     }
 }
