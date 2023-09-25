@@ -19,7 +19,7 @@ spock-core = { module = "org.spockframework:spock-core", version.ref = "spock" }
 spock-junit4 = { module = "org.spockframework:spock-junit4", version.ref = "spock" }
 junit4 = { module = "junit:junit", version = "4.13.2" }
 commonsLang = { module = "org.apache.commons:commons-lang3", version = "3.13.0" }
-exemplar-sampleCheck = { module = "org.gradle.exemplar:samples-check", version = "1.0.0" }
+exemplar-sampleCheck = { module = "org.gradle.exemplar:samples-check", version = "1.0.1" }
 
 [bundles]
 mavenPluginTools-deps = ["mavenPluginTools-api", "mavenPluginTools-annotations", "mavenPluginTools-java", "mavenPluginTools-generators"]
