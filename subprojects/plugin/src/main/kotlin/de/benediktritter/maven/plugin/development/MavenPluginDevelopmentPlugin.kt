@@ -30,8 +30,8 @@ import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.register
-import org.gradle.kotlin.dsl.the
 
 class MavenPluginDevelopmentPlugin : Plugin<Project> {
 
@@ -88,7 +88,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
                     .filterIsInstance<ProjectDependency>()
                     .map { it.dependencyProject }
                     .map {
-                        val mainSourceSet = it.the<SourceSetContainer>()["main"]
+                        val mainSourceSet = it.extensions.getByType<SourceSetContainer>()["main"]
                         UpstreamProjectDescriptor(
                             it.group.toString(),
                             it.name,

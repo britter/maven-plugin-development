@@ -31,7 +31,7 @@ import javax.inject.Inject
 open class DefaultMavenPluginDevelopmentExtension @Inject constructor(project: Project) : MavenPluginDevelopmentExtension {
 
     override val pluginSourceSet: Property<SourceSet> = project.objects.property<SourceSet>()
-            .convention(project.provider { project.the<SourceSetContainer>()["main"] })
+            .convention(project.provider { project.extensions.getByType<SourceSetContainer>()["main"] })
 
     override val groupId: Property<String> = project.objects.property<String>()
             .convention(project.provider { project.group.toString() })
