@@ -17,12 +17,13 @@
 package de.benediktritter.maven.plugin.development
 
 import de.benediktritter.maven.plugin.development.internal.DefaultMavenPluginDevelopmentExtension
+import de.benediktritter.maven.plugin.development.internal.Gavt
 import de.benediktritter.maven.plugin.development.internal.MavenPluginDescriptor
-import de.benediktritter.maven.plugin.development.task.GenerateHelpMojoSourcesTask
-import de.benediktritter.maven.plugin.development.task.GenerateMavenPluginDescriptorTask
-import de.benediktritter.maven.plugin.development.task.UpstreamProjectDescriptor
+import de.benediktritter.maven.plugin.development.task.*
+import org.codehaus.plexus.component.repository.ComponentDependency
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSetContainer
@@ -32,6 +33,8 @@ import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.register
 import org.gradle.kotlin.dsl.the
+import java.io.File
+import java.nio.file.Path
 
 class MavenPluginDevelopmentPlugin : Plugin<Project> {
 
@@ -72,7 +75,15 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
                         extension.goalPrefix.orNull
                 )
             })
-            runtimeDependencies.set(extension.dependencies)
+            runtimeDependenciesFiles.from(extension.dependencies.map { toDependenciesFiles(it) })
+            runtimeDependenciesMetadata.set(extension.dependencies.map { toComponentDependencies(it) })
+            projectInfo.set(
+                ProjectInfo(
+                    project.group.toString(),
+                    project.name,
+                    project.version.toString()
+                )
+            )
         }
 
         val generateTask = tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
@@ -110,7 +121,8 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
                 )
             })
             additionalMojos.set(extension.mojos)
-            runtimeDependencies.set(extension.dependencies)
+            runtimeDependenciesFiles.from(extension.dependencies.map { toDependenciesFiles(it) })
+            runtimeDependenciesMetadata.set(extension.dependencies.map { toComponentDependencies(it) })
 
             dependsOn(extension.pluginSourceSet.map { it.output }, generateHelpMojoTask)
         }
@@ -120,6 +132,14 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             val jarTask: Jar? = tasks.findByName(sourceSet.jarTaskName) as Jar?
             jarTask?.from(generateTask)
             sourceSet.java.srcDir(generateHelpMojoTask.map { it.outputDirectory })
+            val pInfo = ProjectInfo(
+                project.group.toString(),
+                project.name,
+                project.version.toString()
+            )
+            tasks.withType(AbstractMavenPluginDevelopmentTask::class.java).configureEach {
+                projectInfo.set(pInfo)
+            }
         }
     }
 
@@ -129,4 +149,20 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
                     MavenPluginDevelopmentExtension.NAME,
                     DefaultMavenPluginDevelopmentExtension::class,
                     this)
+
+    private fun toComponentDependencies(configuration: Configuration): List<Gavt> {
+        return configuration.resolvedConfiguration.resolvedArtifacts.map { artifact ->
+            Gavt(
+                artifact.moduleVersion.id.group,
+                 artifact.moduleVersion.id.name,
+                 artifact.moduleVersion.id.version,
+                 artifact.extension ?: "jar"
+            )
+        }
+    }
+    private fun toDependenciesFiles(configuration: Configuration): List<File> {
+        return configuration.resolvedConfiguration.resolvedArtifacts.map { artifact ->
+            artifact.file
+        }
+    }
 }

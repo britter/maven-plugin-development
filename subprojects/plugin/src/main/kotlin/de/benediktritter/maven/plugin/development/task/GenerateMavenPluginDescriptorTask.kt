@@ -30,7 +30,6 @@ import org.apache.maven.project.MavenProject
 import org.apache.maven.project.artifact.ProjectArtifact
 import org.apache.maven.tools.plugin.ExtendedMojoDescriptor
 import org.apache.maven.tools.plugin.generator.PluginDescriptorGenerator
-import org.gradle.api.Project
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.ListProperty
@@ -60,18 +59,12 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
     @get:OutputDirectory
     abstract val outputDirectory: DirectoryProperty
 
-    private val loggerAdapter = MavenLoggerAdapter(logger)
-
-    private val scanner = MavenServiceFactory.createMojoScanner(loggerAdapter)
-
-    private val generator = PluginDescriptorGenerator(loggerAdapter)
-
     @TaskAction
     fun generateDescriptor() {
         checkArtifactId()
-
-        val pluginDescriptor = extractPluginDescriptor()
-        writeDescriptor(pluginDescriptor)
+        val loggerAdapter = MavenLoggerAdapter(logger)
+        val pluginDescriptor = extractPluginDescriptor(loggerAdapter)
+        writeDescriptor(pluginDescriptor, loggerAdapter)
     }
 
     private fun checkArtifactId() {
@@ -81,15 +74,17 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
         }
     }
 
-    private fun writeDescriptor(pluginDescriptor: PluginDescriptor) {
-        val mavenProject = mavenProject(project, sourcesDirs.get(), outputDirectory.asFile.get())
+    private fun writeDescriptor(pluginDescriptor: PluginDescriptor, loggerAdapter: MavenLoggerAdapter) {
+        val mavenProject = mavenProject(sourcesDirs.get(), outputDirectory.asFile.get())
+        val generator = PluginDescriptorGenerator(loggerAdapter)
         generator.execute(outputDirectory.dir("META-INF/maven").get().asFile, createPluginToolsRequest(mavenProject, pluginDescriptor))
     }
 
-    private fun extractPluginDescriptor(): PluginDescriptor {
+    private fun extractPluginDescriptor(loggerAdapter: MavenLoggerAdapter): PluginDescriptor {
+        val scanner = MavenServiceFactory.createMojoScanner(loggerAdapter)
         return createPluginDescriptor().also { pluginDescriptor ->
             classesDirs.get().forEach { classesDir ->
-                val mavenProject = mavenProject(project, sourcesDirs.get(), classesDir)
+                val mavenProject = mavenProject(sourcesDirs.get(), classesDir)
                 val pluginToolsRequest = createPluginToolsRequest(mavenProject, pluginDescriptor)
                 // process upstream projects in order to scan base classes
                 upstreamProjects.get().forEach {
@@ -156,8 +151,9 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
         }
     }
 
-    private fun mavenProject(project: Project, sourcesDirs: FileCollection, outputDirectory: File): MavenProject =
-        mavenProject(project.group.toString(), project.name, project.version.toString(), sourcesDirs, outputDirectory)
+    private fun mavenProject(sourcesDirs: FileCollection, outputDirectory: File): MavenProject = projectInfo.map {
+        mavenProject(it.group, it.name, it.version, sourcesDirs, outputDirectory)
+    }.get()
 
     private fun mavenProject(
         groupId: String,
@@ -180,4 +176,3 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
         }
     }
 }
-
