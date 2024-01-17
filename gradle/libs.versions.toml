@@ -26,7 +26,7 @@ mavenPluginTools-deps = ["mavenPluginTools-api", "mavenPluginTools-annotations",
 spock = ["spock-core", "spock-junit4"]
 
 [plugins]
-asciidoctor = { id = "org.asciidoctor.jvm.convert", version = "3.3.2" }
+asciidoctor = { id = "org.asciidoctor.jvm.convert", version = "4.0.1" }
 gitPublish = { id = "org.ajoberstar.git-publish", version = "4.2.1" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version = "1.9.20" }
 pluginPublish = { id = "com.gradle.plugin-publish", version = "1.2.1" }
