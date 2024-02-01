@@ -18,7 +18,7 @@ jobs:
           distribution: 'zulu'
           java-version: 11
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2.12.0
+        uses: gradle/gradle-build-action@v3.0.0
       - name: Produce plugin
         run: "./gradlew :gradle-producer-build:publishToMavenLocal"
       - name: "Consume plugin"
