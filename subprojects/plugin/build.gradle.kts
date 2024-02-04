@@ -98,9 +98,10 @@ tasks {
         inputs.file(".stutter/java8.lock")
             .withPropertyName("stutter lock")
             .withPathSensitivity(PathSensitivity.NONE)
-        outputs.file("$buildDir/ci/gradle-versions.json")
+        val outputFile = layout.buildDirectory.file("ci/gradle-versions.json")
+        outputs.file(outputFile)
         doLast {
-            val output = file("$buildDir/ci/gradle-versions.json")
+            val output = file(outputFile)
             mkdir(output.parentFile)
             val json = file(".stutter/java8.lock").readLines()
                 .filterNot { it.startsWith("#") }

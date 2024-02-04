@@ -49,7 +49,7 @@ publishing {
     repositories {
         maven {
             name = "buildFolder"
-            url = uri("$buildDir/repository")
+            url = uri(layout.buildDirectory.dir("repository"))
         }
     }
 }
