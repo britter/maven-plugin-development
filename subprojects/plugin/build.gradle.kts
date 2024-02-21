@@ -22,7 +22,6 @@ plugins {
     `kotlin-dsl`
     alias(libs.plugins.kotlin)
     alias(libs.plugins.pluginPublish)
-    alias(libs.plugins.stutter)
 }
 
 group = "de.benediktritter"
@@ -63,26 +62,10 @@ dependencies {
         }
     }
 
-    compatTestImplementation(libs.bundles.spock)
-    compatTestImplementation(testFixtures(project))
+    testImplementation(libs.bundles.spock)
+    testImplementation(testFixtures(project))
     testFixturesImplementation(libs.junit4)
     testFixturesImplementation(libs.commonsLang)
-}
-
-stutter {
-    isSparse = true
-    java(8) {
-        compatibleRange("5.5.1")
-    }
-}
-
-idea {
-    project {
-        module {
-            testSources.from(sourceSets["compatTest"].allSource.sourceDirectories)
-            testResources.from(sourceSets["compatTest"].resources.sourceDirectories)
-        }
-    }
 }
 
 tasks {
@@ -92,21 +75,6 @@ tasks {
     jar {
         from(rootProject.file("LICENSE.txt")) {
             into("META-INF")
-        }
-    }
-    register("writeVersions") {
-        inputs.file(".stutter/java8.lock")
-            .withPropertyName("stutter lock")
-            .withPathSensitivity(PathSensitivity.NONE)
-        val outputFile = layout.buildDirectory.file("ci/gradle-versions.json")
-        outputs.file(outputFile)
-        doLast {
-            val output = file(outputFile)
-            mkdir(output.parentFile)
-            val json = file(".stutter/java8.lock").readLines()
-                .filterNot { it.startsWith("#") }
-                .joinToString(prefix = "[", postfix = "]") { "\"$it\"" }
-            output.writeText(json)
         }
     }
 }
