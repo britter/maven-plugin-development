@@ -15,7 +15,6 @@
  */
 plugins {
     id("groovy")
-    id("idea")
     id("java-gradle-plugin")
     id("java-test-fixtures")
     id("maven-publish")
