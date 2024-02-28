@@ -2,7 +2,7 @@
 
 == 0.4.3
 
-Release date: YYYY-MM-DD
+Release date: 2024-02-28
 
 === Bug fixes
 
