@@ -17,7 +17,6 @@ plugins {
     id("groovy")
     id("java-gradle-plugin")
     id("java-test-fixtures")
-    id("maven-publish")
     `kotlin-dsl`
     alias(libs.plugins.kotlin)
     alias(libs.plugins.pluginPublish)
@@ -92,14 +91,6 @@ gradlePlugin {
 
 publishing {
     publications.withType<MavenPublication>() {
-        versionMapping {
-            usage("java-api") {
-                fromResolutionResult()
-            }
-            usage("java-runtime") {
-                fromResolutionResult()
-            }
-        }
         pom {
             description.set(project.description)
             url.set("https://github.com/britter/maven-development-plugin")
