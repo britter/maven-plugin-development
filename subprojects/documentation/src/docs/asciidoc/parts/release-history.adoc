@@ -1,5 +1,13 @@
 = Release History
 
+== 0.4.3
+
+Release date: YYYY-MM-DD
+
+=== Bug fixes
+
+* Fix deprecation warnings ({gh-issue}166[#166]). Thanks to https://github.com/Goooler[Zongle Wang]
+
 == 0.4.2
 
 Release date: 2023-06-03
