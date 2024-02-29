@@ -21,4 +21,4 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3.1.0
       - name: Check Docs
-        run: "./gradlew :documentation:check"
+        run: "./gradlew :testSamples"
