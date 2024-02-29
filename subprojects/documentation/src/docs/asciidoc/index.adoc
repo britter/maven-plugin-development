@@ -16,6 +16,3 @@ Compatible with Gradle 5.5.1 or later.
 
 == Usage
 include::src/docs/asciidoc/parts/plugin-usage.adoc[leveloffset=+1]
-
-[appendix]
-include::src/docs/asciidoc/parts/release-history.adoc[leveloffset=+1]
