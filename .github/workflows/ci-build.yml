@@ -19,4 +19,4 @@ jobs:
           java-version: 11
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3.1.0
-      - run: "./gradlew :plugin:test"
+      - run: "./gradlew :test"

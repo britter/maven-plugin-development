@@ -14,26 +14,11 @@
  * limitations under the License.
  */
 plugins {
-    id("com.gradle.enterprise") version "3.16.2"
-    id("com.gradle.common-custom-user-data-gradle-plugin") version "1.13"
+    id("de.benediktritter.maven-plugin-development") version "0.4.3"
 }
 
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-    }
+// tag::help-mojo[]
+mavenPlugin {
+    helpMojoPackage.set("org.example.help")
 }
-
-rootProject.name = "maven-plugin-development"
-
-includeBuild("sample/gradle-producer-build")
-
-if (System.getenv("CI") == "true") {
-    gradleEnterprise {
-        buildScan {
-            publishAlways()
-            termsOfServiceUrl = "https://gradle.com/terms-of-service"
-            termsOfServiceAgree = "yes"
-        }
-    }
-}
+// end::help-mojo[]

@@ -13,27 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-plugins {
-    id("com.gradle.enterprise") version "3.16.2"
-    id("com.gradle.common-custom-user-data-gradle-plugin") version "1.13"
-}
 
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-    }
-}
+package de.benediktritter.maven.plugin.development.documentation;
 
-rootProject.name = "maven-plugin-development"
+import org.gradle.exemplar.test.runner.GradleSamplesRunner;
+import org.gradle.exemplar.test.runner.SamplesRoot;
+import org.junit.runner.RunWith;
 
-includeBuild("sample/gradle-producer-build")
-
-if (System.getenv("CI") == "true") {
-    gradleEnterprise {
-        buildScan {
-            publishAlways()
-            termsOfServiceUrl = "https://gradle.com/terms-of-service"
-            termsOfServiceAgree = "yes"
-        }
-    }
+@RunWith(GradleSamplesRunner.class)
+@SamplesRoot("src/docs/snippets")
+class DocumentationSnippetsTest {
 }
