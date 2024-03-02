@@ -52,7 +52,6 @@ dependencies {
     testImplementation(testFixtures(project))
     testFixturesImplementation(libs.junit4)
     testFixturesImplementation(libs.commonsLang)
-
 }
 
 testing.suites.register<JvmTestSuite>("testSamples") {
