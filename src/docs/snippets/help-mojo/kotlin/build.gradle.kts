@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 plugins {
-    id("de.benediktritter.maven-plugin-development")
+    id("de.benediktritter.maven-plugin-development") version "0.4.3"
 }
 
 // tag::help-mojo[]

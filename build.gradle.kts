@@ -56,8 +56,8 @@ dependencies {
 }
 
 testing.suites.register<JvmTestSuite>("testSamples") {
+    useJUnit()
     dependencies {
-        implementation(libs.groovy)
         implementation(gradleTestKit())
         implementation(libs.exemplar.sampleCheck)
     }
@@ -71,7 +71,7 @@ testing.suites.register<JvmTestSuite>("testSamples") {
 }
 
 tasks {
-    withType<Test> {
+    test {
         useJUnitPlatform()
     }
     jar {

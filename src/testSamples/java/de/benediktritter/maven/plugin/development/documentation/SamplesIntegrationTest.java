@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package de.benediktritter.maven.plugin.development.documentation
+package de.benediktritter.maven.plugin.development.documentation;
 
-import org.gradle.exemplar.test.runner.SamplesRoot
-import org.junit.runner.RunWith
+import org.gradle.exemplar.test.runner.GradleSamplesRunner;
+import org.gradle.exemplar.test.runner.SamplesRoot;
+import org.junit.runner.RunWith;
 
-@RunWith(PluginUnderTestAwareGradleSamplesRunner)
+@RunWith(GradleSamplesRunner.class)
 @SamplesRoot("src/docs/snippets")
 class DocumentationSnippetsTest {
 }

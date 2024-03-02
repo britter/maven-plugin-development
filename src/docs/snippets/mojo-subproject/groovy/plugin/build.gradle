@@ -15,7 +15,7 @@
  */
 plugins {
     id 'java'
-    id 'de.benediktritter.maven-plugin-development' version '0.4.0'
+    id 'de.benediktritter.maven-plugin-development' version '0.4.3'
 }
 
 // tag::mojo-subproject[]
