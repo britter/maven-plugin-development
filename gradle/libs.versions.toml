@@ -5,7 +5,7 @@ spock = "2.3-groovy-3.0"
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom" }
 kotlin-stdlibJdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8" }
 mavenPlugin-annotations = { module = "org.apache.maven.plugin-tools:maven-plugin-annotations" }
-mavenPluginTools-bom = { module = "org.apache.maven.plugin-tools:maven-plugin-tools", version = "3.6.1" }
+mavenPluginTools-bom = { module = "org.apache.maven.plugin-tools:maven-plugin-tools", version = "3.12.0" }
 mavenPluginTools-api = { module = "org.apache.maven.plugin-tools:maven-plugin-tools-api" }
 mavenPluginTools-annotations = { module = "org.apache.maven.plugin-tools:maven-plugin-tools-annotations" }
 mavenPluginTools-java = { module = "org.apache.maven.plugin-tools:maven-plugin-tools-java" }
