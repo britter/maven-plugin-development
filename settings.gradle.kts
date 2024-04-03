@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 plugins {
-    id("com.gradle.enterprise") version "3.17"
+    id("com.gradle.develocity") version "3.17"
     id("com.gradle.common-custom-user-data-gradle-plugin") version "1.13"
 }
 
