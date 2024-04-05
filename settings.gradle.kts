@@ -28,12 +28,12 @@ rootProject.name = "maven-plugin-development"
 
 includeBuild("sample/gradle-producer-build")
 
-if (System.getenv("CI") == "true") {
-    gradleEnterprise {
-        buildScan {
-            publishAlways()
-            termsOfServiceUrl = "https://gradle.com/terms-of-service"
-            termsOfServiceAgree = "yes"
-        }
+develocity {
+    buildScan {
+        termsOfUseUrl = "https://gradle.com/terms-of-service"
+        termsOfUseAgree = "yes"
+        // TODO: workaround for https://github.com/gradle/gradle/issues/22879.
+        val isCI = providers.environmentVariable("CI").isPresent
+        publishing.onlyIf { isCI }
     }
 }
