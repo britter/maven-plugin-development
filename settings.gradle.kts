@@ -28,12 +28,10 @@ rootProject.name = "maven-plugin-development"
 
 includeBuild("sample/gradle-producer-build")
 
-if (System.getenv("CI") == "true") {
-    gradleEnterprise {
-        buildScan {
-            publishAlways()
-            termsOfServiceUrl = "https://gradle.com/terms-of-service"
-            termsOfServiceAgree = "yes"
-        }
+develocity {
+    buildScan {
+        termsOfUseUrl = "https://gradle.com/terms-of-service"
+        termsOfUseAgree = "yes"
+        publishing.onlyIf { !System.getenv("CI").isNullOrEmpty() }
     }
 }
