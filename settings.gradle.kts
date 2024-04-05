@@ -15,7 +15,7 @@
  */
 plugins {
     id("com.gradle.develocity") version "3.17"
-    id("com.gradle.common-custom-user-data-gradle-plugin") version "1.13"
+    id("com.gradle.common-custom-user-data-gradle-plugin") version "2"
 }
 
 dependencyResolutionManagement {
