@@ -31,7 +31,7 @@ repositories {
 
 dependencies {
     // required dependencies for building a Maven Plugin
-    implementation("org.apache.maven:maven-plugin-api:3.9.8")
+    implementation("org.apache.maven:maven-plugin-api:3.9.9")
     // annotations are only needed at compile time
     compileOnly("org.apache.maven.plugin-tools:maven-plugin-annotations:3.14.0")
 }
