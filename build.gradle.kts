@@ -54,6 +54,10 @@ dependencies {
     testFixturesImplementation(libs.commonsLang)
 }
 
+testing.suites.named<JvmTestSuite>("test") {
+    useSpock()
+}
+
 testing.suites.register<JvmTestSuite>("testSamples") {
     useJUnit()
     dependencies {
