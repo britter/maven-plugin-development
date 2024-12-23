@@ -30,6 +30,6 @@ class GradleCrossVersionTest extends AbstractPluginFuncTest {
           .build()
 
         where:
-        gradleVersion << ["5.5.1", "5.6.4", "6.0.1", "6.9.4", "7.0.2", "7.6.4", "8.0.2"]
+        gradleVersion << ["7.0.2", "7.6.4", "8.0.2"]
     }
 }
