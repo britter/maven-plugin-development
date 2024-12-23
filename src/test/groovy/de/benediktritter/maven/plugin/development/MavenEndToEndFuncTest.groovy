@@ -65,7 +65,7 @@ class MavenEndToEndFuncTest extends AbstractPluginFuncTest {
         def mavenBuildResult = mvnCleanPackage(mavenBuild)
 
         then:
-        mavenBuildResult.contains("[INFO] --- touch:1.0.0:touch (default) @ use-touch-plugin ---")
+        mavenBuildResult.contains("touch-maven-plugin:1.0.0:touch")
         mavenBuildResult.contains("BUILD SUCCESS")
         file("$mavenBuild/target/classes/touch.txt").exists()
     }
