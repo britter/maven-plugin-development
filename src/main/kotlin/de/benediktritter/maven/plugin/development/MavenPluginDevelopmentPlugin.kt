@@ -75,13 +75,14 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             runtimeDependencies.set(extension.dependencies)
         }
 
+        val main = project.extensions.getByType<SourceSetContainer>()["main"]
         val generateTask = tasks.register<GenerateMavenPluginDescriptorTask>("generateMavenPluginDescriptor") {
             group = TASK_GROUP_NAME
             description = "Generates the Maven plugin descriptor file"
 
-            classesDirs.set(extension.pluginSourceSet.map { it.output.classesDirs })
-            sourcesDirs.set(extension.pluginSourceSet.map { it.java.sourceDirectories })
-            javaClassesDir.set(extension.pluginSourceSet.flatMap { it.java.classesDirectory })
+            classesDirs.set(main.output.classesDirs)
+            sourcesDirs.set(main.java.sourceDirectories)
+            javaClassesDir.set(main.java.classesDirectory)
             upstreamProjects.convention(provider {
                 val compileClasspath = configurations.getByName(JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME)
                 compileClasspath.incoming.dependencies
@@ -112,14 +113,13 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             additionalMojos.set(extension.mojos)
             runtimeDependencies.set(extension.dependencies)
 
-            dependsOn(extension.pluginSourceSet.map { it.output }, generateHelpMojoTask)
+            dependsOn(main.output, generateHelpMojoTask)
         }
 
         project.afterEvaluate {
-            val sourceSet = extension.pluginSourceSet.get()
-            val jarTask: Jar? = tasks.findByName(sourceSet.jarTaskName) as Jar?
+            val jarTask: Jar? = tasks.findByName(main.jarTaskName) as Jar?
             jarTask?.from(generateTask)
-            sourceSet.java.srcDir(generateHelpMojoTask.map { it.outputDirectory })
+            main.java.srcDir(generateHelpMojoTask.map { it.outputDirectory })
         }
     }
 

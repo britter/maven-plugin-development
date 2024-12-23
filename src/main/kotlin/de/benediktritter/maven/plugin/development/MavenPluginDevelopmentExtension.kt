@@ -28,8 +28,6 @@ interface MavenPluginDevelopmentExtension {
         const val NAME = "mavenPlugin"
     }
 
-    val pluginSourceSet: Property<SourceSet>
-
     val groupId: Property<String>
 
     val artifactId: Property<String>

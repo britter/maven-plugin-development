@@ -158,28 +158,6 @@ class PluginDescriptorGenerationFuncTest extends AbstractPluginFuncTest {
         helpDescriptor.hasGoal("touch")
     }
 
-    def "generates a plugin descriptor and help descriptor for a different source set"() {
-        given:
-        buildFile << """
-            def mojoSourceSet = sourceSets.create('mojo')
-            mavenPlugin {
-                pluginSourceSet = mojoSourceSet
-            }
-            dependencies {
-                mojoImplementation 'org.apache.maven:maven-plugin-api:3.6.3'
-                mojoImplementation 'org.apache.maven.plugin-tools:maven-plugin-annotations:3.6.0'
-            }
-        """
-        javaMojo("mojo")
-
-        when:
-        run("generateMavenPluginDescriptor")
-
-        then:
-        pluginDescriptor()
-        helpDescriptor()
-    }
-
     def "adds direct and transitive runtime dependencies to plugin descriptor"() {
         given:
         buildFile << """
