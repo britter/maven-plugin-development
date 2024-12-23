@@ -82,7 +82,6 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
 
             classesDirs.set(main.output.classesDirs)
             sourcesDirs.set(main.java.sourceDirectories)
-            javaClassesDir.set(main.java.classesDirectory)
             upstreamProjects.convention(provider {
                 val compileClasspath = configurations.getByName(JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME)
                 compileClasspath.incoming.dependencies

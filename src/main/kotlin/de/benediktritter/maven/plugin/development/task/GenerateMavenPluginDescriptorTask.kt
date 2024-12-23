@@ -45,9 +45,6 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
     @get:[InputFiles Classpath]
     abstract val classesDirs: Property<FileCollection>
 
-    @get:Internal
-    abstract val javaClassesDir: DirectoryProperty
-
     @get:[InputFiles PathSensitive(PathSensitivity.RELATIVE)]
     abstract val sourcesDirs: Property<FileCollection>
 
