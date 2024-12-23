@@ -7,6 +7,7 @@ Consequently this is a breaking release with features being dropped, plugin ID a
 The minimal required Gradle version has been increased to 7.0.
 Lower versions of Gradle might be supported but are not tested.
 
+* [Fixed] [#57](https://github.com/britter/maven-plugin-development/issues/57) Remove javaClassesDir from GenerateMavenPluginDescriptorTask.
 * [Fixed] [#210](https://github.com/britter/maven-plugin-development/issues/210) Drop feature: Mojo source set. It's not longer possibel to define a dedicated source set for defining the mojo. Use a dedicated project instead.
 
 ## Version 0.4.3
