@@ -79,6 +79,7 @@ tasks {
         }
     }
     asciidoctor {
+        notCompatibleWithConfigurationCache("See https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/564")
         inputs.dir("src/docs/snippets")
             .withPathSensitivity(PathSensitivity.RELATIVE)
             .withPropertyName("snippets")
