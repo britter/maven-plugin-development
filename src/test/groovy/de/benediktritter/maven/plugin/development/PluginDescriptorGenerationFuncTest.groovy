@@ -187,24 +187,6 @@ class PluginDescriptorGenerationFuncTest extends AbstractPluginFuncTest {
         helpDescriptor.hasNoDependencies()
     }
 
-    def "finds mojos in project dependencies"() {
-        given:
-        multiProjectSetup()
-        def pluginProject = subproject("plugin")
-
-        when:
-        run(":plugin:build")
-
-        then:
-        pluginProject.pluginDescriptor.hasGoal("touch")
-        !pluginProject.pluginDescriptor.hasGoal("create")
-        def mojo = pluginProject.pluginDescriptor.getMojo("touch")
-        mojo.description == "A mojo written in Java that touches a file."
-        mojo.parameters.size() == 2
-        mojo.parameters.contains(new DescriptorFile.ParameterDeclaration("fileName", File, "", false, true, "The name of the file to put into the output directory."))
-        mojo.parameters.contains(new DescriptorFile.ParameterDeclaration("outputDirectory", File, "", false, true, "The output directory to put the file into."))
-    }
-
     def "provides control over plugin dependencies"() {
         given:
         javaMojo()
