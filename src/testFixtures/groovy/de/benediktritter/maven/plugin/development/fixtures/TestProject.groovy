@@ -66,10 +66,9 @@ trait TestProject {
         DescriptorFile.parse(file("build/mavenPlugin/descriptor/META-INF/maven/plugin.xml"))
     }
 
-    DescriptorFile helpDescriptor() {
-        DescriptorFile.parse(file("build/mavenPlugin/descriptor/META-INF/maven/org.example/touch-maven-plugin/plugin-help.xml"))
+    DescriptorFile helpDescriptor(String groupId = "org.example", artifactId = "touch-maven-plugin") {
+        DescriptorFile.parse(file("build/mavenPlugin/descriptor/META-INF/maven/${groupId}/${artifactId}/plugin-help.xml"))
     }
-
 
     def withMavenPluginBuildConfiguration(boolean applyPlugin = true) {
         def pluginApplication = applyPlugin ? "id 'de.benediktritter.maven-plugin-development'" : ""

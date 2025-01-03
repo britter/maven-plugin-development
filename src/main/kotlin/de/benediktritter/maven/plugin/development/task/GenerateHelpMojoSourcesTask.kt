@@ -59,9 +59,9 @@ abstract class GenerateHelpMojoSourcesTask : AbstractMavenPluginDevelopmentTask(
         val propertiesDirectory = helpPropertiesFile.get().asFile.parentFile
         propertiesDirectory.mkdirs()
         return MavenProject().also {
-            it.groupId = project.group.toString()
-            it.artifactId = project.name
-            it.version = project.version.toString()
+            it.groupId = pluginDescriptor.get().groupId
+            it.artifactId = pluginDescriptor.get().artifactId
+            it.version = pluginDescriptor.get().version
             it.artifact = ProjectArtifact(it)
             it.build = Build().also { b -> b.directory = propertiesDirectory.absolutePath }
         }

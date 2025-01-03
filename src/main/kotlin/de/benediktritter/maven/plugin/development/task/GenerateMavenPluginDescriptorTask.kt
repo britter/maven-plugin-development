@@ -25,7 +25,6 @@ import org.apache.maven.plugin.descriptor.PluginDescriptor
 import org.apache.maven.project.MavenProject
 import org.apache.maven.project.artifact.ProjectArtifact
 import org.apache.maven.tools.plugin.generator.PluginDescriptorGenerator
-import org.gradle.api.Project
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.ListProperty
@@ -70,14 +69,14 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
     }
 
     private fun writeDescriptor(pluginDescriptor: PluginDescriptor) {
-        val mavenProject = mavenProject(project, sourcesDirs.get(), outputDirectory.asFile.get())
+        val mavenProject = mavenProject(sourcesDirs.get(), outputDirectory.asFile.get())
         generator.execute(outputDirectory.dir("META-INF/maven").get().asFile, createPluginToolsRequest(mavenProject, pluginDescriptor))
     }
 
     private fun extractPluginDescriptor(): PluginDescriptor {
         return createPluginDescriptor().also { pluginDescriptor ->
             classesDirs.get().forEach { classesDir ->
-                val mavenProject = mavenProject(project, sourcesDirs.get(), classesDir)
+                val mavenProject = mavenProject(sourcesDirs.get(), classesDir)
                 val pluginToolsRequest = createPluginToolsRequest(mavenProject, pluginDescriptor)
                 // process upstream projects in order to scan base classes
                 upstreamProjects.get().forEach {
@@ -95,8 +94,8 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
         }
     }
 
-    private fun mavenProject(project: Project, sourcesDirs: FileCollection, outputDirectory: File): MavenProject =
-        mavenProject(project.group.toString(), project.name, project.version.toString(), sourcesDirs, outputDirectory)
+    private fun mavenProject(sourcesDirs: FileCollection, outputDirectory: File): MavenProject =
+        mavenProject(pluginDescriptor.get().groupId, pluginDescriptor.get().artifactId, pluginDescriptor.get().version, sourcesDirs, outputDirectory)
 
     private fun mavenProject(
         groupId: String,
