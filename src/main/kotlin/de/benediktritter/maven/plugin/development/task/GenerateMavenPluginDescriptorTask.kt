@@ -164,7 +164,7 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
                 b.outputDirectory = outputDirectory.absolutePath
                 b.directory = this@GenerateMavenPluginDescriptorTask.outputDirectory.get().asFile.parent
             }
-            // populate compileSourceRoots in order to extract meta data from JavaDoc
+            // populate compileSourceRoots in order to extract metadata from JavaDoc
             sourcesDirs.forEach { dir -> it.addCompileSourceRoot(dir.absolutePath) }
         }
     }
