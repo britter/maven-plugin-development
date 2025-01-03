@@ -101,14 +101,6 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
                 }
                 scanner.populatePluginDescriptor(pluginToolsRequest)
             }
-            // process upstream projects again in order to find mojo implementations
-            upstreamProjects.get().forEach {
-                it.classesDirs.forEach { classesDir ->
-                    val mavenProject = mavenProject(it.group, it.name, it.version, it.sourceDirectories, classesDir)
-                    val pluginToolsRequest = createPluginToolsRequest(mavenProject, pluginDescriptor)
-                    scanner.populatePluginDescriptor(pluginToolsRequest)
-                }
-            }
             addAdditionalMojos(pluginDescriptor)
         }
     }
@@ -172,7 +164,7 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
                 b.outputDirectory = outputDirectory.absolutePath
                 b.directory = this@GenerateMavenPluginDescriptorTask.outputDirectory.get().asFile.parent
             }
-            // populate compileSourceRoots in order to extract meta data from JavaDoc
+            // populate compileSourceRoots in order to extract metadata from JavaDoc
             sourcesDirs.forEach { dir -> it.addCompileSourceRoot(dir.absolutePath) }
         }
     }
