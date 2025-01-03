@@ -1,2 +1,0 @@
-include(":mojo-subproject")
-include(":plugin")
