@@ -8,11 +8,16 @@ The minimal required Gradle version has been increased to 7.0.
 Lower versions of Gradle might be supported but are not tested.
 
 * [Fixed] [#57](https://github.com/britter/maven-plugin-development/issues/57) Remove javaClassesDir from GenerateMavenPluginDescriptorTask.
-* [Fixed] [#210](https://github.com/britter/maven-plugin-development/issues/210) Drop feature: Mojo source set. It's not longer possibel to define a dedicated source set for defining the mojo. Use a dedicated project instead.
+* [Fixed] [#210](https://github.com/britter/maven-plugin-development/issues/210) Drop feature: Mojo source set. 
+    It's no longer possible to define a dedicated source set for defining the mojo.
+    Use a dedicated project instead.
+* [Fixed] [#212](https://github.com/britter/maven-plugin-development/issues/212) Drop feature: Finding mojos in project dependencies.
+    The plugin no longer searches for mojo implementations in dependent projects since this is not the way of modelling aggregation of build results in Gradle.
+    Users who rely on this use case should instead apply this plugin to all projects with mojo implementations, set up a variant that exposes the descriptor, and then merge all exposed descriptor variants in an aggregator project.
 
 ## Version 0.4.3
 
-* [Fixed] [#166](https://github.com/britter/maven-plugin-development/issues/166) Fix deprecation warnings. Thanks to https://github.com/Goooler[Zongle Wang].
+* [Fixed] [#166](https://github.com/britter/maven-plugin-development/issues/166) Fix deprecation warnings. Thanks to [Zongle Wang](https://github.com/Goooler).
 
 ## Version 0.4.2
 
