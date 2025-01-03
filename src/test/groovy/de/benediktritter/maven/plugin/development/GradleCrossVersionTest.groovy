@@ -16,8 +16,6 @@
 
 package de.benediktritter.maven.plugin.development
 
-import org.gradle.testkit.runner.TaskOutcome
-
 class GradleCrossVersionTest extends AbstractPluginFuncTest {
 
     def "works on Gradle #gradleVersion"() {
@@ -30,6 +28,6 @@ class GradleCrossVersionTest extends AbstractPluginFuncTest {
           .build()
 
         where:
-        gradleVersion << ["7.0.2", "7.6.4", "8.0.2"]
+        gradleVersion << ["7.3", "7.6.4", "8.0.2"]
     }
 }

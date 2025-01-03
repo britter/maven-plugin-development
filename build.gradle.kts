@@ -76,6 +76,7 @@ testing.suites.register<JvmTestSuite>("testSamples") {
 tasks {
     test {
         useJUnitPlatform()
+        javaLauncher.set(project.javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(17) })
     }
     jar {
         from(rootProject.file("LICENSE.txt")) {

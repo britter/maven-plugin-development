@@ -6,7 +6,7 @@ image:https://img.shields.io/maven-metadata/v?label=Plugin%20Portal&metadataUrl=
 This plugin aims to fill the tiny gap for people who need to create an https://maven.apacke.org[Apache Maven] plugin from a Gradle build.
 To do this the plugin wraps around the https://maven.apache.org/plugin-tools/[Maven Plugin Tools API] and feeds it with the right inputs from the Gradle build.
 
-Compatible with Gradle 7.x or later.
+Compatible with Gradle 7.3 or later.
 
 == Features
 
