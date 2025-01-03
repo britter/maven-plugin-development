@@ -24,7 +24,7 @@ import org.apache.maven.model.Build
 import org.apache.maven.plugin.descriptor.PluginDescriptor
 import org.apache.maven.project.MavenProject
 import org.apache.maven.project.artifact.ProjectArtifact
-import org.apache.maven.tools.plugin.generator.PluginDescriptorGenerator
+import org.apache.maven.tools.plugin.generator.PluginDescriptorFilesGenerator
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.ListProperty
@@ -51,7 +51,7 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
 
     private val scanner = MavenServiceFactory.createMojoScanner(loggerAdapter)
 
-    private val generator = PluginDescriptorGenerator(loggerAdapter)
+    private val generator = PluginDescriptorFilesGenerator()
 
     @TaskAction
     fun generateDescriptor() {

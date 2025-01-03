@@ -21,13 +21,12 @@ import org.apache.maven.model.Build
 import org.apache.maven.project.MavenProject
 import org.apache.maven.project.artifact.ProjectArtifact
 import org.apache.maven.tools.plugin.generator.PluginHelpGenerator
-import org.codehaus.plexus.velocity.DefaultVelocityComponent
 import org.codehaus.plexus.velocity.VelocityComponent
+import org.codehaus.plexus.velocity.internal.DefaultVelocityComponent
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.*
-import java.util.*
 
 @CacheableTask
 abstract class GenerateHelpMojoSourcesTask : AbstractMavenPluginDevelopmentTask() {
@@ -46,13 +45,14 @@ abstract class GenerateHelpMojoSourcesTask : AbstractMavenPluginDevelopmentTask(
 
     private val generator = PluginHelpGenerator().also { gen ->
         gen.enableLogging(loggerAdapter)
-        gen.velocityComponent = createVelocityComponent()
+        gen.setVelocityComponent(createVelocityComponent())
     }
 
     @TaskAction
     fun generateHelpMojo() {
         generator.setHelpPackageName(helpMojoPackage.get())
-        generator.execute(outputDirectory.get().asFile, createPluginToolsRequest(mavenProject(), createPluginDescriptor()))
+        generator.setMavenProject(mavenProject())
+        generator.execute(outputDirectory.get().asFile)
     }
 
     private fun mavenProject(): MavenProject {
@@ -68,30 +68,13 @@ abstract class GenerateHelpMojoSourcesTask : AbstractMavenPluginDevelopmentTask(
     }
 
     private fun createVelocityComponent(): VelocityComponent {
-        val velocityComponent = DefaultVelocityComponent()
-        velocityComponent.enableLogging(loggerAdapter)
-        // initialization as defined by org.codehaus.plexus:plexus-velocity:1.1.8:META-INF/plexus/components.xml
-        val velocityProperties = Properties().also {
-            it["resource.loader"] = "classpath,site"
-            it["classpath.resource.loader.class"] = "org.codehaus.plexus.velocity.ContextClassLoaderResourceLoader"
-            it["site.resource.loader.class"] = "org.codehaus.plexus.velocity.SiteResourceLoader"
-            it["runtime.log.invalid.references"] = "false"
-            it["velocimacro.messages.on"] = "false"
-            it["resource.manager.logwhenfound"] = "false"
-        }
-        val javaClass = velocityComponent.javaClass
-        val propertiesField = javaClass.getDeclaredField("properties")
-        propertiesField.isAccessible = true
-        propertiesField.set(velocityComponent, velocityProperties)
         // fix for broken debugging due to reflection happening inside Velocity (RuntimeInstance#initializeResourceManager())
         val currentContextClassLoader = Thread.currentThread().contextClassLoader
-        try {
+        return try {
             Thread.currentThread().contextClassLoader = javaClass.classLoader
-            velocityComponent.initialize()
+            DefaultVelocityComponent(null)
         } finally {
             Thread.currentThread().contextClassLoader = currentContextClassLoader
         }
-        return velocityComponent
     }
-
 }
