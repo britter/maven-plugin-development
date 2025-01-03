@@ -18,24 +18,18 @@ package de.benediktritter.maven.plugin.development.task
 
 import de.benediktritter.maven.plugin.development.internal.MavenLoggerAdapter
 import de.benediktritter.maven.plugin.development.internal.MavenServiceFactory
-import de.benediktritter.maven.plugin.development.internal.DefaultMavenMojo
-import de.benediktritter.maven.plugin.development.internal.DefaultMavenMojoParameter
 import org.apache.maven.artifact.DefaultArtifact
 import org.apache.maven.artifact.handler.DefaultArtifactHandler
 import org.apache.maven.model.Build
-import org.apache.maven.plugin.descriptor.MojoDescriptor
-import org.apache.maven.plugin.descriptor.Parameter
 import org.apache.maven.plugin.descriptor.PluginDescriptor
 import org.apache.maven.project.MavenProject
 import org.apache.maven.project.artifact.ProjectArtifact
-import org.apache.maven.tools.plugin.ExtendedMojoDescriptor
 import org.apache.maven.tools.plugin.generator.PluginDescriptorGenerator
 import org.gradle.api.Project
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
-import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.*
 import java.io.File
 
@@ -50,9 +44,6 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
 
     @get:Nested
     abstract val upstreamProjects: ListProperty<UpstreamProjectDescriptor>
-
-    @get:Nested
-    abstract val additionalMojos: SetProperty<DefaultMavenMojo>
 
     @get:OutputDirectory
     abstract val outputDirectory: DirectoryProperty
@@ -101,47 +92,6 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
                 }
                 scanner.populatePluginDescriptor(pluginToolsRequest)
             }
-            addAdditionalMojos(pluginDescriptor)
-        }
-    }
-
-    private fun addAdditionalMojos(pluginDescriptor: PluginDescriptor) {
-        additionalMojos.get().map(::toMojoDescriptor).forEach { pluginDescriptor.addMojo(it) }
-    }
-
-    private fun toMojoDescriptor(mojo: DefaultMavenMojo): MojoDescriptor {
-        return ExtendedMojoDescriptor().also {
-            it.goal = mojo.name
-            it.description = mojo.description
-            it.implementation = mojo.implementation
-            it.language = mojo.language
-            it.phase = mojo.defaultPhase.id()
-            it.dependencyResolutionRequired = mojo.requiresDependencyResolution.id()
-            it.dependencyCollectionRequired = mojo.requiresDependencyCollection.id()
-            it.instantiationStrategy = mojo.instantiationStrategy.id()
-            it.executionStrategy = mojo.executionStrategy.id()
-            it.isProjectRequired = mojo.isRequiresProject
-            it.isRequiresReports = mojo.isRequiresReports
-            it.isAggregator = mojo.isAggregator
-            it.isDirectInvocationOnly = mojo.isRequiresDirectInvocation
-            it.isOnlineRequired = mojo.isRequiresOnline
-            it.isInheritedByDefault = mojo.isInheritByDefault
-            it.componentConfigurator = mojo.configurator
-            it.isThreadSafe = mojo.isThreadSafe
-            mojo.parameters.forEach { parameter -> it.addParameter(toParameter(parameter)) }
-        }
-    }
-
-    private fun toParameter(parameter: DefaultMavenMojoParameter): Parameter {
-        return Parameter().also {
-            it.name = parameter.name
-            it.type = parameter.type
-            it.description = parameter.description
-            it.alias = parameter.alias
-            it.defaultValue = parameter.defaultValue
-            it.expression = parameter.property
-            it.isRequired = parameter.isRequired
-            it.isEditable = !parameter.isReadonly
         }
     }
 
