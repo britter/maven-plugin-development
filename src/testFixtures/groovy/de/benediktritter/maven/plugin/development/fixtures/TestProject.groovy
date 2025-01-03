@@ -79,9 +79,9 @@ trait TestProject {
                 $pluginApplication
             }
 
-            group "org.example"
-            description "A maven plugin with a mojo that can touch it!"
-            version "1.0.0"
+            group = "org.example"
+            description = "A maven plugin with a mojo that can touch it!"
+            version = "1.0.0"
 
             repositories {
                 mavenCentral()
