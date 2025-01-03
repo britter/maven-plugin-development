@@ -43,16 +43,3 @@ include::{snippets-path}/dependencies/groovy/build.gradle[tags=dependencies]
 ----
 include::{snippets-path}/dependencies/kotlin/build.gradle.kts[tags=dependencies]
 ----
-
-== Defining mojos in the build script
-
-If you can't or don't want to use auto detection of mojos there is also a DSL for defining mojos inside the build script:
-
-[source.multi-language-sample,groovy]
-----
-include::{snippets-path}/buildscript-dsl/groovy/build.gradle[tags=buildscript-dsl]
-----
-[source.multi-language-sample,kotlin]
-----
-include::{snippets-path}/buildscript-dsl/kotlin/build.gradle.kts[tags=buildscript-dsl]
-----
