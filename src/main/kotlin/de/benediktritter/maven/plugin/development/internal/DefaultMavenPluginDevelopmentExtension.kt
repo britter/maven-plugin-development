@@ -16,15 +16,12 @@
 
 package de.benediktritter.maven.plugin.development.internal
 
-import de.benediktritter.maven.plugin.development.MavenMojo
 import de.benediktritter.maven.plugin.development.MavenPluginDevelopmentExtension
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.SourceSet
-import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.kotlin.dsl.*
 import javax.inject.Inject
 
@@ -51,10 +48,6 @@ open class DefaultMavenPluginDevelopmentExtension @Inject constructor(project: P
             .convention(false)
 
     override val helpMojoPackage: Property<String> = project.objects.property()
-
-    override val mojos: NamedDomainObjectContainer<DefaultMavenMojo> = project.objects.domainObjectContainer(DefaultMavenMojo::class.java)
-
-    override fun mojos(action: Action<in NamedDomainObjectContainer<out MavenMojo>>) = action.execute(mojos)
 
     override val dependencies: Property<Configuration> = project.objects.property<Configuration>()
             .convention(project.provider { project.configurations["runtimeClasspath"] })

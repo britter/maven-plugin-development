@@ -109,7 +109,6 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
                         extension.goalPrefix.orNull
                 )
             })
-            additionalMojos.set(extension.mojos)
             runtimeDependencies.set(extension.dependencies)
 
             dependsOn(main.output, generateHelpMojoTask)

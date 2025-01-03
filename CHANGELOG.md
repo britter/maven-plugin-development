@@ -14,6 +14,9 @@ Lower versions of Gradle might be supported but are not tested.
 * [Fixed] [#212](https://github.com/britter/maven-plugin-development/issues/212) Drop feature: Finding mojos in project dependencies.
     The plugin no longer searches for mojo implementations in dependent projects since this is not the way of modelling aggregation of build results in Gradle.
     Users who rely on this use case should instead apply this plugin to all projects with mojo implementations, set up a variant that exposes the descriptor, and then merge all exposed descriptor variants in an aggregator project.
+* [Fixed] [209](https://github.com/britter/maven-plugin-development/issues/209) Drop feature: Mojo DSL.
+    This feature was dropped without replacement.
+    Annotate mojos using annotations defined in `org.apache.maven.plugin-tools:maven-plugin-annotations` instead of declaring them in your build script.
 
 ## Version 0.4.3
 
