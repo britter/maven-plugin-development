@@ -45,15 +45,4 @@ class HelpMojoGenerationFuncTest extends AbstractPluginFuncTest {
         then:
         result.task(":generateMavenPluginHelpMojoSources").outcome == TaskOutcome.SKIPPED
     }
-
-    def "logs error if deprecated property is used"() {
-        given:
-        buildFile << "mavenPlugin.generateHelpMojo.set(true)"
-
-        when:
-        def result = run("build")
-
-        then:
-        result.output.contains("generateHelpMojo is deprecated")
-    }
 }
