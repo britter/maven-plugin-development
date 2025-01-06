@@ -16,7 +16,6 @@
 
 package de.benediktritter.maven.plugin.development
 
-import de.benediktritter.maven.plugin.development.internal.DefaultMavenPluginDevelopmentExtension
 import de.benediktritter.maven.plugin.development.internal.MavenPluginDescriptor
 import de.benediktritter.maven.plugin.development.task.GenerateHelpMojoSourcesTask
 import de.benediktritter.maven.plugin.development.task.GenerateMavenPluginDescriptorTask
@@ -46,7 +45,14 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
         val descriptorDir = pluginOutputDirectory.map { it.dir("descriptor") }
         val helpMojoDir = pluginOutputDirectory.map { it.dir("helpMojo") }
 
-        val extension = createExtension() as DefaultMavenPluginDevelopmentExtension
+        val extension = extensions.create<MavenPluginDevelopmentExtension>(MavenPluginDevelopmentExtension.NAME).also {
+            it.groupId.convention(project.provider { project.group.toString() })
+            it.artifactId.convention(project.provider { project.name })
+            it.version.convention(project.provider { project.version.toString() })
+            it.name.convention(project.provider { project.name })
+            it.description.convention(project.provider { project.description })
+            it.dependencies.convention(project.provider { project.configurations["runtimeClasspath"] })
+        }
 
         val generateHelpMojoTask = tasks.register<GenerateHelpMojoSourcesTask>("generateMavenPluginHelpMojoSources") {
             group = TASK_GROUP_NAME
@@ -115,11 +121,4 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             main.java.srcDir(generateHelpMojoTask.map { it.outputDirectory })
         }
     }
-
-    private fun Project.createExtension() =
-            extensions.create(
-                    MavenPluginDevelopmentExtension::class,
-                    MavenPluginDevelopmentExtension.NAME,
-                    DefaultMavenPluginDevelopmentExtension::class,
-                    this)
 }
