@@ -20,6 +20,7 @@ Lower versions of Gradle might be supported but are not tested.
 * [Fixed] [278](https://github.com/britter/maven-plugin-development/issues/278) Remove deprecated code.
     In particular this the `generateHelpMojo` property was removed.
     Users should configure `helpMojoPackage` with the desired target package for the generated help mojo.
+* [Fixed] [8](https://github.com/britter/maven-plugin-development/issues/278) Support configuration cache.
 
 ## Version 0.4.3
 

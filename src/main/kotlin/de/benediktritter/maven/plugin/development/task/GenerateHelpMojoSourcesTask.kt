@@ -43,13 +43,12 @@ abstract class GenerateHelpMojoSourcesTask : AbstractMavenPluginDevelopmentTask(
 
     private val loggerAdapter = MavenLoggerAdapter(logger)
 
-    private val generator = PluginHelpGenerator().also { gen ->
-        gen.enableLogging(loggerAdapter)
-        gen.setVelocityComponent(createVelocityComponent())
-    }
-
     @TaskAction
     fun generateHelpMojo() {
+        val generator = PluginHelpGenerator().also { gen ->
+            gen.enableLogging(loggerAdapter)
+            gen.setVelocityComponent(createVelocityComponent())
+        }
         generator.setHelpPackageName(helpMojoPackage.get())
         generator.setMavenProject(mavenProject())
         generator.execute(outputDirectory.get().asFile)

@@ -21,12 +21,9 @@ import org.apache.maven.plugin.descriptor.PluginDescriptor
 import org.apache.maven.project.MavenProject
 import org.apache.maven.tools.plugin.DefaultPluginToolsRequest
 import org.apache.maven.tools.plugin.PluginToolsRequest
-import org.codehaus.plexus.component.repository.ComponentDependency
 import org.gradle.api.DefaultTask
-import org.gradle.api.artifacts.Configuration
+import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Classpath
-import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Nested
 
 abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
@@ -34,8 +31,8 @@ abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
     @get:Nested
     abstract val pluginDescriptor: Property<MavenPluginDescriptor>
 
-    @get:[InputFiles Classpath]
-    abstract val runtimeDependencies: Property<Configuration>
+    @get:Nested
+    abstract val runtimeDependencies: ListProperty<DependencyDescriptor>
 
     protected fun createPluginDescriptor(): PluginDescriptor {
         val pluginDescriptor = pluginDescriptor.get()
@@ -47,18 +44,7 @@ abstract class AbstractMavenPluginDevelopmentTask : DefaultTask() {
             it.goalPrefix = pluginDescriptor.goalPrefix ?: PluginDescriptor.getGoalPrefixFromArtifactId(artifactId)
             it.name = pluginDescriptor.name
             it.description = pluginDescriptor.description
-            it.dependencies = getComponentDependencies()
-        }
-    }
-
-    private fun getComponentDependencies(): List<ComponentDependency> {
-        return runtimeDependencies.get().resolvedConfiguration.resolvedArtifacts.map { artifact ->
-            ComponentDependency().also {
-                it.groupId = artifact.moduleVersion.id.group
-                it.artifactId = artifact.moduleVersion.id.name
-                it.version = artifact.moduleVersion.id.version
-                it.type = artifact.extension
-            }
+            it.dependencies = runtimeDependencies.get().map { it.toComponentDependency() }
         }
     }
 

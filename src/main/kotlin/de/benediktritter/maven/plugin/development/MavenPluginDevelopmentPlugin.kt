@@ -17,20 +17,18 @@
 package de.benediktritter.maven.plugin.development
 
 import de.benediktritter.maven.plugin.development.internal.MavenPluginDescriptor
+import de.benediktritter.maven.plugin.development.task.DependencyDescriptor
 import de.benediktritter.maven.plugin.development.task.GenerateHelpMojoSourcesTask
 import de.benediktritter.maven.plugin.development.task.GenerateMavenPluginDescriptorTask
 import de.benediktritter.maven.plugin.development.task.UpstreamProjectDescriptor
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.jvm.tasks.Jar
-import org.gradle.kotlin.dsl.apply
-import org.gradle.kotlin.dsl.create
-import org.gradle.kotlin.dsl.get
-import org.gradle.kotlin.dsl.getByType
-import org.gradle.kotlin.dsl.register
+import org.gradle.kotlin.dsl.*
 
 class MavenPluginDevelopmentPlugin : Plugin<Project> {
 
@@ -51,14 +49,16 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             it.version.convention(project.provider { project.version.toString() })
             it.name.convention(project.provider { project.name })
             it.description.convention(project.provider { project.description })
-            it.dependencies.convention(project.provider { project.configurations["runtimeClasspath"] })
+            it.dependencies.convention(configurations["runtimeClasspath"])
         }
 
         val generateHelpMojoTask = tasks.register<GenerateHelpMojoSourcesTask>("generateMavenPluginHelpMojoSources") {
             group = TASK_GROUP_NAME
             description = "Generates a Maven help mojo that documents the usage of the Maven plugin"
 
-            onlyIf { extension.helpMojoPackage.isPresent }
+            // capture helpMojoPackage property here for configuration cache compatibility
+            val helpMojoPkg = extension.helpMojoPackage
+            onlyIf { helpMojoPkg.isPresent }
 
             helpMojoPackage.set(extension.helpMojoPackage)
             outputDirectory.set(helpMojoDir)
@@ -73,7 +73,16 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
                         extension.goalPrefix.orNull
                 )
             })
-            runtimeDependencies.set(extension.dependencies)
+            runtimeDependencies.set(extension.dependencies.map {
+                it.resolvedConfiguration.resolvedArtifacts.map { artifact ->
+                    DependencyDescriptor(
+                        artifact.moduleVersion.id.group,
+                        artifact.moduleVersion.id.name,
+                        artifact.moduleVersion.id.version,
+                        artifact.extension
+                    )
+                }
+            })
         }
 
         val main = project.extensions.getByType<SourceSetContainer>()["main"]
@@ -110,7 +119,16 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
                         extension.goalPrefix.orNull
                 )
             })
-            runtimeDependencies.set(extension.dependencies)
+            runtimeDependencies.set(extension.dependencies.map {
+                it.resolvedConfiguration.resolvedArtifacts.map { artifact ->
+                    DependencyDescriptor(
+                        artifact.moduleVersion.id.group,
+                        artifact.moduleVersion.id.name,
+                        artifact.moduleVersion.id.version,
+                        artifact.extension
+                    )
+                }
+            })
 
             dependsOn(main.output, generateHelpMojoTask)
         }
