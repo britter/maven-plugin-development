@@ -37,12 +37,6 @@ interface MavenPluginDevelopmentExtension {
 
     val goalPrefix: Property<String>
 
-    @Deprecated(
-            "Use helpMojoPackage.set(\"org.example.help\") with the desired package for the generated HelpMojo instead",
-            ReplaceWith("helpMojoPackage")
-    )
-    val generateHelpMojo: Property<Boolean>
-
     val helpMojoPackage: Property<String>
 
     /**

@@ -17,6 +17,9 @@ Lower versions of Gradle might be supported but are not tested.
 * [Fixed] [209](https://github.com/britter/maven-plugin-development/issues/209) Drop feature: Mojo DSL.
     This feature was dropped without replacement.
     Annotate mojos using annotations defined in `org.apache.maven.plugin-tools:maven-plugin-annotations` instead of declaring them in your build script.
+* [Fixed] [278](https://github.com/britter/maven-plugin-development/issues/278) Remove deprecated code.
+    In particular this the `generateHelpMojo` property was removed.
+    Users should configure `helpMojoPackage` with the desired target package for the generated help mojo.
 
 ## Version 0.4.3
 

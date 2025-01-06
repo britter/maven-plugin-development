@@ -52,12 +52,7 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             group = TASK_GROUP_NAME
             description = "Generates a Maven help mojo that documents the usage of the Maven plugin"
 
-            onlyIf {
-                if(extension.generateHelpMojo.get()) {
-                    it.logger.error("generateHelpMojo is deprecated and setting it has no effect! Use helpMojoPackage instead.")
-                }
-                return@onlyIf extension.helpMojoPackage.isPresent
-            }
+            onlyIf { extension.helpMojoPackage.isPresent }
 
             helpMojoPackage.set(extension.helpMojoPackage)
             outputDirectory.set(helpMojoDir)
