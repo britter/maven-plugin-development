@@ -54,6 +54,10 @@ dependencies {
     testFixturesImplementation(libs.commonsLang)
 }
 
+testing.suites.named<JvmTestSuite>("test") {
+    useSpock()
+}
+
 testing.suites.register<JvmTestSuite>("testSamples") {
     useJUnit()
     dependencies {
@@ -72,6 +76,7 @@ testing.suites.register<JvmTestSuite>("testSamples") {
 tasks {
     test {
         useJUnitPlatform()
+        javaLauncher.set(project.javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(17) })
     }
     jar {
         from(rootProject.file("LICENSE.txt")) {

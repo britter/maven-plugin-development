@@ -54,6 +54,7 @@ class PluginDescriptorGenerationFuncTest extends AbstractPluginFuncTest {
                 artifactId.set("custom-artifact-id")
                 version.set("2.0-custom")
                 goalPrefix.set("custom-prefix")
+                helpMojoPackage.set("com.acme.help")
             }
         """
         javaMojo()
@@ -70,6 +71,7 @@ class PluginDescriptorGenerationFuncTest extends AbstractPluginFuncTest {
         pluginDescriptor.goalPrefix == "custom-prefix"
 
         and:
+        def helpDescriptor = helpDescriptor("com.acme", "custom-artifact-id")
         helpDescriptor.name == "custom-name"
         helpDescriptor.description == "custom description"
         helpDescriptor.groupId == "com.acme"
