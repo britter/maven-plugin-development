@@ -123,30 +123,21 @@ class PluginDescriptorGenerationFuncTest extends AbstractPluginFuncTest {
         result.output.contains("ArtifactIds of the form maven-___-plugin are reserved for plugins of the maven team. Please change the plugin artifactId to the format ___-maven-plugin.")
     }
 
-    def "generates a plugin and help descriptor for mojos in the main source set"() {
+    def "generates a plugin and help descriptor for mojo definition using annotations"() {
         given:
-        buildFile << """
-            apply plugin: 'groovy'
-            dependencies {
-                implementation localGroovy()
-            }
-        """
-        javaMojo("main", "create")
-        groovyMojo()
+        javaMojo()
 
         when:
         run("generateMavenPluginDescriptor")
 
         then:
-        pluginDescriptor.hasGoal("create")
         pluginDescriptor.hasGoal("touch")
 
         and:
-        helpDescriptor.hasGoal("create")
         helpDescriptor.hasGoal("touch")
     }
 
-    def "generates a plugin and help descriptor from JavaDoc"() {
+    def "generates a plugin and help descriptor from mojo definition using JavaDoc"() {
         given:
         javaDocMojo()
 

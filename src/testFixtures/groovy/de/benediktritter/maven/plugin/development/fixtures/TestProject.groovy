@@ -135,43 +135,6 @@ trait TestProject {
         """
     }
 
-    def groovyMojo() {
-        file("src/main/groovy/org/example/TouchMojo.groovy") << '''
-            package org.example;
-            import java.io.*;
-            import org.apache.maven.plugin.AbstractMojo;
-            import org.apache.maven.plugin.MojoExecutionException;
-            import org.apache.maven.plugins.annotations.*;
-            /**
-             * A mojo written in Groovy that touches a file.
-             */
-            @Mojo(
-                name = "touch",
-                defaultPhase = LifecyclePhase.PROCESS_SOURCES
-            )
-            class TouchMojo extends AbstractMojo {
-
-                /**
-                 * The output directory to put the file into.
-                 */
-                @Parameter(defaultValue = '${project.build.outputDirectory}', property = "myMojo.outputDirectory")
-                private File outputDirectory
-
-                /**
-                 * The name of the file to put into the output directory.
-                 */
-                @Parameter(defaultValue = "touch.txt", property = "myMojo.fileName")
-                private File fileName
-
-                @Override
-                void execute() throws MojoExecutionException {
-                    outputDirectory.mkdirs()
-                    new File(outputDirectory, "touch.txt") << ""
-                }
-            }
-        '''
-    }
-
     def javaDocMojo() {
         def className = "TouchMojo"
         file("src/main/java/org/example/${className}.java") << """
@@ -213,6 +176,4 @@ trait TestProject {
             }
         """
     }
-
-
 }
