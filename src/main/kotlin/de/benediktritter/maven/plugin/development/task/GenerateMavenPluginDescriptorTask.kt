@@ -25,10 +25,10 @@ import org.apache.maven.plugin.descriptor.PluginDescriptor
 import org.apache.maven.project.MavenProject
 import org.apache.maven.project.artifact.ProjectArtifact
 import org.apache.maven.tools.plugin.generator.PluginDescriptorFilesGenerator
+import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.ListProperty
-import org.gradle.api.provider.Property
 import org.gradle.api.tasks.*
 import java.io.File
 
@@ -36,10 +36,10 @@ import java.io.File
 abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmentTask() {
 
     @get:[InputFiles Classpath]
-    abstract val classesDirs: Property<FileCollection>
+    abstract val classesDirs: ConfigurableFileCollection
 
     @get:[InputFiles PathSensitive(PathSensitivity.RELATIVE)]
-    abstract val sourcesDirs: Property<FileCollection>
+    abstract val sourcesDirs: ConfigurableFileCollection
 
     @get:Nested
     abstract val upstreamProjects: ListProperty<UpstreamProjectDescriptor>
@@ -69,14 +69,14 @@ abstract class GenerateMavenPluginDescriptorTask : AbstractMavenPluginDevelopmen
     }
 
     private fun writeDescriptor(pluginDescriptor: PluginDescriptor) {
-        val mavenProject = mavenProject(sourcesDirs.get(), outputDirectory.asFile.get())
+        val mavenProject = mavenProject(sourcesDirs, outputDirectory.asFile.get())
         generator.execute(outputDirectory.dir("META-INF/maven").get().asFile, createPluginToolsRequest(mavenProject, pluginDescriptor))
     }
 
     private fun extractPluginDescriptor(): PluginDescriptor {
         return createPluginDescriptor().also { pluginDescriptor ->
-            classesDirs.get().forEach { classesDir ->
-                val mavenProject = mavenProject(sourcesDirs.get(), classesDir)
+            classesDirs.forEach { classesDir ->
+                val mavenProject = mavenProject(sourcesDirs, classesDir)
                 val pluginToolsRequest = createPluginToolsRequest(mavenProject, pluginDescriptor)
                 // process upstream projects in order to scan base classes
                 upstreamProjects.get().forEach {

@@ -23,7 +23,6 @@ import de.benediktritter.maven.plugin.development.task.GenerateMavenPluginDescri
 import de.benediktritter.maven.plugin.development.task.UpstreamProjectDescriptor
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSetContainer
@@ -90,8 +89,8 @@ class MavenPluginDevelopmentPlugin : Plugin<Project> {
             group = TASK_GROUP_NAME
             description = "Generates the Maven plugin descriptor file"
 
-            classesDirs.set(main.output.classesDirs)
-            sourcesDirs.set(main.java.sourceDirectories)
+            classesDirs.from(main.output.classesDirs)
+            sourcesDirs.from(main.java.sourceDirectories)
             upstreamProjects.convention(provider {
                 val compileClasspath = configurations.getByName(JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME)
                 compileClasspath.incoming.dependencies
