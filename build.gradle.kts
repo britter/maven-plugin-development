@@ -3,8 +3,6 @@ plugins {
     id("java-gradle-plugin")
     id("java-test-fixtures")
     id("jvm-test-suite")
-    `kotlin-dsl`
-    alias(libs.plugins.kotlin)
     alias(libs.plugins.pluginPublish)
     alias(libs.plugins.asciidoctor)
     alias(libs.plugins.gitPublish)
@@ -20,9 +18,6 @@ java {
 }
 
 dependencies {
-    implementation(platform(libs.kotlin.bom))
-    implementation(libs.kotlin.stdlibJdk8)
-
     api(platform(libs.mavenPluginTools.bom)) {
         because("the version for other dependencies in api would be missing otherwise")
     }

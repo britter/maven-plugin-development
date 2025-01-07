@@ -14,35 +14,33 @@
  * limitations under the License.
  */
 
-package de.benediktritter.maven.plugin.development
+package de.benediktritter.maven.plugin.development;
 
-import org.gradle.api.artifacts.Configuration
-import org.gradle.api.provider.Property
+import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.provider.Property;
 
 interface MavenPluginDevelopmentExtension {
 
-    companion object {
-        const val NAME = "mavenPlugin"
-    }
+    String NAME = "mavenPlugin";
 
-    val groupId: Property<String>
+     Property<String> getGroupId();
 
-    val artifactId: Property<String>
+     Property<String> getArtifactId();
 
-    val version: Property<String>
+     Property<String> getVersion();
 
-    val name: Property<String>
+     Property<String> getName();
 
-    val description: Property<String>
+     Property<String> getDescription();
 
-    val goalPrefix: Property<String>
+     Property<String> getGoalPrefix();
 
-    val helpMojoPackage: Property<String>
+     Property<String> getHelpMojoPackage();
 
     /**
      * The set of dependencies to add to the plugin descriptor.
      *
      * Defaults to the runtime classpath of this project.
      */
-    val dependencies: Property<Configuration>
+    Property<Configuration> getDependencies();
 }
