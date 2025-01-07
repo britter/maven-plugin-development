@@ -7,23 +7,24 @@ Consequently, this is a breaking release with features being dropped, plugin ID 
 The minimal required Gradle version has been increased to 7.0.
 Lower versions of Gradle might be supported but are not tested.
 
-* [Fixed] [#57](https://github.com/britter/maven-plugin-development/issues/57) Remove javaClassesDir from GenerateMavenPluginDescriptorTask.
-* [Fixed] [#210](https://github.com/britter/maven-plugin-development/issues/210) Drop feature: Mojo source set. 
+* [Fixed] [#57](https://github.com/gradlex-org/maven-plugin-development/issues/57) Remove javaClassesDir from GenerateMavenPluginDescriptorTask.
+* [Fixed] [#210](https://github.com/gradlex-org/maven-plugin-development/issues/210) Drop feature: Mojo source set. 
     It's no longer possible to define a dedicated source set for defining the mojo.
     Use a dedicated project instead.
-* [Fixed] [#212](https://github.com/britter/maven-plugin-development/issues/212) Drop feature: Finding mojos in project dependencies.
+* [Fixed] [#212](https://github.com/gradlex-org/maven-plugin-development/issues/212) Drop feature: Finding mojos in project dependencies.
     The plugin no longer searches for mojo implementations in dependent projects since this is not the way of modelling aggregation of build results in Gradle.
     Users who rely on this use case should instead apply this plugin to all projects with mojo implementations, set up a variant that exposes the descriptor, and then merge all exposed descriptor variants in an aggregator project.
-* [Fixed] [209](https://github.com/britter/maven-plugin-development/issues/209) Drop feature: Mojo DSL.
+* [Fixed] [209](https://github.com/gradlex-org/maven-plugin-development/issues/209) Drop feature: Mojo DSL.
     This feature was dropped without replacement.
     Annotate mojos using annotations defined in `org.apache.maven.plugin-tools:maven-plugin-annotations` instead of declaring them in your build script.
-* [Fixed] [278](https://github.com/britter/maven-plugin-development/issues/278) Remove deprecated code.
+* [Fixed] [278](https://github.com/gradlex-org/maven-plugin-development/issues/278) Remove deprecated code.
     In particular this the `generateHelpMojo` property was removed.
     Users should configure `helpMojoPackage` with the desired target package for the generated help mojo.
-* [Fixed] [8](https://github.com/britter/maven-plugin-development/issues/278) Support configuration cache.
-* [Fixed] [38](https://github.com/britter/maven-plugin-development/issues/278) Don't use Property for lazy types.
+* [Fixed] [8](https://github.com/gradlex-org/maven-plugin-development/issues/278) Support configuration cache.
+* [Fixed] [38](https://github.com/gradlex-org/maven-plugin-development/issues/278) Don't use Property for lazy types.
     Instead of declaring fields of type `Property<FileCollection>` the `GenerateMavenPluginDescriptorTask` not declares fields of type `ConfigurableFileCollection`, which is more idiomatic.
-* [Fixed] [78](https://github.com/britter/maven-plugin-development/issues/78) Migration to Java.
+* [Fixed] [78](https://github.com/gradlex-org/maven-plugin-development/issues/78) Migration to Java.
+* [Fixed] [203](https://github.com/gradlex-org/maven-plugin-development/issues/203) Migration to GradleX namespace.
 
 ## Version 0.4.3
 

@@ -45,7 +45,7 @@ Then you can run the Maven build in `maven-consumer-build` folder:
 ## Publishing the plugin to a remote repository
 
 The `gradle-producer-build` also contains some configuration to publish to another repository.
-In this case the repository URI of the `buildFolder` repository points into the build folder of the project (see [`gradle-producer-build/build.gradle.kts`](https://github.com/britter/maven-plugin-development/blob/master/example/gradle-producer-build/build.gradle.kts)).
+In this case the repository URI of the `buildFolder` repository points into the build folder of the project (see [`gradle-producer-build/build.gradle.kts`](https://github.com/gradlex-org/maven-plugin-development/blob/master/example/gradle-producer-build/build.gradle.kts)).
 By running `gradle publishMavenPluginPublicationToBuildFolderRepository` you can publish the plugin to the `buildFolder` repository.
 This should result in the following file tree (timestamps in filenames will be different):
 

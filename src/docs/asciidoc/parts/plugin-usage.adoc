@@ -1,16 +1,16 @@
-Once applied, the plugin adds a https://github.com/britter/maven-plugin-development/blob/0.1.0/src/main/kotlin/de/benediktritter/maven/plugin/development/MavenPluginDevelopmentExtension.kt[`MavenPluginDevelopmentExtension`] with name `mavenPlugin` to the project.
-All meta data for the plugin, e.g. `groupId`, `artifactId`, `description` is extracted from the corresponding project properties.
+Once applied, the plugin adds a https://github.com/gradlex-org/maven-plugin-development/blob/main/src/main/java/org/gradlex/maven/plugin/development/MavenPluginDevelopmentExtension.java[`MavenPluginDevelopmentExtension`] with name `mavenPlugin` to the project.
+All metadata for the plugin, e.g. `groupId`, `artifactId`, `description` is extracted from the corresponding project properties.
 
 [source.multi-language-sample,groovy,subs="attributes+,verbatim"]
 ----
 plugins {
-    id 'de.benediktritter.maven-plugin-development' version '{gradle-project-version}'
+    id 'org.gradlex.maven-plugin-development' version '{gradle-project-version}'
 }
 ----
 [source.multi-language-sample,kotlin,subs="attributes+"]
 ----
 plugins {
-    id("de.benediktritter.maven-plugin-development") version "{gradle-project-version}"
+    id("org.gradlex.maven-plugin-development") version "{gradle-project-version}"
 }
 ----
 
