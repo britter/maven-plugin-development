@@ -13,21 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.gradlex.maven.plugin.development
-
-class GradleCrossVersionTest extends AbstractPluginFuncTest {
-
-    def "works on Gradle #gradleVersion"() {
-        given:
-        javaMojo()
-
-        and:
-        runner("build")
-          .withGradleVersion(gradleVersion)
-          .build()
-
-        where:
-        gradleVersion << ["7.3", "7.6.4", "8.0.2"]
-    }
-}

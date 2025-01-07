@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Benedikt Ritter
+ * Copyright 2022 the GradleX team.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 package org.gradlex.maven.plugin.development.task;
 
-import org.gradlex.maven.plugin.development.internal.MavenLoggerAdapter;
-import org.gradlex.maven.plugin.development.internal.MavenServiceFactory;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
 import org.apache.maven.model.Build;
@@ -34,7 +32,16 @@ import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.provider.ListProperty;
-import org.gradle.api.tasks.*;
+import org.gradle.api.tasks.CacheableTask;
+import org.gradle.api.tasks.Classpath;
+import org.gradle.api.tasks.InputFiles;
+import org.gradle.api.tasks.Nested;
+import org.gradle.api.tasks.OutputDirectory;
+import org.gradle.api.tasks.PathSensitive;
+import org.gradle.api.tasks.PathSensitivity;
+import org.gradle.api.tasks.TaskAction;
+import org.gradlex.maven.plugin.development.internal.MavenLoggerAdapter;
+import org.gradlex.maven.plugin.development.internal.MavenServiceFactory;
 
 import java.io.File;
 

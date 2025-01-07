@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Benedikt Ritter
+ * Copyright 2022 the GradleX team.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,6 @@
 
 package org.gradlex.maven.plugin.development;
 
-import org.gradlex.maven.plugin.development.internal.MavenPluginDescriptor;
-import org.gradlex.maven.plugin.development.task.DependencyDescriptor;
-import org.gradlex.maven.plugin.development.task.GenerateHelpMojoSourcesTask;
-import org.gradlex.maven.plugin.development.task.GenerateMavenPluginDescriptorTask;
-import org.gradlex.maven.plugin.development.task.UpstreamProjectDescriptor;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
@@ -33,6 +28,11 @@ import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.TaskProvider;
 import org.gradle.jvm.tasks.Jar;
+import org.gradlex.maven.plugin.development.internal.MavenPluginDescriptor;
+import org.gradlex.maven.plugin.development.task.DependencyDescriptor;
+import org.gradlex.maven.plugin.development.task.GenerateHelpMojoSourcesTask;
+import org.gradlex.maven.plugin.development.task.GenerateMavenPluginDescriptorTask;
+import org.gradlex.maven.plugin.development.task.UpstreamProjectDescriptor;
 
 import java.util.stream.Collectors;
 
