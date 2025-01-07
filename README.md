@@ -19,18 +19,6 @@ Compatible with Gradle 7.3 or later.
 Please see the [plugin documentation](https://gradlex.org/maven-plugin-development).
 For a self-contained example please the [example folder](https://github.com/gradlex-org/maven-plugin-development/tree/main/sample).
 
-## How to release
-
-- Pull latest changes
-- Set the version to be released in `gradle.properties`
-- Set the release date for the version to be released in `release-history.adoc`
-- Commit and tag the change
-- Run `./gradlew release -Prelease`
-- Update the version in `gradle.properties` to the next development version
-- Update the version in `sample/gradle-producer-build/build.gradle.kts` to the released version
-- Commit the change
-- Push changes and release tag
-
 ## Contribution policy
 
 Contributions via GitHub pull requests are gladly accepted from their original author. Along with any pull requests, please state that the contribution is your original work and that you license the work to the project under the project's open source license. Whether or not you state this explicitly, by submitting any copyrighted material via pull request, email, or other means you agree to license the material under the project's open source license and warrant that you have the legal authority to do so.

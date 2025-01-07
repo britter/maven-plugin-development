@@ -5,7 +5,6 @@ plugins {
     id("jvm-test-suite")
     alias(libs.plugins.pluginPublish)
     alias(libs.plugins.asciidoctor)
-    alias(libs.plugins.gitPublish)
 }
 
 group = " org.gradlex"
@@ -136,16 +135,3 @@ publishing {
         }
     }
 }
-
-val asciidoctor by tasks.existing
-
-gitPublish {
-    repoUri.set("https://github.com/gradlex-org/maven-plugin-development")
-    branch.set("gh-pages")
-    sign.set(false)
-
-    contents {
-        from(asciidoctor)
-    }
-}
-
