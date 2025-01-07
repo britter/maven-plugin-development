@@ -3,7 +3,7 @@
 ## Version 1.0
 
 This release marks the move of this plugin to the [GradleX project](https://github.com/gradlex-org).
-Consequently this is a breaking release with features being dropped, plugin ID and code coordinate changes, and the implementation language changing from Kotlin to Java.
+Consequently, this is a breaking release with features being dropped, plugin ID and code coordinate changes, and the implementation language changing from Kotlin to Java.
 The minimal required Gradle version has been increased to 7.0.
 Lower versions of Gradle might be supported but are not tested.
 
