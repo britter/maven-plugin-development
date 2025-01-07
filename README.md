@@ -16,8 +16,8 @@ Compatible with Gradle 7.3 or later.
 
 ## Usage
 
-Please see the [plugin documentation](https://britter.github.io/maven-plugin-development).
-For a self-contained example please the [example folder](https://github.com/britter/maven-plugin-development/tree/main/sample).
+Please see the [plugin documentation](https://gradlex.org/maven-plugin-development).
+For a self-contained example please the [example folder](https://github.com/gradlex-org/maven-plugin-development/tree/main/sample).
 
 ## How to release
 

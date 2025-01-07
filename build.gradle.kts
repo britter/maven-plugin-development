@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.gitPublish)
 }
 
-group = "de.benediktritter"
+group = " org.gradlex"
 description = "Gradle plugin for developing Apache Maven plugins"
 
 java {
@@ -97,8 +97,6 @@ tasks {
                 "sectanchors" to true,
                 "idprefix" to "",
                 "idseparator" to "-",
-                "gh-issue" to "https://github.com/britter/maven-plugin-development/issues/",
-                "gh-pr" to "https://github.com/britter/maven-plugin-development/pull/",
                 "snippets-path" to "$projectDir/src/docs/snippets"
         ))
     }
@@ -108,13 +106,13 @@ tasks {
 }
 
 gradlePlugin {
-    website.set("https://britter.github.io/maven-plugin-development")
-    vcsUrl.set("https://github.com/britter/maven-plugin-development")
+    website.set("https://gradlex.org/maven-plugin-development")
+    vcsUrl.set("https://github.com/gradlex-org/maven-plugin-development")
     plugins.create("mavenPluginDevelopment") {
-        id = "de.benediktritter.maven-plugin-development"
+        id = "org.gradlex.maven-plugin-development"
         displayName = "Maven plugin development plugin"
         description = project.description
-        implementationClass = "de.benediktritter.maven.plugin.development.MavenPluginDevelopmentPlugin"
+        implementationClass = "org.gradlex.maven.plugin.development.MavenPluginDevelopmentPlugin"
         tags.set(listOf("maven", "mojo", "maven plugin"))
     }
 }
@@ -123,7 +121,7 @@ publishing {
     publications.withType<MavenPublication>() {
         pom {
             description.set(project.description)
-            url.set("https://github.com/britter/maven-development-plugin")
+            url.set("https://github.com/gradlex-org/maven-development-plugin")
             licenses {
                 license {
                     name.set("Apache-2.0")
@@ -131,9 +129,9 @@ publishing {
                 }
             }
             scm {
-                connection.set("scm:git:git://github.com/britter/maven-development-plugin.git")
-                developerConnection.set("scm:git:ssh://github.com/britter/maven-development-plugin.git")
-                url.set("https://github.com/britter/maven-development-plugin")
+                connection.set("scm:git:git://github.com/gradlex-org/maven-development-plugin.git")
+                developerConnection.set("scm:git:ssh://github.com/gradlex-org/maven-development-plugin.git")
+                url.set("https://github.com/gradlex-org/maven-development-plugin")
             }
         }
     }
@@ -142,7 +140,7 @@ publishing {
 val asciidoctor by tasks.existing
 
 gitPublish {
-    repoUri.set("https://github.com/britter/maven-plugin-development")
+    repoUri.set("https://github.com/gradlex-org/maven-plugin-development")
     branch.set("gh-pages")
     sign.set(false)
 
