@@ -1,5 +1,5 @@
 plugins {
-    id 'org.gradlex.maven-plugin-development' version '1.0'
+    id 'de.benediktritter.maven-plugin-development' version '0.4.3'
 }
 
 // tag::help-mojo[]
