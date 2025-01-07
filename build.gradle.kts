@@ -5,15 +5,14 @@ plugins {
     id("jvm-test-suite")
     alias(libs.plugins.pluginPublish)
     alias(libs.plugins.asciidoctor)
+    id("org.gradlex.internal.plugin-publish-conventions") version "0.6"
 }
 
-group = " org.gradlex"
-description = "Gradle plugin for developing Apache Maven plugins"
+group = "org.gradlex"
+version = "1.0"
 
 java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
-    }
+    toolchain.languageVersion = JavaLanguageVersion.of(8)
 }
 
 dependencies {
@@ -46,6 +45,21 @@ dependencies {
     testImplementation(testFixtures(project))
     testFixturesImplementation(libs.junit4)
     testFixturesImplementation(libs.commonsLang)
+}
+
+pluginPublishConventions {
+    id("${project.group}.${project.name}")
+    implementationClass("org.gradlex.maven.plugin.development.MavenPluginDevelopmentPlugin")
+    displayName("Maven Plugin Development Gradle Plugin")
+    description("Gradle plugin for developing Apache Maven plugins.")
+    tags("gradlex", "maven", "mojo", "maven plugin")
+    gitHub("https://github.com/gradlex-org/maven-plugin-development")
+    website("https://gradlex.org/maven-plugin-development")
+    developer {
+        id = "britter"
+        name = "Benedikt Ritter"
+        email = "benedikt@gradlex.org"
+    }
 }
 
 testing.suites.named<JvmTestSuite>("test") {
@@ -98,40 +112,5 @@ tasks {
                 "idseparator" to "-",
                 "snippets-path" to "$projectDir/src/docs/snippets"
         ))
-    }
-    register("release") {
-        dependsOn("publishPlugins", ":gitPublishPush")
-    }
-}
-
-gradlePlugin {
-    website.set("https://gradlex.org/maven-plugin-development")
-    vcsUrl.set("https://github.com/gradlex-org/maven-plugin-development")
-    plugins.create("mavenPluginDevelopment") {
-        id = "org.gradlex.maven-plugin-development"
-        displayName = "Maven plugin development plugin"
-        description = project.description
-        implementationClass = "org.gradlex.maven.plugin.development.MavenPluginDevelopmentPlugin"
-        tags.set(listOf("maven", "mojo", "maven plugin"))
-    }
-}
-
-publishing {
-    publications.withType<MavenPublication>() {
-        pom {
-            description.set(project.description)
-            url.set("https://github.com/gradlex-org/maven-development-plugin")
-            licenses {
-                license {
-                    name.set("Apache-2.0")
-                    url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                }
-            }
-            scm {
-                connection.set("scm:git:git://github.com/gradlex-org/maven-development-plugin.git")
-                developerConnection.set("scm:git:ssh://github.com/gradlex-org/maven-development-plugin.git")
-                url.set("https://github.com/gradlex-org/maven-development-plugin")
-            }
-        }
     }
 }

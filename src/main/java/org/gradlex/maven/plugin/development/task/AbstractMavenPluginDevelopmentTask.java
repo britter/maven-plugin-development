@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Benedikt Ritter
+ * Copyright 2022 the GradleX team.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package org.gradlex.maven.plugin.development.task;
 
-import org.gradlex.maven.plugin.development.internal.MavenPluginDescriptor;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.tools.plugin.DefaultPluginToolsRequest;
@@ -25,6 +24,7 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Nested;
+import org.gradlex.maven.plugin.development.internal.MavenPluginDescriptor;
 
 import java.util.stream.Collectors;
 

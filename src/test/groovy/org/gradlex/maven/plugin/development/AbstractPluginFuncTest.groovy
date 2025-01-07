@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Benedikt Ritter
+ * Copyright 2022 the GradleX team.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 
 package org.gradlex.maven.plugin.development
 
-import org.gradlex.maven.plugin.development.fixtures.TestRootProject
 import org.gradle.testkit.runner.GradleRunner
+import org.gradlex.maven.plugin.development.fixtures.TestRootProject
 import org.junit.Rule
 import spock.lang.Specification
 
