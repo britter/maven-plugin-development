@@ -23,6 +23,7 @@ Lower versions of Gradle might be supported but are not tested.
 * [Fixed] [8](https://github.com/britter/maven-plugin-development/issues/278) Support configuration cache.
 * [Fixed] [38](https://github.com/britter/maven-plugin-development/issues/278) Don't use Property for lazy types.
     Instead of declaring fields of type `Property<FileCollection>` the `GenerateMavenPluginDescriptorTask` not declares fields of type `ConfigurableFileCollection`, which is more idiomatic.
+* [Fixed] [78](https://github.com/britter/maven-plugin-development/issues/78) Migration to Java.
 
 ## Version 0.4.3
 
