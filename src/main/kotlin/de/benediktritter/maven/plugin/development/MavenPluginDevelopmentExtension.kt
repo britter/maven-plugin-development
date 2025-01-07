@@ -42,7 +42,7 @@ interface MavenPluginDevelopmentExtension {
     /**
      * The set of dependencies to add to the plugin descriptor.
      *
-     * Defaults to the runtime classpath of this projects.
+     * Defaults to the runtime classpath of this project.
      */
     val dependencies: Property<Configuration>
 }
