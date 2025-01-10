@@ -22,6 +22,7 @@ import org.gradle.api.Project;
 import org.gradle.api.artifacts.ArtifactView;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.component.ComponentIdentifier;
+import org.gradle.api.artifacts.component.ModuleComponentIdentifier;
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier;
 import org.gradle.api.artifacts.result.ResolvedArtifactResult;
 import org.gradle.api.attributes.AttributeContainer;
@@ -49,6 +50,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -95,18 +97,7 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
             task.getOutputDirectory().set(helpMojoDir);
             task.getHelpPropertiesFile().set(pluginOutputDirectory.map(it -> it.file("maven-plugin-help.properties")));
             task.getPluginDescriptor().set(project.provider(() -> mavenPluginDescriptorOf(extension)));
-            task.getRuntimeDependencies().set(
-                    extension.getDependencies().map(it ->
-                            it.getResolvedConfiguration().getResolvedArtifacts().stream()
-                                    .map(artifact ->
-                                            new DependencyDescriptor(
-                                                    artifact.getModuleVersion().getId().getGroup(),
-                                                    artifact.getModuleVersion().getId().getName(),
-                                                    artifact.getModuleVersion().getId().getVersion(),
-                                                    artifact.getExtension())
-                                    ).collect(Collectors.toList())
-                    )
-            );
+            task.getRuntimeDependencies().set(collectRuntimeDependencies(project, extension));
         });
 
         SourceSet main = project.getExtensions().getByType(SourceSetContainer.class).getByName("main");
@@ -119,17 +110,7 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
             task.getUpstreamProjects().convention(project.provider(() -> extractUpstreamProjects(project)));
             task.getOutputDirectory().set(descriptorDir);
             task.getPluginDescriptor().set(project.provider(() -> mavenPluginDescriptorOf(extension)));
-            task.getRuntimeDependencies().set(extension.getDependencies().map(c ->
-                    c.getResolvedConfiguration().getResolvedArtifacts().stream()
-                            .map(artifact -> new DependencyDescriptor(
-                                            artifact.getModuleVersion().getId().getGroup(),
-                                            artifact.getModuleVersion().getId().getName(),
-                                            artifact.getModuleVersion().getId().getVersion(),
-                                            artifact.getExtension()
-                                    )
-                            )
-                            .collect(Collectors.toList())
-            ));
+            task.getRuntimeDependencies().set(collectRuntimeDependencies(project, extension));
 
             task.dependsOn(main.getOutput(), generateHelpMojoTask);
         });
@@ -238,5 +219,27 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
             l.addAll(r);
             return l;
         }, Collector.Characteristics.UNORDERED);
+    }
+
+    private static Provider<? extends List<? extends DependencyDescriptor>> collectRuntimeDependencies(Project project, MavenPluginDevelopmentExtension extension) {
+        return extension.getDependencies().map(c ->
+                c.getIncoming().getArtifacts().getArtifacts().stream()
+                        .map(toDependencyDescriptor(project.getGroup().toString(), project.getVersion().toString())).collect(Collectors.toList())
+        );
+    }
+
+    private static Function<? super ResolvedArtifactResult, ? extends DependencyDescriptor> toDependencyDescriptor(String group, String version) {
+        return artifact -> {
+            ComponentIdentifier id = artifact.getId().getComponentIdentifier();
+            GAV gav = null;
+            if (id instanceof ModuleComponentIdentifier) {
+                ModuleComponentIdentifier externalDependencyIdentifier = (ModuleComponentIdentifier) id;
+                gav = GAV.of(externalDependencyIdentifier.getGroup(), externalDependencyIdentifier.getModule(), externalDependencyIdentifier.getVersion());
+            } else {
+                ProjectComponentIdentifier projectDependencyIdentifier = (ProjectComponentIdentifier) id;
+                gav = GAV.of(group, projectDependencyIdentifier.getProjectName(), version);
+            }
+            return new DependencyDescriptor(gav, FileUtils.getExtension(artifact.getFile()).orElse(null));
+        };
     }
 }
