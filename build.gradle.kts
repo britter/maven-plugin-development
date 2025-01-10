@@ -3,8 +3,7 @@ plugins {
     id("java-gradle-plugin")
     id("java-test-fixtures")
     id("jvm-test-suite")
-    alias(libs.plugins.pluginPublish)
-    alias(libs.plugins.asciidoctor)
+    id("org.asciidoctor.jvm.convert") version "4.0.4"
     id("org.gradlex.internal.plugin-publish-conventions") version "0.6"
 }
 
