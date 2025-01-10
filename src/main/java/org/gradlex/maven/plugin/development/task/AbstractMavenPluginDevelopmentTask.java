@@ -24,7 +24,6 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Nested;
-import org.gradlex.maven.plugin.development.internal.MavenPluginDescriptor;
 
 import java.util.stream.Collectors;
 

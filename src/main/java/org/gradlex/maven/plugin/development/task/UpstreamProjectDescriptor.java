@@ -23,7 +23,6 @@ import org.gradle.api.tasks.Nested;
 import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.work.NormalizeLineEndings;
-import org.gradlex.maven.plugin.development.internal.GAV;
 
 import java.io.File;
 

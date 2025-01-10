@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.gradlex.maven.plugin.development.internal;
+package org.gradlex.maven.plugin.development.task;
 
 import org.gradle.api.tasks.Input;
 
