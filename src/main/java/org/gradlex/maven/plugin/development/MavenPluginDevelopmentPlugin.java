@@ -16,11 +16,15 @@
 
 package org.gradlex.maven.plugin.development;
 
+import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.artifacts.ArtifactView;
 import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.artifacts.component.ComponentIdentifier;
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier;
 import org.gradle.api.artifacts.result.ResolvedArtifactResult;
+import org.gradle.api.attributes.AttributeContainer;
 import org.gradle.api.attributes.Category;
 import org.gradle.api.attributes.VerificationType;
 import org.gradle.api.file.Directory;
@@ -28,21 +32,24 @@ import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.provider.Property;
 import org.gradle.api.provider.Provider;
+import org.gradle.api.specs.Spec;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.TaskProvider;
 import org.gradle.jvm.tasks.Jar;
 import org.gradle.util.GradleVersion;
-import org.gradlex.maven.plugin.development.task.GAV;
-import org.gradlex.maven.plugin.development.task.MavenPluginDescriptor;
 import org.gradlex.maven.plugin.development.task.DependencyDescriptor;
+import org.gradlex.maven.plugin.development.task.GAV;
 import org.gradlex.maven.plugin.development.task.GenerateHelpMojoSourcesTask;
 import org.gradlex.maven.plugin.development.task.GenerateMavenPluginDescriptorTask;
+import org.gradlex.maven.plugin.development.task.MavenPluginDescriptor;
 import org.gradlex.maven.plugin.development.task.UpstreamProjectDescriptor;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
@@ -87,14 +94,7 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
             task.getHelpMojoPackage().set(extension.getHelpMojoPackage());
             task.getOutputDirectory().set(helpMojoDir);
             task.getHelpPropertiesFile().set(pluginOutputDirectory.map(it -> it.file("maven-plugin-help.properties")));
-            task.getPluginDescriptor().set(project.provider(() ->
-                    new MavenPluginDescriptor(
-                            GAV.of(extension.getGroupId().get(), extension.getArtifactId().get(), extension.getVersion().get()),
-                            extension.getName().get(),
-                            extension.getDescription().getOrElse(""),
-                            extension.getGoalPrefix().getOrNull()
-                    )
-            ));
+            task.getPluginDescriptor().set(project.provider(() -> mavenPluginDescriptorOf(extension)));
             task.getRuntimeDependencies().set(
                     extension.getDependencies().map(it ->
                             it.getResolvedConfiguration().getResolvedArtifacts().stream()
@@ -116,63 +116,9 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
 
             task.getClassesDirs().from(main.getOutput().getClassesDirs());
             task.getSourcesDirs().from(main.getJava().getSourceDirectories());
-            task.getUpstreamProjects().convention(project.provider(() -> {
-                Configuration compileClasspath = project.getConfigurations().getByName(JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME);
-                // It's not possible to access group, and version of project dependencies, see https://github.com/gradle/gradle/issues/31973
-                String group = project.getGroup().toString();
-                String version = project.getVersion().toString();
-
-                // classes
-                Map<GAV, File> classesDirectoriesByGAV = compileClasspath.getIncoming()
-                        .artifactView(vc -> {
-                            vc.componentFilter(ci -> ci instanceof ProjectComponentIdentifier);
-                        })
-                        .getArtifacts().getArtifacts().stream()
-                        .collect(Collectors.toMap(
-                                a -> {
-                                    ProjectComponentIdentifier m = (ProjectComponentIdentifier) a.getId().getComponentIdentifier();
-                                    return GAV.of(group, m.getProjectName(), version);
-                                },
-                                ResolvedArtifactResult::getFile
-                        ));
-                // sources per artifact view with variant reselection
-                ObjectFactory objectFactory = project.getObjects();
-                Map<GAV, File> sourcesDirectoriesByGAV = compileClasspath.getIncoming()
-                        .artifactView(vc -> {
-                            vc.componentFilter(ci -> ci instanceof ProjectComponentIdentifier);
-                            vc.attributes(attributes -> {
-                                attributes.attribute(Category.CATEGORY_ATTRIBUTE, objectFactory.named(Category.class, Category.VERIFICATION));
-                                attributes.attribute(VerificationType.VERIFICATION_TYPE_ATTRIBUTE, objectFactory.named(VerificationType.class, VerificationType.MAIN_SOURCES));
-                            });
-                            vc.withVariantReselection();
-                        })
-                        .getArtifacts().getArtifacts().stream()
-                        .collect(Collectors.toMap(
-                                a -> {
-                                    ProjectComponentIdentifier m = (ProjectComponentIdentifier) a.getId().getComponentIdentifier();
-                                    return GAV.of(group, m.getProjectName(), version);
-                                },
-                                ResolvedArtifactResult::getFile,
-                                (l, r) -> l.getName().equals("java") ? l : r
-                        ));
-                return classesDirectoriesByGAV.entrySet().stream().collect(ArrayList::new, (acc, e) -> {
-                    acc.add(new UpstreamProjectDescriptor(
-                            e.getKey(),
-                            e.getValue(),
-                            sourcesDirectoriesByGAV.get(e.getKey())
-                    ));
-                },
-                        ArrayList::addAll);
-            }));
+            task.getUpstreamProjects().convention(project.provider(() -> extractUpstreamProjects(project)));
             task.getOutputDirectory().set(descriptorDir);
-            task.getPluginDescriptor().set(project.provider(() ->
-                    new MavenPluginDescriptor(
-                            GAV.of(extension.getGroupId().get(), extension.getArtifactId().get(), extension.getVersion().get()),
-                            extension.getName().get(),
-                            extension.getDescription().getOrElse(""),
-                            extension.getGoalPrefix().getOrNull()
-                    )
-            ));
+            task.getPluginDescriptor().set(project.provider(() -> mavenPluginDescriptorOf(extension)));
             task.getRuntimeDependencies().set(extension.getDependencies().map(c ->
                     c.getResolvedConfiguration().getResolvedArtifacts().stream()
                             .map(artifact -> new DependencyDescriptor(
@@ -193,5 +139,104 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
             jarTask.from(generateTask);
             main.getJava().srcDir(generateHelpMojoTask.map(GenerateHelpMojoSourcesTask::getOutputDirectory));
         });
+    }
+
+    private static MavenPluginDescriptor mavenPluginDescriptorOf(MavenPluginDevelopmentExtension extension) {
+        return new MavenPluginDescriptor(
+                GAV.of(extension.getGroupId().get(), extension.getArtifactId().get(), extension.getVersion().get()),
+                extension.getName().get(),
+                extension.getDescription().getOrElse(""),
+                extension.getGoalPrefix().getOrNull()
+        );
+    }
+
+    private static List<UpstreamProjectDescriptor> extractUpstreamProjects(Project project) {
+        Configuration compileClasspath = project.getConfigurations().getByName(JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME);
+        // It's not possible to access group, and version of project dependencies, see https://github.com/gradle/gradle/issues/31973
+        String group = project.getGroup().toString();
+        String version = project.getVersion().toString();
+
+        Map<GAV, File> classDirectoriesByGAV = getDependencyProjectClassesDirectoriesMappedByGav(compileClasspath, group, version);
+        Map<GAV, File> sourcesDirectoriesByGAV = getDependencyProjectSourceDirectoriesMappedByGav(project, compileClasspath, group, version);
+
+        return classDirectoriesByGAV.entrySet().stream()
+                .collect(associateClassesDirectoriesToSourcesDirectories(sourcesDirectoriesByGAV));
+    }
+
+    private static Map<GAV, File> getDependencyProjectClassesDirectoriesMappedByGav(Configuration compileClasspath, String group, String version) {
+        return compileClasspath.getIncoming()
+                .artifactView(projects())
+                .getArtifacts().getArtifacts().stream()
+                .collect(collectToClassDirectoriesMappedByGav(group, version));
+    }
+
+    private static Action<ArtifactView.ViewConfiguration> projects() {
+        return vc -> {
+            vc.componentFilter(projectDependencies());
+        };
+    }
+
+    private static Collector<ResolvedArtifactResult, ?, Map<GAV, File>> collectToClassDirectoriesMappedByGav(String group, String version) {
+        return Collectors.toMap(
+                a -> {
+                    ProjectComponentIdentifier m = (ProjectComponentIdentifier) a.getId().getComponentIdentifier();
+                    return GAV.of(group, m.getProjectName(), version);
+                },
+                ResolvedArtifactResult::getFile
+        );
+    }
+
+    private static Map<GAV, File> getDependencyProjectSourceDirectoriesMappedByGav(Project project, Configuration compileClasspath, String group, String version) {
+        return compileClasspath.getIncoming()
+                .artifactView(projectSources(project.getObjects()))
+                .getArtifacts().getArtifacts().stream()
+                .collect(collectSrcMainJavaMappedByGav(group, version));
+    }
+
+    private static Action<ArtifactView.ViewConfiguration> projectSources(ObjectFactory objectFactory) {
+        return vc -> {
+            vc.componentFilter(projectDependencies());
+            vc.attributes(sourceAttributes(objectFactory));
+            vc.withVariantReselection();
+        };
+    }
+
+    private static Collector<ResolvedArtifactResult, ?, Map<GAV, File>> collectSrcMainJavaMappedByGav(String group, String version) {
+        return Collectors.toMap(
+                a -> {
+                    ProjectComponentIdentifier m = (ProjectComponentIdentifier) a.getId().getComponentIdentifier();
+                    return GAV.of(group, m.getProjectName(), version);
+                },
+                ResolvedArtifactResult::getFile,
+                (l, r) -> l.getName().equals("java") ? l : r
+        );
+    }
+
+    private static Spec<ComponentIdentifier> projectDependencies() {
+        return ci -> ci instanceof ProjectComponentIdentifier;
+    }
+
+    /**
+     * Inspired by <a href="https://github.com/gradle/gradle/blob/bf974bdd5b1a046611eb50a5ec863c07f7630bfd/platforms/jvm/jacoco/src/main/java/org/gradle/testing/jacoco/plugins/JacocoReportAggregationPlugin.java#L88-L92">...</a>
+     * and <a href="https://github.com/gradle/gradle/blob/bf974bdd5b1a046611eb50a5ec863c07f7630bfd/platforms/jvm/platform-jvm/src/main/java/org/gradle/api/plugins/jvm/internal/DefaultJvmEcosystemAttributesDetails.java#L118-L121">...</a>
+     */
+    private static Action<AttributeContainer> sourceAttributes(ObjectFactory objectFactory) {
+        return attributes -> {
+            attributes.attribute(Category.CATEGORY_ATTRIBUTE, objectFactory.named(Category.class, Category.VERIFICATION));
+            attributes.attribute(VerificationType.VERIFICATION_TYPE_ATTRIBUTE, objectFactory.named(VerificationType.class, VerificationType.MAIN_SOURCES));
+        };
+    }
+
+    private static Collector<Map.Entry<GAV, File>, ArrayList<UpstreamProjectDescriptor>, ArrayList<UpstreamProjectDescriptor>> associateClassesDirectoriesToSourcesDirectories(Map<GAV, File> sourcesDirectoriesByGav) {
+        return Collector.of(ArrayList::new, (acc, e) -> {
+            acc.add(new UpstreamProjectDescriptor(
+                    e.getKey(),
+                    e.getValue(),
+                    sourcesDirectoriesByGav.get(e.getKey())
+            ));
+        }, (l, r) -> {
+            l.addAll(r);
+            return l;
+        }, Collector.Characteristics.UNORDERED);
     }
 }
