@@ -47,6 +47,9 @@ class Issue73FuncTest extends AbstractPluginFuncTest {
                 
                 public abstract class AbstractNameMojo extends AbstractMojo {
                 
+                  /**
+                   * This is the name parameter.
+                   */
                   @Parameter(property = "name")
                   private String name;
                 
@@ -94,6 +97,6 @@ class Issue73FuncTest extends AbstractPluginFuncTest {
         run(":greeting-mojo:build")
 
         then:
-        mojoProject.pluginDescriptor.getMojo("sayhi").parameters.contains(new DescriptorFile.ParameterDeclaration("name", String, "", false, true, ""))
+        mojoProject.pluginDescriptor.getMojo("sayhi").parameters.contains(new DescriptorFile.ParameterDeclaration("name", String, "", false, true, "This is the name parameter."))
     }
 }
