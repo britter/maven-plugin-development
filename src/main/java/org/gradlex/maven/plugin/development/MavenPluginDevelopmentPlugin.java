@@ -93,11 +93,11 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
             Property<String> helpMojoPkg = extension.getHelpMojoPackage();
             task.onlyIf(t -> helpMojoPkg.isPresent());
 
-            task.getHelpMojoPackage().set(extension.getHelpMojoPackage());
-            task.getOutputDirectory().set(helpMojoDir);
-            task.getHelpPropertiesFile().set(pluginOutputDirectory.map(it -> it.file("maven-plugin-help.properties")));
-            task.getPluginDescriptor().set(project.provider(() -> mavenPluginDescriptorOf(extension)));
-            task.getRuntimeDependencies().set(collectRuntimeDependencies(project, extension));
+            task.getHelpMojoPackage().convention(extension.getHelpMojoPackage());
+            task.getOutputDirectory().convention(helpMojoDir);
+            task.getHelpPropertiesFile().convention(pluginOutputDirectory.map(it -> it.file("maven-plugin-help.properties")));
+            task.getPluginDescriptor().convention(project.provider(() -> mavenPluginDescriptorOf(extension)));
+            task.getRuntimeDependencies().convention(collectRuntimeDependencies(project, extension));
         });
 
         SourceSet main = project.getExtensions().getByType(SourceSetContainer.class).getByName("main");
@@ -108,9 +108,9 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
             task.getClassesDirs().from(main.getOutput().getClassesDirs());
             task.getSourcesDirs().from(main.getJava().getSourceDirectories());
             task.getUpstreamProjects().convention(project.provider(() -> extractUpstreamProjects(project)));
-            task.getOutputDirectory().set(descriptorDir);
-            task.getPluginDescriptor().set(project.provider(() -> mavenPluginDescriptorOf(extension)));
-            task.getRuntimeDependencies().set(collectRuntimeDependencies(project, extension));
+            task.getOutputDirectory().convention(descriptorDir);
+            task.getPluginDescriptor().convention(project.provider(() -> mavenPluginDescriptorOf(extension)));
+            task.getRuntimeDependencies().convention(collectRuntimeDependencies(project, extension));
 
             task.dependsOn(main.getOutput(), generateHelpMojoTask);
         });
