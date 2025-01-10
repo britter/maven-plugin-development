@@ -44,6 +44,8 @@ import org.gradlex.maven.plugin.development.internal.MavenLoggerAdapter;
 import org.gradlex.maven.plugin.development.internal.MavenServiceFactory;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
 
 @CacheableTask
 public abstract class GenerateMavenPluginDescriptorTask extends AbstractMavenPluginDevelopmentTask {
@@ -96,14 +98,15 @@ public abstract class GenerateMavenPluginDescriptorTask extends AbstractMavenPlu
             PluginToolsRequest pluginToolsRequest = createPluginToolsRequest(mavenProject, descriptor);
             // process upstream projects in order to scan base classes
             getUpstreamProjects().get().forEach(it -> {
-                it.getClassesDirs().getFiles().forEach(dir -> {
+                File dir = it.getClassesDirs();
+                // Project versions are null, see https://github.com/gradle/gradle/issues/31973
+                String version = Optional.ofNullable(it.getVersion()).orElse("1.0");
                     DefaultArtifact artifact = new DefaultArtifact(
-                            it.getGroup(), it.getName(), it.getVersion(), "compile", "jar", null, new DefaultArtifactHandler()
+                            it.getGroup(), it.getName(), version, "compile", "jar", null, new DefaultArtifactHandler()
                     );
                     artifact.setFile(dir);
                     pluginToolsRequest.getDependencies().add(artifact);
-                    mavenProject.addProjectReference(mavenProject(it.getGroup(), it.getName(), it.getVersion(), it.getSourceDirectories(), classesDir));
-                });
+                    mavenProject.addProjectReference(mavenProject(it.getGroup(), it.getName(), version, it.getSourceDirectories(), classesDir));
             });
             populatePluginDescriptor(pluginToolsRequest);
         });
@@ -136,6 +139,26 @@ public abstract class GenerateMavenPluginDescriptorTask extends AbstractMavenPlu
             FileCollection sourcesDirs,
             File outputDirectory
     ) {
+        return mavenProject(groupId, artifactId, version, sourcesDirs.getFiles(), outputDirectory);
+    }
+
+    private MavenProject mavenProject(
+            String groupId,
+            String artifactId,
+            String version,
+            File sourcesDirs,
+            File outputDirectory
+    ) {
+        return mavenProject(groupId, artifactId, version, Collections.singleton(sourcesDirs), outputDirectory);
+    }
+
+    private MavenProject mavenProject(
+            String groupId,
+            String artifactId,
+            String version,
+            Collection<File> sourcesDirs,
+            File outputDirectory
+    ) {
         MavenProject project = new MavenProject();
 
         project.setGroupId(groupId);
@@ -147,7 +170,7 @@ public abstract class GenerateMavenPluginDescriptorTask extends AbstractMavenPlu
         build.setDirectory(getOutputDirectory().get().getAsFile().getParent());
         project.setBuild(build);
         // populate compileSourceRoots in order to extract metadata from JavaDoc
-        sourcesDirs.getFiles().forEach(dir -> project.addCompileSourceRoot(dir.getAbsolutePath()));
+        sourcesDirs.forEach(dir -> project.addCompileSourceRoot(dir.getAbsolutePath()));
 
         return project;
     }

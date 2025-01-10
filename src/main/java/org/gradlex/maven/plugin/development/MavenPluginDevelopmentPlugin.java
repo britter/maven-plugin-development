@@ -19,8 +19,12 @@ package org.gradlex.maven.plugin.development;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.artifacts.ProjectDependency;
+import org.gradle.api.artifacts.component.ProjectComponentIdentifier;
+import org.gradle.api.artifacts.result.ResolvedArtifactResult;
+import org.gradle.api.attributes.Category;
+import org.gradle.api.attributes.VerificationType;
 import org.gradle.api.file.Directory;
+import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.provider.Property;
 import org.gradle.api.provider.Provider;
@@ -28,12 +32,16 @@ import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.TaskProvider;
 import org.gradle.jvm.tasks.Jar;
+import org.gradlex.maven.plugin.development.internal.GAV;
 import org.gradlex.maven.plugin.development.internal.MavenPluginDescriptor;
 import org.gradlex.maven.plugin.development.task.DependencyDescriptor;
 import org.gradlex.maven.plugin.development.task.GenerateHelpMojoSourcesTask;
 import org.gradlex.maven.plugin.development.task.GenerateMavenPluginDescriptorTask;
 import org.gradlex.maven.plugin.development.task.UpstreamProjectDescriptor;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
@@ -100,20 +108,50 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
             task.getSourcesDirs().from(main.getJava().getSourceDirectories());
             task.getUpstreamProjects().convention(project.provider(() -> {
                 Configuration compileClasspath = project.getConfigurations().getByName(JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME);
-                return compileClasspath.getIncoming().getDependencies().stream()
-                        .filter(d -> d instanceof ProjectDependency)
-                        .map(d -> ((ProjectDependency) d).getDependencyProject())
-                        .map(d -> {
-                            SourceSet mainSourceSet = d.getExtensions().getByType(SourceSetContainer.class).getByName("main");
-                            return new UpstreamProjectDescriptor(
-                                    d.getGroup().toString(),
-                                    d.getName(),
-                                    d.getVersion().toString(),
-                                    mainSourceSet.getOutput().getClassesDirs(),
-                                    mainSourceSet.getJava().getSourceDirectories()
-                            );
+                String group = project.getGroup().toString();
+                // classes
+                Map<GAV, File> classesDirectoriesByGAV = compileClasspath.getIncoming()
+                        .artifactView(vc -> {
+                            vc.componentFilter(ci -> ci instanceof ProjectComponentIdentifier);
                         })
-                        .collect(Collectors.toList());
+                        .getArtifacts().getArtifacts().stream()
+                        .collect(Collectors.toMap(
+                                a -> {
+                                    ProjectComponentIdentifier m = (ProjectComponentIdentifier) a.getId().getComponentIdentifier();
+                                    return new GAV(group, m.getProjectName(), null);
+                                },
+                                ResolvedArtifactResult::getFile
+                        ));
+                // sources per artifact view with variant reselection
+                ObjectFactory objectFactory = project.getObjects();
+                Map<GAV, File> sourcesDirectoriesByGAV = compileClasspath.getIncoming()
+                        .artifactView(vc -> {
+                            vc.componentFilter(ci -> ci instanceof ProjectComponentIdentifier);
+                            vc.attributes(attributes -> {
+                                attributes.attribute(Category.CATEGORY_ATTRIBUTE, objectFactory.named(Category.class, Category.VERIFICATION));
+                                attributes.attribute(VerificationType.VERIFICATION_TYPE_ATTRIBUTE, objectFactory.named(VerificationType.class, VerificationType.MAIN_SOURCES));
+                            });
+                            vc.withVariantReselection();
+                        })
+                        .getArtifacts().getArtifacts().stream()
+                        .collect(Collectors.toMap(
+                                a -> {
+                                    ProjectComponentIdentifier m = (ProjectComponentIdentifier) a.getId().getComponentIdentifier();
+                                    return new GAV(group, m.getProjectName(), null);
+                                },
+                                ResolvedArtifactResult::getFile,
+                                (l, r) -> l.getName().equals("java") ? l : r
+                        ));
+                return classesDirectoriesByGAV.entrySet().stream().collect(ArrayList::new, (acc, e) -> {
+                    acc.add(new UpstreamProjectDescriptor(
+                            e.getKey().group,
+                            e.getKey().name,
+                            e.getKey().version,
+                            e.getValue(),
+                            sourcesDirectoriesByGAV.get(e.getKey())
+                    ));
+                },
+                        ArrayList::addAll);
             }));
             task.getOutputDirectory().set(descriptorDir);
             task.getPluginDescriptor().set(project.provider(() ->

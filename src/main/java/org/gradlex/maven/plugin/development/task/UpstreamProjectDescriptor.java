@@ -16,29 +16,31 @@
 
 package org.gradlex.maven.plugin.development.task;
 
-import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.CompileClasspath;
 import org.gradle.api.tasks.IgnoreEmptyDirectories;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFiles;
+import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.work.NormalizeLineEndings;
+
+import java.io.File;
 
 public final class UpstreamProjectDescriptor {
 
     private final String group;
     private final String name;
     private final String version;
-    private final FileCollection classesDirs;
-    private final FileCollection sourceDirectories;
+    private final File classesDir;
+    private final File sourceDirectorie;
 
-    public UpstreamProjectDescriptor(String group, String name, String version, FileCollection classesDirs, FileCollection sourceDirectories) {
+    public UpstreamProjectDescriptor(String group, String name, String version, File classesDir, File sourcesDir) {
         this.group = group;
         this.name = name;
         this.version = version;
-        this.classesDirs = classesDirs;
-        this.sourceDirectories = sourceDirectories;
+        this.classesDir = classesDir;
+        this.sourceDirectorie = sourcesDir;
     }
 
     @Input
@@ -51,6 +53,7 @@ public final class UpstreamProjectDescriptor {
         return name;
     }
 
+    @Optional
     @Input
     public String getVersion() {
         return version;
@@ -58,16 +61,16 @@ public final class UpstreamProjectDescriptor {
 
     @CompileClasspath
     @InputFiles
-    public FileCollection getClassesDirs() {
-        return classesDirs;
+    public File getClassesDirs() {
+        return classesDir;
     }
 
     @InputFiles
     @PathSensitive(PathSensitivity.RELATIVE)
     @IgnoreEmptyDirectories
     @NormalizeLineEndings
-    public FileCollection getSourceDirectories() {
-        return sourceDirectories;
+    public File getSourceDirectories() {
+        return sourceDirectorie;
     }
 }
 
