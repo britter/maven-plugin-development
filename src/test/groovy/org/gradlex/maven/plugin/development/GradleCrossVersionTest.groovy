@@ -22,12 +22,25 @@ class GradleCrossVersionTest extends AbstractPluginFuncTest {
         given:
         javaMojo()
 
-        and:
+        expect:
         runner("build")
           .withGradleVersion(gradleVersion)
           .build()
 
         where:
-        gradleVersion << ["7.3", "7.6.4", "8.0.2"]
+        gradleVersion << ["7.5", "7.6.4", "8.0.2"]
+    }
+
+    def "fails on version < 7.5"() {
+        given:
+        javaMojo()
+
+        expect:
+        def result = runner("build")
+          .withGradleVersion("7.4")
+          .buildAndFail()
+
+        and:
+        result.output.contains("Plugin requires as least Gradle 7.5.")
     }
 }

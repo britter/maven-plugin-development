@@ -32,6 +32,7 @@ import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.TaskProvider;
 import org.gradle.jvm.tasks.Jar;
+import org.gradle.util.GradleVersion;
 import org.gradlex.maven.plugin.development.task.GAV;
 import org.gradlex.maven.plugin.development.task.MavenPluginDescriptor;
 import org.gradlex.maven.plugin.development.task.DependencyDescriptor;
@@ -48,8 +49,19 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
 
     public static final String TASK_GROUP_NAME = "Maven Plugin Development";
 
+    /**
+     * Minimum supported version is 7.5 because in this release
+     * {@link org.gradle.api.artifacts.ArtifactView.ViewConfiguration#withVariantReselection} was introduced,
+     * which is required to select the sources from the compile classpath.
+     */
+    private static final GradleVersion MIN_VERSION = GradleVersion.version("7.5");
+
     @Override
     public void apply(Project project) {
+        if (GradleVersion.current().compareTo(MIN_VERSION) < 0) {
+            throw new IllegalStateException("Plugin requires as least Gradle 7.5.");
+        }
+
         project.getPluginManager().apply(JavaPlugin.class);
 
         Provider<Directory> pluginOutputDirectory = project.getLayout().getBuildDirectory().dir("mavenPlugin");
