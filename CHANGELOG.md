@@ -25,6 +25,7 @@ Lower versions of Gradle might be supported but are not tested.
     Instead of declaring fields of type `Property<FileCollection>` the `GenerateMavenPluginDescriptorTask` not declares fields of type `ConfigurableFileCollection`, which is more idiomatic.
 * [Fixed] [78](https://github.com/gradlex-org/maven-plugin-development/issues/78) Migration to Java.
 * [Fixed] [203](https://github.com/gradlex-org/maven-plugin-development/issues/203) Migration to GradleX namespace.
+* [Fixed] [283](https://github.com/gradlex-org/maven-plugin-development/issues/283) Fix deprecation issued for accessing other projects.
 
 ## Version 0.4.3
 
