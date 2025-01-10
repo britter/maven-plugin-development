@@ -65,9 +65,9 @@ public abstract class GenerateHelpMojoSourcesTask extends AbstractMavenPluginDev
         propertiesDirectory.mkdirs();
 
         MavenProject project = new MavenProject();
-        project.setGroupId(getPluginDescriptor().get().getGroupId());
-        project.setArtifactId(getPluginDescriptor().get().getArtifactId());
-        project.setVersion(getPluginDescriptor().get().getVersion());
+        project.setGroupId(getPluginDescriptor().get().getGav().getGroup());
+        project.setArtifactId(getPluginDescriptor().get().getGav().getArtifactId());
+        project.setVersion(getPluginDescriptor().get().getGav().getVersion());
         project.setArtifact(new ProjectArtifact(project));
         Build build = new Build();
         build.setDirectory(propertiesDirectory.getAbsolutePath());

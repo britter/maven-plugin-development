@@ -4,7 +4,7 @@
 
 This release marks the move of this plugin to the [GradleX project](https://github.com/gradlex-org).
 Consequently, this is a breaking release with features being dropped, plugin ID and code coordinate changes, and the implementation language changing from Kotlin to Java.
-The minimal required Gradle version has been increased to 7.0.
+The minimal required Gradle version has been increased to 7.5.
 Lower versions of Gradle might be supported but are not tested.
 
 * [Fixed] [#57](https://github.com/gradlex-org/maven-plugin-development/issues/57) Remove javaClassesDir from GenerateMavenPluginDescriptorTask.
@@ -25,6 +25,7 @@ Lower versions of Gradle might be supported but are not tested.
     Instead of declaring fields of type `Property<FileCollection>` the `GenerateMavenPluginDescriptorTask` not declares fields of type `ConfigurableFileCollection`, which is more idiomatic.
 * [Fixed] [78](https://github.com/gradlex-org/maven-plugin-development/issues/78) Migration to Java.
 * [Fixed] [203](https://github.com/gradlex-org/maven-plugin-development/issues/203) Migration to GradleX namespace.
+* [Fixed] [283](https://github.com/gradlex-org/maven-plugin-development/issues/283) Fix deprecation issued for accessing other projects.
 
 ## Version 0.4.3
 

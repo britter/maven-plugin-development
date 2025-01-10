@@ -14,42 +14,29 @@
  * limitations under the License.
  */
 
-package org.gradlex.maven.plugin.development.internal;
+package org.gradlex.maven.plugin.development.task;
 
 import org.gradle.api.tasks.Input;
+import org.gradle.api.tasks.Nested;
 import org.gradle.api.tasks.Optional;
 
 public final class MavenPluginDescriptor {
 
-    private final String groupId;
-    private final String artifactId;
-    private final String version;
+    private final GAV gav;
     private final String name;
     private final String description;
     private final String goalPrefix;
 
-    public MavenPluginDescriptor(String groupId, String artifactId, String version, String name, String description, String goalPrefix) {
-        this.groupId = groupId;
-        this.artifactId = artifactId;
-        this.version = version;
+    public MavenPluginDescriptor(GAV gav, String name, String description, String goalPrefix) {
+        this.gav = gav;
         this.name = name;
         this.description = description;
         this.goalPrefix = goalPrefix;
     }
 
-    @Input
-    public String getGroupId() {
-        return groupId;
-    }
-
-    @Input
-    public String getArtifactId() {
-        return artifactId;
-    }
-
-    @Input
-    public String getVersion() {
-        return version;
+    @Nested
+    public GAV getGav() {
+        return gav;
     }
 
     @Input

@@ -24,7 +24,6 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Nested;
-import org.gradlex.maven.plugin.development.internal.MavenPluginDescriptor;
 
 import java.util.stream.Collectors;
 
@@ -40,13 +39,13 @@ public abstract class AbstractMavenPluginDevelopmentTask extends DefaultTask {
         MavenPluginDescriptor pluginDescriptor = getPluginDescriptor().get();
 
         PluginDescriptor result = new PluginDescriptor();
-        result.setGroupId(pluginDescriptor.getGroupId());
-        result.setArtifactId(pluginDescriptor.getArtifactId());
-        result.setVersion(pluginDescriptor.getVersion());
+        result.setGroupId(pluginDescriptor.getGav().getGroup());
+        result.setArtifactId(pluginDescriptor.getGav().getArtifactId());
+        result.setVersion(pluginDescriptor.getGav().getVersion());
         result.setGoalPrefix(
                 pluginDescriptor.getGoalPrefix() != null
                         ? pluginDescriptor.getGoalPrefix()
-                        : PluginDescriptor.getGoalPrefixFromArtifactId(pluginDescriptor.getArtifactId())
+                        : PluginDescriptor.getGoalPrefixFromArtifactId(pluginDescriptor.getGav().getArtifactId())
         );
         result.setName(pluginDescriptor.getName());
         result.setDescription(pluginDescriptor.getDescription());

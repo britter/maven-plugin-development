@@ -6,7 +6,7 @@
 This plugin aims to fill the tiny gap for people who need to create an [Apache Maven](https://maven.apache.org) plugin from a Gradle build.
 To do this the plugin wraps around the [Maven Plugin Tools API](https://maven.apache.org/plugin-tools/) and feeds it with the right inputs from the Gradle build.
 
-Compatible with Gradle 7.3 or later.
+Compatible with Gradle 7.5 or later.
 
 ## Features
 
