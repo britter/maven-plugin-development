@@ -77,9 +77,7 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
             task.getHelpPropertiesFile().set(pluginOutputDirectory.map(it -> it.file("maven-plugin-help.properties")));
             task.getPluginDescriptor().set(project.provider(() ->
                     new MavenPluginDescriptor(
-                            extension.getGroupId().get(),
-                            extension.getArtifactId().get(),
-                            extension.getVersion().get(),
+                            GAV.of(extension.getGroupId().get(), extension.getArtifactId().get(), extension.getVersion().get()),
                             extension.getName().get(),
                             extension.getDescription().getOrElse(""),
                             extension.getGoalPrefix().getOrNull()
@@ -108,7 +106,10 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
             task.getSourcesDirs().from(main.getJava().getSourceDirectories());
             task.getUpstreamProjects().convention(project.provider(() -> {
                 Configuration compileClasspath = project.getConfigurations().getByName(JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME);
+                // It's not possible to access group, and version of project dependencies, see https://github.com/gradle/gradle/issues/31973
                 String group = project.getGroup().toString();
+                String version = project.getVersion().toString();
+
                 // classes
                 Map<GAV, File> classesDirectoriesByGAV = compileClasspath.getIncoming()
                         .artifactView(vc -> {
@@ -118,7 +119,7 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
                         .collect(Collectors.toMap(
                                 a -> {
                                     ProjectComponentIdentifier m = (ProjectComponentIdentifier) a.getId().getComponentIdentifier();
-                                    return new GAV(group, m.getProjectName(), null);
+                                    return GAV.of(group, m.getProjectName(), version);
                                 },
                                 ResolvedArtifactResult::getFile
                         ));
@@ -137,16 +138,14 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
                         .collect(Collectors.toMap(
                                 a -> {
                                     ProjectComponentIdentifier m = (ProjectComponentIdentifier) a.getId().getComponentIdentifier();
-                                    return new GAV(group, m.getProjectName(), null);
+                                    return GAV.of(group, m.getProjectName(), version);
                                 },
                                 ResolvedArtifactResult::getFile,
                                 (l, r) -> l.getName().equals("java") ? l : r
                         ));
                 return classesDirectoriesByGAV.entrySet().stream().collect(ArrayList::new, (acc, e) -> {
                     acc.add(new UpstreamProjectDescriptor(
-                            e.getKey().group,
-                            e.getKey().name,
-                            e.getKey().version,
+                            e.getKey(),
                             e.getValue(),
                             sourcesDirectoriesByGAV.get(e.getKey())
                     ));
@@ -156,9 +155,7 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
             task.getOutputDirectory().set(descriptorDir);
             task.getPluginDescriptor().set(project.provider(() ->
                     new MavenPluginDescriptor(
-                            extension.getGroupId().get(),
-                            extension.getArtifactId().get(),
-                            extension.getVersion().get(),
+                            GAV.of(extension.getGroupId().get(), extension.getArtifactId().get(), extension.getVersion().get()),
                             extension.getName().get(),
                             extension.getDescription().getOrElse(""),
                             extension.getGoalPrefix().getOrNull()

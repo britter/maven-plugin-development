@@ -40,6 +40,7 @@ import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
+import org.gradlex.maven.plugin.development.internal.GAV;
 import org.gradlex.maven.plugin.development.internal.MavenLoggerAdapter;
 import org.gradlex.maven.plugin.development.internal.MavenServiceFactory;
 
@@ -79,7 +80,7 @@ public abstract class GenerateMavenPluginDescriptorTask extends AbstractMavenPlu
     }
 
     private void checkArtifactId() {
-        String artifactId = getPluginDescriptor().get().getArtifactId();
+        String artifactId = getPluginDescriptor().get().getGav().getArtifactId();
         if (artifactId.startsWith("maven-") && artifactId.endsWith("-plugin")) {
             getLogger().warn("ArtifactIds of the form maven-___-plugin are reserved for plugins of the maven team. Please change the plugin artifactId to the format ___-maven-plugin.");
         }
@@ -99,14 +100,13 @@ public abstract class GenerateMavenPluginDescriptorTask extends AbstractMavenPlu
             // process upstream projects in order to scan base classes
             getUpstreamProjects().get().forEach(it -> {
                 File dir = it.getClassesDirs();
-                // Project versions are null, see https://github.com/gradle/gradle/issues/31973
-                String version = Optional.ofNullable(it.getVersion()).orElse("1.0");
-                    DefaultArtifact artifact = new DefaultArtifact(
-                            it.getGroup(), it.getName(), version, "compile", "jar", null, new DefaultArtifactHandler()
+                GAV gav = it.getGav();
+                DefaultArtifact artifact = new DefaultArtifact(
+                            gav.getGroup(), gav.getArtifactId(), gav.getVersion(), "compile", "jar", null, new DefaultArtifactHandler()
                     );
                     artifact.setFile(dir);
                     pluginToolsRequest.getDependencies().add(artifact);
-                    mavenProject.addProjectReference(mavenProject(it.getGroup(), it.getName(), version, it.getSourceDirectories(), classesDir));
+                    mavenProject.addProjectReference(mavenProject(gav.getGroup(), gav.getArtifactId(), gav.getVersion(), it.getSourceDirectories(), classesDir));
             });
             populatePluginDescriptor(pluginToolsRequest);
         });
@@ -123,10 +123,11 @@ public abstract class GenerateMavenPluginDescriptorTask extends AbstractMavenPlu
     }
 
     private MavenProject mavenProject(FileCollection sourcesDirs, File outputDirectory) {
+        GAV gav = getPluginDescriptor().get().getGav();
         return mavenProject(
-                getPluginDescriptor().get().getGroupId(),
-                getPluginDescriptor().get().getArtifactId(),
-                getPluginDescriptor().get().getVersion(),
+                gav.getGroup(),
+                gav.getArtifactId(),
+                gav.getVersion(),
                 sourcesDirs,
                 outputDirectory
         );

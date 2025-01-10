@@ -16,36 +16,58 @@
 
 package org.gradlex.maven.plugin.development.internal;
 
+import org.gradle.api.tasks.Input;
+
 import java.util.Objects;
 
 public final class GAV {
-    public final String group;
-    public final String name;
-    public final String version;
 
-    public GAV(String group, String name, String version) {
+    private final String group;
+    private final String artifactId;
+    private final String version;
+
+    private GAV(String group, String artifactId, String version) {
         this.group = Objects.requireNonNull(group, "Parameter 'group' must not be null");
-        this.name = Objects.requireNonNull(name, "Parameter 'name' must not be null");
-        this.version = version;
+        this.artifactId = Objects.requireNonNull(artifactId, "Parameter 'artifactId' must not be null");
+        this.version = Objects.requireNonNull(version, "Parameter 'version' must not be null");
+    }
+
+    public static GAV of(String group, String artifactId, String version) {
+        return new GAV(group, artifactId, version);
+    }
+
+    @Input
+    public String getGroup() {
+        return group;
+    }
+
+    @Input
+    public String getArtifactId() {
+        return artifactId;
+    }
+
+    @Input
+    public String getVersion() {
+        return version;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         GAV gav = (GAV) o;
-        return Objects.equals(group, gav.group) && Objects.equals(name, gav.name) && Objects.equals(version, gav.version);
+        return Objects.equals(group, gav.group) && Objects.equals(artifactId, gav.artifactId) && Objects.equals(version, gav.version);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(group, name, version);
+        return Objects.hash(group, artifactId, version);
     }
 
     @Override
     public String toString() {
         return "GAV{" +
                 "group='" + group + '\'' +
-                ", name='" + name + '\'' +
+                ", name='" + artifactId + '\'' +
                 ", version='" + version + '\'' +
                 '}';
     }

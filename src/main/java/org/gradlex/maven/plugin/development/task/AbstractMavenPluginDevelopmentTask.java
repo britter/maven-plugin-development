@@ -40,13 +40,13 @@ public abstract class AbstractMavenPluginDevelopmentTask extends DefaultTask {
         MavenPluginDescriptor pluginDescriptor = getPluginDescriptor().get();
 
         PluginDescriptor result = new PluginDescriptor();
-        result.setGroupId(pluginDescriptor.getGroupId());
-        result.setArtifactId(pluginDescriptor.getArtifactId());
-        result.setVersion(pluginDescriptor.getVersion());
+        result.setGroupId(pluginDescriptor.getGav().getGroup());
+        result.setArtifactId(pluginDescriptor.getGav().getArtifactId());
+        result.setVersion(pluginDescriptor.getGav().getVersion());
         result.setGoalPrefix(
                 pluginDescriptor.getGoalPrefix() != null
                         ? pluginDescriptor.getGoalPrefix()
-                        : PluginDescriptor.getGoalPrefixFromArtifactId(pluginDescriptor.getArtifactId())
+                        : PluginDescriptor.getGoalPrefixFromArtifactId(pluginDescriptor.getGav().getArtifactId())
         );
         result.setName(pluginDescriptor.getName());
         result.setDescription(pluginDescriptor.getDescription());

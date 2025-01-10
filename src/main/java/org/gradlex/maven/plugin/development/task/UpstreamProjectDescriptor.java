@@ -18,45 +18,30 @@ package org.gradlex.maven.plugin.development.task;
 
 import org.gradle.api.tasks.CompileClasspath;
 import org.gradle.api.tasks.IgnoreEmptyDirectories;
-import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFiles;
-import org.gradle.api.tasks.Optional;
+import org.gradle.api.tasks.Nested;
 import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.work.NormalizeLineEndings;
+import org.gradlex.maven.plugin.development.internal.GAV;
 
 import java.io.File;
 
 public final class UpstreamProjectDescriptor {
 
-    private final String group;
-    private final String name;
-    private final String version;
+    private final GAV gav;
     private final File classesDir;
     private final File sourceDirectorie;
 
-    public UpstreamProjectDescriptor(String group, String name, String version, File classesDir, File sourcesDir) {
-        this.group = group;
-        this.name = name;
-        this.version = version;
+    public UpstreamProjectDescriptor(GAV gav, File classesDir, File sourcesDir) {
+        this.gav = gav;
         this.classesDir = classesDir;
         this.sourceDirectorie = sourcesDir;
     }
 
-    @Input
-    public String getGroup() {
-        return group;
-    }
-
-    @Input
-    public String getName() {
-        return name;
-    }
-
-    @Optional
-    @Input
-    public String getVersion() {
-        return version;
+    @Nested
+    public GAV getGav() {
+        return gav;
     }
 
     @CompileClasspath
