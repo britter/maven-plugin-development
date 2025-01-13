@@ -19,7 +19,7 @@ package org.gradlex.maven.plugin.development;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.provider.Property;
 
-interface MavenPluginDevelopmentExtension {
+public interface MavenPluginDevelopmentExtension {
 
     String NAME = "mavenPlugin";
 
