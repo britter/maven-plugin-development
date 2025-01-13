@@ -73,6 +73,11 @@ testing.suites.named<JvmTestSuite>("test") {
         implementation(project.dependencies.testFixtures(project))
         runtimeOnly(libs.junitVintageEngine)
     }
+    targets.all {
+        testTask.configure {
+            maxParallelForks = 4
+        }
+    }
 }
 
 testing.suites.register<JvmTestSuite>("testSamples") {
