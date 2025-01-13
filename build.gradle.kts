@@ -40,8 +40,6 @@ dependencies {
         }
     }
 
-    testImplementation(libs.bundles.spock)
-    testImplementation(testFixtures(project))
     testFixturesImplementation(libs.junit4)
     testFixturesImplementation(libs.commonsLang)
 }
@@ -61,8 +59,20 @@ pluginPublishConventions {
     }
 }
 
+// Required to write localRepository property to src/test/resources/test.properties for takari-plugin-testing used in MavenEndToEndFuncTest
+tasks.processTestResources {
+    expand("localRepository" to project.layout.buildDirectory.dir("mavenLocal").get().asFile)
+}
+
 testing.suites.named<JvmTestSuite>("test") {
     useSpock()
+    dependencies {
+        implementation(libs.spock.core)
+        implementation(libs.spock.junit4)
+        implementation(libs.takariPluginTesting)
+        implementation(project.dependencies.testFixtures(project))
+        runtimeOnly(libs.junitVintageEngine)
+    }
 }
 
 testing.suites.register<JvmTestSuite>("testSamples") {

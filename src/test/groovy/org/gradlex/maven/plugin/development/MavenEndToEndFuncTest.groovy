@@ -16,13 +16,50 @@
 
 package org.gradlex.maven.plugin.development
 
+import io.takari.maven.testing.executor.MavenExecutionResult
+import io.takari.maven.testing.executor.MavenRuntime
+import io.takari.maven.testing.executor.MavenRuntime.MavenRuntimeBuilder
+import io.takari.maven.testing.executor.MavenVersions
+import io.takari.maven.testing.executor.junit.MavenJUnitTestRunner
+import org.gradle.testkit.runner.GradleRunner
 import org.gradlex.maven.plugin.development.fixtures.DescriptorFile
+import org.gradlex.maven.plugin.development.fixtures.TestRootProject
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
 
-class MavenEndToEndFuncTest extends AbstractPluginFuncTest {
+import java.lang.management.ManagementFactory
+
+/**
+ * This is implemented as a JUnit 4 test, so we can use https://github.com/takari/takari-plugin-testing-project
+ */
+@RunWith(MavenJUnitTestRunner)
+@MavenVersions("3.9.9")
+class MavenEndToEndFuncTest {
+
+    @Delegate
+    @Rule
+    public TestRootProject project = new TestRootProject()
 
     File mavenRepository
 
-    def setup() {
+    MavenRuntime maven;
+
+    MavenEndToEndFuncTest(MavenRuntimeBuilder mavenBuilder) {
+        this.maven = mavenBuilder.withCliOptions("-B", "-U")
+                // not using the forked builder makes the tests fail with
+                //   libXext.so.6: cannot open shared object file: No such file or director
+                // which may be a NixOS specific problem.
+                // Using the forked builder works.
+                .forkedBuilder()
+                .build()
+    }
+
+    @Before
+    void setup() {
+        settingsFile << "rootProject.name=\"touch-maven-plugin\""
+        withMavenPluginBuildConfiguration()
         mavenRepository = dir("maven-repository")
         def buildFileContents = buildFile.text
         buildFile.text = """
@@ -48,7 +85,8 @@ class MavenEndToEndFuncTest extends AbstractPluginFuncTest {
         """
     }
 
-    def "plugin built by Gradle can be used in maven build"() {
+    @Test
+    void "plugin built by Gradle can be used in maven build"() {
         given:
         javaMojo()
 
@@ -65,12 +103,12 @@ class MavenEndToEndFuncTest extends AbstractPluginFuncTest {
         def mavenBuildResult = mvnCleanPackage(mavenBuild)
 
         then:
-        mavenBuildResult.contains("touch-maven-plugin:1.0.0:touch")
-        mavenBuildResult.contains("BUILD SUCCESS")
+        mavenBuildResult.assertLogText("[INFO] --- touch:1.0.0:touch (default) @ use-touch-plugin ---")
         file("$mavenBuild/target/classes/touch.txt").exists()
     }
 
-    def "plugin descriptor build by Gradle equals plugin descriptor build by Maven"() {
+    @Test
+    void "plugin descriptor build by Gradle equals plugin descriptor build by Maven"() {
         given:
         javaMojo()
 
@@ -81,11 +119,10 @@ class MavenEndToEndFuncTest extends AbstractPluginFuncTest {
         run("build")
 
         and:
-        String mavenBuildResult = mvnCleanPackage(mavenBuild)
+        MavenExecutionResult mavenBuildResult = mvnCleanPackage(mavenBuild)
 
         then:
-        mavenBuildResult.contains("maven-plugin-plugin")
-        mavenBuildResult.contains("BUILD SUCCESS")
+        mavenBuildResult.assertLogText("maven-plugin-plugin")
 
         and:
         def mavenPluginDescriptor = DescriptorFile.parse(file("$mavenBuild/target/classes/META-INF/maven/plugin.xml"))
@@ -94,9 +131,11 @@ class MavenEndToEndFuncTest extends AbstractPluginFuncTest {
         mavenHelpDescriptor == helpDescriptor
     }
 
-    private String mvnCleanPackage(File mavenBuild) {
-        def path = "${System.getProperty("java.home")}:${System.getenv("PATH")}"
-        "mvn clean package -B -Dmaven.repo.local=$mavenRepository".execute(["PATH=$path"], mavenBuild).text
+    private MavenExecutionResult mvnCleanPackage(File mavenBuild) {
+        maven.forProject(mavenBuild)
+            .withCliOption("-Dmaven.repo.local=$mavenRepository")
+            .execute("clean", "package")
+            .assertErrorFreeLog()
     }
 
     File mavenBuildUsingPlugin() {
@@ -172,5 +211,22 @@ class MavenEndToEndFuncTest extends AbstractPluginFuncTest {
 </project>
         """
         project.projectDir
+    }
+
+    def run(String... args) {
+        runner(args).build()
+    }
+
+    def runAndFail(String... args) {
+        runner(args).buildAndFail()
+    }
+
+    def runner(String... args) {
+        GradleRunner.create()
+                .forwardOutput()
+                .withDebug(ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0)
+                .withPluginClasspath()
+                .withArguments([*args, "-s"])
+                .withProjectDir(project.projectDir)
     }
 }
