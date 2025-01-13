@@ -15,7 +15,7 @@
  */
 
 plugins {
-    id("org.gradlex.maven-plugin-development") version "1.0"
+    id("org.gradlex.maven-plugin-development") version "1.0.1"
     // necessary for publishing the plugin to maven local or remote repositories
     // see https://docs.gradle.org/current/userguide/publishing_maven.html for more information
     `maven-publish`
