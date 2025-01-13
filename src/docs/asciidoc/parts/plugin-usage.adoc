@@ -4,13 +4,13 @@ All metadata for the plugin, e.g. `groupId`, `artifactId`, `description` is extr
 [source.multi-language-sample,groovy,subs="attributes+,verbatim"]
 ----
 plugins {
-    id 'org.gradlex.maven-plugin-development' version '{gradle-project-version}'
+    id 'org.gradlex.maven-plugin-development' version '1.0'
 }
 ----
 [source.multi-language-sample,kotlin,subs="attributes+"]
 ----
 plugins {
-    id("org.gradlex.maven-plugin-development") version "{gradle-project-version}"
+    id("org.gradlex.maven-plugin-development") version "1.0"
 }
 ----
 

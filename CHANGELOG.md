@@ -1,11 +1,12 @@
 # Maven Plugin Development Gradle plugin - Changelog
 
+## Version 1.1
+
 ## Version 1.0
 
 This release marks the move of this plugin to the [GradleX project](https://github.com/gradlex-org).
 Consequently, this is a breaking release with features being dropped, plugin ID and code coordinate changes, and the implementation language changing from Kotlin to Java.
 The minimal required Gradle version has been increased to 7.5.
-Lower versions of Gradle might be supported but are not tested.
 
 * [Fixed] [#57](https://github.com/gradlex-org/maven-plugin-development/issues/57) Remove javaClassesDir from GenerateMavenPluginDescriptorTask.
 * [Fixed] [#210](https://github.com/gradlex-org/maven-plugin-development/issues/210) Drop feature: Mojo source set. 
