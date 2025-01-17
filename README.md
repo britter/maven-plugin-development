@@ -26,3 +26,9 @@ Contributions via GitHub pull requests are gladly accepted from their original a
 ## License
 
 This code is open source software licensed under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0.html).
+
+# Disclaimer
+
+Gradle and the Gradle logo are trademarks of Gradle, Inc.
+The GradleX project is not endorsed by, affiliated with, or associated with Gradle or Gradle, Inc. in any way.
+
