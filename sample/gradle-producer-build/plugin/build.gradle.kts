@@ -25,11 +25,8 @@ plugins {
 group = "sample.plugin"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
+    implementation(project(":lib"))
     // required dependencies for building a Maven Plugin
     implementation("org.apache.maven:maven-plugin-api:3.9.9")
     // annotations are only needed at compile time

@@ -14,5 +14,14 @@
  * limitations under the License.
  */
 
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+}
+
 // this sets the artifactId of the Maven plugin
 rootProject.name = "hello-maven-plugin"
+
+include(":lib")
+include(":plugin")
