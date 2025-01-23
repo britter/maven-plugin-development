@@ -64,6 +64,12 @@ tasks.processTestResources {
     expand("localRepository" to project.layout.buildDirectory.dir("mavenLocal").get().asFile)
 }
 
+tasks.compileTestJava {
+    javaCompiler = javaToolchains.compilerFor {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 testing.suites.named<JvmTestSuite>("test") {
     useSpock()
     dependencies {
@@ -75,6 +81,9 @@ testing.suites.named<JvmTestSuite>("test") {
     }
     targets.all {
         testTask.configure {
+            javaLauncher = javaToolchains.launcherFor {
+                languageVersion = JavaLanguageVersion.of(17)
+            }
             maxParallelForks = 4
         }
     }
