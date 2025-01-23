@@ -64,8 +64,8 @@ tasks.processTestResources {
     expand("localRepository" to project.layout.buildDirectory.dir("mavenLocal").get().asFile)
 }
 
-tasks.compileTestJava {
-    javaCompiler = javaToolchains.compilerFor {
+tasks.compileTestGroovy {
+    javaLauncher = javaToolchains.launcherFor {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
