@@ -25,17 +25,18 @@ import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.work.NormalizeLineEndings;
 
 import java.io.File;
+import java.util.Set;
 
 public final class UpstreamProjectDescriptor {
 
     private final GAV gav;
-    private final File classesDir;
-    private final File sourceDirectorie;
+    private final Set<File> classesDir;
+    private final Set<File> sourceDirectories;
 
-    public UpstreamProjectDescriptor(GAV gav, File classesDir, File sourcesDir) {
+    public UpstreamProjectDescriptor(GAV gav, Set<File> classesDir, Set<File> sourcesDir) {
         this.gav = gav;
         this.classesDir = classesDir;
-        this.sourceDirectorie = sourcesDir;
+        this.sourceDirectories = sourcesDir;
     }
 
     @Nested
@@ -45,7 +46,7 @@ public final class UpstreamProjectDescriptor {
 
     @CompileClasspath
     @InputFiles
-    public File getClassesDirs() {
+    public Set<File> getClassesDirs() {
         return classesDir;
     }
 
@@ -53,8 +54,8 @@ public final class UpstreamProjectDescriptor {
     @PathSensitive(PathSensitivity.RELATIVE)
     @IgnoreEmptyDirectories
     @NormalizeLineEndings
-    public File getSourceDirectories() {
-        return sourceDirectorie;
+    public Set<File> getSourceDirectories() {
+        return sourceDirectories;
     }
 }
 

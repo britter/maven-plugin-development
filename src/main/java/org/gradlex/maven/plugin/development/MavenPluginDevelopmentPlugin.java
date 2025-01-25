@@ -48,8 +48,11 @@ import org.gradlex.maven.plugin.development.task.UpstreamProjectDescriptor;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -137,18 +140,18 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
         String group = project.getGroup().toString();
         String version = project.getVersion().toString();
 
-        Map<GAV, File> classDirectoriesByGAV = getDependencyProjectClassesDirectoriesMappedByGav(compileClasspath, group, version);
-        Map<GAV, File> sourcesDirectoriesByGAV = getDependencyProjectSourceDirectoriesMappedByGav(project, compileClasspath, group, version);
+        Map<GAV, Set<File>> classDirectoriesByGAV = getDependencyProjectClassesDirectoriesMappedByGav(compileClasspath, group, version);
+        Map<GAV, Set<File>> sourcesDirectoriesByGAV = getDependencyProjectSourceDirectoriesMappedByGav(project, compileClasspath, group, version);
 
         return classDirectoriesByGAV.entrySet().stream()
                 .collect(associateClassesDirectoriesToSourcesDirectories(sourcesDirectoriesByGAV));
     }
 
-    private static Map<GAV, File> getDependencyProjectClassesDirectoriesMappedByGav(Configuration compileClasspath, String group, String version) {
+    private static Map<GAV, Set<File>> getDependencyProjectClassesDirectoriesMappedByGav(Configuration compileClasspath, String group, String version) {
         return compileClasspath.getIncoming()
                 .artifactView(projects())
                 .getArtifacts().getArtifacts().stream()
-                .collect(collectToClassDirectoriesMappedByGav(group, version));
+                .collect(collectToDirectoriesMappedByGav(group, version));
     }
 
     private static Action<ArtifactView.ViewConfiguration> projects() {
@@ -157,21 +160,26 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
         };
     }
 
-    private static Collector<ResolvedArtifactResult, ?, Map<GAV, File>> collectToClassDirectoriesMappedByGav(String group, String version) {
+    private static Collector<ResolvedArtifactResult, ?, Map<GAV, Set<File>>> collectToDirectoriesMappedByGav(String group, String version) {
         return Collectors.toMap(
                 a -> {
                     ProjectComponentIdentifier m = (ProjectComponentIdentifier) a.getId().getComponentIdentifier();
                     return GAV.of(group, m.getProjectName(), version);
                 },
-                ResolvedArtifactResult::getFile
+                artifact -> Collections.singleton(artifact.getFile()),
+                (l, r) -> {
+                    Set<File> result = new HashSet<>(l);
+                    result.addAll(r);
+                    return result;
+                }
         );
     }
 
-    private static Map<GAV, File> getDependencyProjectSourceDirectoriesMappedByGav(Project project, Configuration compileClasspath, String group, String version) {
+    private static Map<GAV, Set<File>> getDependencyProjectSourceDirectoriesMappedByGav(Project project, Configuration compileClasspath, String group, String version) {
         return compileClasspath.getIncoming()
                 .artifactView(projectSources(project.getObjects()))
                 .getArtifacts().getArtifacts().stream()
-                .collect(collectSrcMainJavaMappedByGav(group, version));
+                .collect(collectToDirectoriesMappedByGav(group, version));
     }
 
     private static Action<ArtifactView.ViewConfiguration> projectSources(ObjectFactory objectFactory) {
@@ -182,16 +190,6 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
         };
     }
 
-    private static Collector<ResolvedArtifactResult, ?, Map<GAV, File>> collectSrcMainJavaMappedByGav(String group, String version) {
-        return Collectors.toMap(
-                a -> {
-                    ProjectComponentIdentifier m = (ProjectComponentIdentifier) a.getId().getComponentIdentifier();
-                    return GAV.of(group, m.getProjectName(), version);
-                },
-                ResolvedArtifactResult::getFile,
-                (l, r) -> l.getName().equals("java") ? l : r
-        );
-    }
 
     private static Spec<ComponentIdentifier> projectDependencies() {
         return ci -> ci instanceof ProjectComponentIdentifier;
@@ -208,7 +206,7 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
         };
     }
 
-    private static Collector<Map.Entry<GAV, File>, ArrayList<UpstreamProjectDescriptor>, ArrayList<UpstreamProjectDescriptor>> associateClassesDirectoriesToSourcesDirectories(Map<GAV, File> sourcesDirectoriesByGav) {
+    private static Collector<Map.Entry<GAV, Set<File>>, ArrayList<UpstreamProjectDescriptor>, ArrayList<UpstreamProjectDescriptor>> associateClassesDirectoriesToSourcesDirectories(Map<GAV, Set<File>> sourcesDirectoriesByGav) {
         return Collector.of(ArrayList::new, (acc, e) -> {
             acc.add(new UpstreamProjectDescriptor(
                     e.getKey(),

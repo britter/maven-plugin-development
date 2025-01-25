@@ -46,6 +46,7 @@ import org.gradlex.maven.plugin.development.internal.MavenServiceFactory;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 @CacheableTask
 public abstract class GenerateMavenPluginDescriptorTask extends AbstractMavenPluginDevelopmentTask {
@@ -98,14 +99,16 @@ public abstract class GenerateMavenPluginDescriptorTask extends AbstractMavenPlu
             PluginToolsRequest pluginToolsRequest = createPluginToolsRequest(mavenProject, descriptor);
             // process upstream projects in order to scan base classes
             getUpstreamProjects().get().forEach(it -> {
-                File dir = it.getClassesDirs();
+                Set<File> dirs = it.getClassesDirs();
                 GAV gav = it.getGav();
-                DefaultArtifact artifact = new DefaultArtifact(
-                            gav.getGroup(), gav.getArtifactId(), gav.getVersion(), "compile", "jar", null, new DefaultArtifactHandler()
-                    );
-                    artifact.setFile(dir);
-                    pluginToolsRequest.getDependencies().add(artifact);
-                    mavenProject.addProjectReference(mavenProject(gav.getGroup(), gav.getArtifactId(), gav.getVersion(), it.getSourceDirectories(), classesDir));
+				for (File dir : dirs) {
+					DefaultArtifact artifact = new DefaultArtifact(
+							gav.getGroup(), gav.getArtifactId(), gav.getVersion(), "compile", "jar", null, new DefaultArtifactHandler()
+					);
+					artifact.setFile(dir);
+					pluginToolsRequest.getDependencies().add(artifact);
+				}
+                mavenProject.addProjectReference(mavenProject(gav.getGroup(), gav.getArtifactId(), gav.getVersion(), it.getSourceDirectories(), classesDir));
             });
             populatePluginDescriptor(pluginToolsRequest);
         });

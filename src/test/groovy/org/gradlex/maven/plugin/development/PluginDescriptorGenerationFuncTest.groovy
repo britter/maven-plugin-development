@@ -204,4 +204,15 @@ class PluginDescriptorGenerationFuncTest extends AbstractPluginFuncTest {
         !pluginDescriptor.hasDependency('com.google.guava:guava:28.0-jre')
     }
 
+    def "supports kotlin project dependency"() {
+        given:
+        multiProjectKotlinSetup()
+
+        when:
+        run(":plugin:generateMavenPluginDescriptor")
+
+        then:
+        pluginDescriptor("plugin/").hasDependency('root-project:kotlin-lib:unspecified', '')
+    }
+
 }

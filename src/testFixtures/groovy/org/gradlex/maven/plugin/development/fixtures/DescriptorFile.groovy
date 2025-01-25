@@ -99,13 +99,13 @@ class DescriptorFile {
         mojos.find { it.goal == goalName }
     }
 
-    boolean hasDependency(String dependencyNotation) {
+    boolean hasDependency(String dependencyNotation, String type = "jar") {
         def coords = dependencyNotation.split(":")
         dependencies.any {
             it.groupId == coords[0] &&
             it.artifactId == coords[1] &&
             it.version == coords[2] &&
-            it.type == "jar"
+            it.type == type
         }
     }
 
