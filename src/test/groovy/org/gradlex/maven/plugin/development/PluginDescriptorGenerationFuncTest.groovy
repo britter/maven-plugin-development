@@ -212,7 +212,7 @@ class PluginDescriptorGenerationFuncTest extends AbstractPluginFuncTest {
         run(":plugin:generateMavenPluginDescriptor")
 
         then:
-        pluginDescriptor("plugin/").hasDependency('root-project:kotlin-lib:unspecified', '')
+        pluginDescriptor("plugin/").hasDependency('org.example:kotlin-lib:1.0.0', '')
     }
 
 }

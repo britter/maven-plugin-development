@@ -108,6 +108,8 @@ class TestRootProject extends ExternalResource implements TestProject {
                 repositories {
                     mavenCentral()
                 }
+                group = "org.example"
+                version = "1.0.0"
                 dependencies {
                     implementation project(":kotlin-lib") 
                 }
