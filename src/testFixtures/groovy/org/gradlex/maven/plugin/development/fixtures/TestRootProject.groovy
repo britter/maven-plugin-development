@@ -79,4 +79,41 @@ class TestRootProject extends ExternalResource implements TestProject {
             """
         }
     }
+
+    def multiProjectKotlinSetup() {
+        settingsFile.text = "rootProject.name = 'root-project'"
+        buildFile.text = ""
+        subproject("kotlin-lib") { project ->
+            project.buildFile << """
+                plugins {
+                    id 'org.jetbrains.kotlin.jvm' version '2.1.0'
+                    id 'java-library'
+                }
+    
+                group = "org.example"
+                version = "1.0.0"
+                
+                repositories {
+                    mavenCentral()
+                }
+            """
+            project.kotlinClass()
+        }
+        subproject("plugin") { project ->
+            project.buildFile << """
+                plugins {
+                    id 'java'
+                    id 'org.gradlex.maven-plugin-development'
+                }
+                repositories {
+                    mavenCentral()
+                }
+                group = "org.example"
+                version = "1.0.0"
+                dependencies {
+                    implementation project(":kotlin-lib") 
+                }
+            """
+        }
+    }
 }

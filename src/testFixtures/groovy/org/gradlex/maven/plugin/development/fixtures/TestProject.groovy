@@ -62,8 +62,8 @@ trait TestProject {
 
     abstract DescriptorFile getHelpDescriptor()
 
-    DescriptorFile pluginDescriptor() {
-        DescriptorFile.parse(file("build/mavenPlugin/descriptor/META-INF/maven/plugin.xml"))
+    DescriptorFile pluginDescriptor(dir = "") {
+        DescriptorFile.parse(file(dir + "build/mavenPlugin/descriptor/META-INF/maven/plugin.xml"))
     }
 
     DescriptorFile helpDescriptor(String groupId = "org.example", artifactId = "touch-maven-plugin") {
@@ -174,6 +174,14 @@ trait TestProject {
                     }
                 }
             }
+        """
+    }
+
+    def kotlinClass(String sourceSetName = "main", String className = "Foo") {
+        file("src/$sourceSetName/java/org/example/${className}.kt") << """
+            package org.example;
+
+            class $className
         """
     }
 }
