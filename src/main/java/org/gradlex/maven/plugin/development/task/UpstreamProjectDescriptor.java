@@ -16,6 +16,7 @@
 
 package org.gradlex.maven.plugin.development.task;
 
+import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.CompileClasspath;
 import org.gradle.api.tasks.IgnoreEmptyDirectories;
 import org.gradle.api.tasks.InputFiles;
@@ -24,16 +25,13 @@ import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.work.NormalizeLineEndings;
 
-import java.io.File;
-import java.util.Set;
-
 public final class UpstreamProjectDescriptor {
 
     private final GAV gav;
-    private final Set<File> classesDir;
-    private final Set<File> sourceDirectories;
+    private final FileCollection classesDir;
+    private final FileCollection sourceDirectories;
 
-    public UpstreamProjectDescriptor(GAV gav, Set<File> classesDir, Set<File> sourcesDir) {
+    public UpstreamProjectDescriptor(GAV gav, FileCollection classesDir, FileCollection sourcesDir) {
         this.gav = gav;
         this.classesDir = classesDir;
         this.sourceDirectories = sourcesDir;
@@ -46,7 +44,7 @@ public final class UpstreamProjectDescriptor {
 
     @CompileClasspath
     @InputFiles
-    public Set<File> getClassesDirs() {
+    public FileCollection getClassesDirs() {
         return classesDir;
     }
 
@@ -54,7 +52,7 @@ public final class UpstreamProjectDescriptor {
     @PathSensitive(PathSensitivity.RELATIVE)
     @IgnoreEmptyDirectories
     @NormalizeLineEndings
-    public Set<File> getSourceDirectories() {
+    public FileCollection getSourceDirectories() {
         return sourceDirectories;
     }
 }
