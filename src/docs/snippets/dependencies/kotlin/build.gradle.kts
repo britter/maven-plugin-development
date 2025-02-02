@@ -1,5 +1,5 @@
 plugins {
-    id("org.gradlex.maven-plugin-development") version "1.0.1"
+    id("org.gradlex.maven-plugin-development") version "1.0.2"
 }
 
 // tag::dependencies[]
