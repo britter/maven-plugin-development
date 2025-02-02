@@ -1,6 +1,6 @@
 # Maven Plugin Development Gradle plugin - Changelog
 
-## Version 1.1
+## Version 1.0.2
 
 * [Fixed][295](https://github.com/gradlex-org/maven-plugin-development/issues/295) Build no longer fails when Mojo project depends on a Kotlin library project. Thanks to @DreierF.
 
