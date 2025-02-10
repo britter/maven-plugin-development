@@ -65,4 +65,26 @@ class UpToDateCheckingFuncTest extends AbstractPluginFuncTest {
         then:
         result.task(":plugin:generateMavenPluginDescriptor").outcome == TaskOutcome.SUCCESS
     }
+
+    def "help task correctly cleans up outputs"() {
+        given:
+        javaMojo()
+        buildFile << """
+            mavenPlugin {
+                helpMojoPackage = 'org.example.help'
+            }
+        """
+
+        and:
+        run("build")
+
+        when:
+        buildFile.text = buildFile.text.replace("helpMojoPackage = 'org.example.help'", "helpMojoPackage = 'com.acme.help'")
+
+        and:
+        run("build")
+
+        then:
+        pluginDescriptor.mojos.size() == 2
+    }
 }

@@ -3,6 +3,7 @@
 ## Version 1.0.3
 
 * [Fixed] [#294](https://github.com/gradlex-org/maven-plugin-development/issues/294) Build no longer fails in presence of the Groovy or Kotlin plugins.
+* [Fixed] [#314](https://github.com/gradlex-org/maven-plugin-development/issues/314) Tasks now clean their output before executing.
 
 ## Version 1.0.2
 

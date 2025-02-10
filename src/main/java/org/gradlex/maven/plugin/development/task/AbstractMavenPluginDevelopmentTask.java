@@ -21,10 +21,12 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.tools.plugin.DefaultPluginToolsRequest;
 import org.apache.maven.tools.plugin.PluginToolsRequest;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.file.FileSystemOperations;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Nested;
 
+import javax.inject.Inject;
 import java.util.stream.Collectors;
 
 public abstract class AbstractMavenPluginDevelopmentTask extends DefaultTask {
@@ -34,6 +36,9 @@ public abstract class AbstractMavenPluginDevelopmentTask extends DefaultTask {
 
     @Nested
     public abstract ListProperty<DependencyDescriptor> getRuntimeDependencies();
+
+    @Inject
+    public abstract FileSystemOperations getFs();
 
     protected PluginDescriptor createPluginDescriptor() {
         MavenPluginDescriptor pluginDescriptor = getPluginDescriptor().get();

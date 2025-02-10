@@ -48,10 +48,14 @@ public abstract class GenerateHelpMojoSourcesTask extends AbstractMavenPluginDev
     @Input
     public abstract Property<String> getHelpMojoPackage();
 
+
+
     private final MavenLoggerAdapter loggerAdapter = new MavenLoggerAdapter(getLogger());
 
     @TaskAction
     public void generateHelpMojo() throws GeneratorException {
+        getFs().delete(spec -> spec.delete(getOutputDirectory()));
+
         PluginHelpGenerator generator = new PluginHelpGenerator();
         generator.enableLogging(loggerAdapter);
         generator.setVelocityComponent(createVelocityComponent());

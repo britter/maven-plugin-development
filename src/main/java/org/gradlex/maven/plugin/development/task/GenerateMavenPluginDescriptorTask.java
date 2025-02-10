@@ -72,6 +72,8 @@ public abstract class GenerateMavenPluginDescriptorTask extends AbstractMavenPlu
 
     @TaskAction
     public void generateDescriptor() throws GeneratorException {
+        getFs().delete(spec -> spec.delete(getOutputDirectory()));
+
         checkArtifactId();
 
         PluginDescriptor pluginDescriptor = extractPluginDescriptor();
