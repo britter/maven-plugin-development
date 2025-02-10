@@ -11,7 +11,17 @@ group = "org.gradlex"
 version = "1.0.2"
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(8)
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
+}
+
+tasks.compileJava {
+    options.release = 8
+    options.compilerArgs.add("-Werror")
+}
+
+tasks.javadoc {
+    // Enable all JavaDoc checks, but the one requiring JavaDoc everywhere
+    (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:all,-missing", "-Xwerror")
 }
 
 dependencies {
@@ -64,12 +74,6 @@ tasks.processTestResources {
     expand("localRepository" to project.layout.buildDirectory.dir("mavenLocal").get().asFile)
 }
 
-tasks.compileTestGroovy {
-    javaLauncher = javaToolchains.launcherFor {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
-
 testing.suites.named<JvmTestSuite>("test") {
     useSpock()
     dependencies {
@@ -81,9 +85,6 @@ testing.suites.named<JvmTestSuite>("test") {
     }
     targets.all {
         testTask.configure {
-            javaLauncher = javaToolchains.launcherFor {
-                languageVersion = JavaLanguageVersion.of(17)
-            }
             maxParallelForks = 4
         }
     }
@@ -107,7 +108,6 @@ testing.suites.register<JvmTestSuite>("testSamples") {
 tasks {
     test {
         useJUnitPlatform()
-        javaLauncher.set(project.javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(17) })
     }
     jar {
         from(rootProject.file("LICENSE.txt")) {
