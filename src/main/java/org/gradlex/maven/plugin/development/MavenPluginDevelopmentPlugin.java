@@ -108,7 +108,7 @@ public class MavenPluginDevelopmentPlugin implements Plugin<Project> {
             task.setGroup(TASK_GROUP_NAME);
             task.setDescription("Generates the Maven plugin descriptor file");
 
-            task.getClassesDirs().from(main.getOutput().getClassesDirs());
+            task.getClassesDirs().from(main.getJava().getClassesDirectory());
             task.getSourcesDirs().from(main.getJava().getSourceDirectories());
             task.getUpstreamProjects().convention(project.provider(() -> extractUpstreamProjects(project)));
             task.getOutputDirectory().convention(descriptorDir);
